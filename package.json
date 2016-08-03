@@ -1,0 +1,63 @@
+{
+  "name": "tekuma-curation",
+  "version": "1.0.0",
+  "description": "A curation portal, written as a Node.js application with use of ReactJS for front-end services. The application uses ES6 syntax.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack-dev-server"
+  },
+  "keywords": [
+    "tekuma",
+    "startup",
+    "art",
+    "curation",
+    "color",
+    "artwork",
+    "MIT",
+    "technology"
+  ],
+  "author": "Afika Nyati, Stephen White, Kun Qian",
+  "license": "ISC",
+  "dependencies": {
+    "babel-preset-survivejs-kanban": "^0.3.3",
+    "firebase": "^3.2.1",
+    "imports-loader": "^0.6.5",
+    "material-ui": "^0.15.2",
+    "node-uuid": "^1.4.7",
+    "npm-install-webpack-plugin": "^4.0.4",
+    "react": "^15.3.0",
+    "react-addons-update": "^15.3.0",
+    "react-bootstrap": "^0.30.1",
+    "react-confirm": "^0.1.14",
+    "react-dnd": "^2.1.4",
+    "react-dnd-html5-backend": "^2.1.2",
+    "react-dom": "^15.3.0",
+    "react-dropzone": "^3.5.3",
+    "react-masonry-component": "^4.2.1",
+    "react-selectize": "^2.0.3",
+    "react-tap-event-plugin": "^1.0.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-react-hmre": "^1.1.1",
+    "css-loader": "^0.23.1",
+    "file-loader": "^0.9.0",
+    "npm-install-webpack-plugin": "^4.0.3",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-merge": "^0.14.0",
+    "json-loader": "^0.5.4",
+    "dotenv": "^2.0.0",
+    "extract-text-webpack-plugin": "^2.0.0-beta.2"
+  }
+}
