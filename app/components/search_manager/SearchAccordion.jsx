@@ -1,22 +1,32 @@
 // Libs
-import React            from 'react';
-import Dropzone         from 'react-dropzone';
-import getMuiTheme      from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Snackbar         from 'material-ui/Snackbar';
+import React                        from 'react';
+import Dropzone                     from 'react-dropzone';
+import getMuiTheme                  from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider             from 'material-ui/styles/MuiThemeProvider';
+import Snackbar                     from 'material-ui/Snackbar';
 import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
+import Select                       from 'react-select';
+import { WithContext as ReactTags } from 'react-tag-input';
 
 
 export default class SearchAccordion extends React.Component {
     state = {
-        accordion: {
-            artist      : false,
-            tag         : false,
-            title       : false,
-            time        : false,
-            color       : false
-        },
-        allAccordion    : false
+        artistNames: [
+            "Afika Nyati",
+            "Stephen White",
+            "Kun Qian",
+            "Naomi Hérbert",
+            "Marwan Aboudib",
+            "Li Qin",
+            "Jia Rao",
+            "Ge Linda Wang",
+            "Clio Berta"
+        ],
+        clearable: true,
+        artistValue: "",
+        tags: [],
+        suggestions: ["happy","sad", "sane", "elephant", "sunset"]
+
     }
 
     constructor(props) {
@@ -32,6 +42,10 @@ export default class SearchAccordion extends React.Component {
             height: window.innerHeight - 240
         }
 
+        let options = this.state.artistNames.map(function(artist){
+                return {label: artist, value: artist}
+            });
+
         return(
             <div
                 style={wrapperHeight}
@@ -39,51 +53,76 @@ export default class SearchAccordion extends React.Component {
                 <article
                     className="search-accordion">
                     <div
-                        className={this.state.accordion.artist ? "accordion-item open" : "accordion-item"}
-                        onClick={this.toggleAccordion.bind({},"artist")}>
+                        className={this.props.accordion.artist ? "accordion-item open" : "accordion-item"}
+                        onClick={this.props.toggleAccordion.bind({},"artist")}>
                         <h2 className="accordion-item-heading search">Artist</h2>
                     </div>
                     <div
-                        id="display-name-content"
-                        className={this.state.accordion.artist ? "accordion-content open" : "accordion-content"}>
-
+                        id="search-artist-content"
+                        className={this.props.accordion.artist ? "accordion-content open" : "accordion-content"}>
+                        <Select
+                            ref="searchArtist"
+                            autofocus
+                            options={options}
+                            simpleValue
+                            clearable={this.state.clearable}
+                            name="artist-search"
+                            value={this.state.artistValue}
+                            placeholder="Search by Artist Name..."
+                            onChange={this.logChange}
+                            />
                     </div>
                     <div
-                        className={this.state.accordion.tag ? "accordion-item open" : "accordion-item"}
-                        onClick={this.toggleAccordion.bind({},"tag")}>
+                        className={this.props.accordion.tag ? "accordion-item open" : "accordion-item"}
+                        onClick={this.props.toggleAccordion.bind({},"tag")}>
                         <h2 className="accordion-item-heading search">Tag</h2>
                     </div>
                     <div
-                        id="avatar-content"
-                        className={this.state.accordion.tag ? "accordion-content open" : "accordion-content"}>
-
+                        id="search-tag-content"
+                        className={this.props.accordion.tag ? "accordion-content open" : "accordion-content"}>
+                        <ReactTags
+                            tags={this.state.tags}
+                            suggestions={this.state.suggestions}
+                            handleDelete={this.handleDelete}
+                            handleAddition={this.handleAddition}
+                            handleDrag={this.handleDrag} />
                     </div>
                     <div
-                        className={this.state.accordion.title ? "accordion-item open" : "accordion-item"}
-                        onClick={this.toggleAccordion.bind({},"title")}>
+                        className={this.props.accordion.title ? "accordion-item open" : "accordion-item"}
+                        onClick={this.props.toggleAccordion.bind({},"title")}>
                         <h2 className="accordion-item-heading search">Title</h2>
                     </div>
                     <div
-                        id="bio-content"
-                        className={this.state.accordion.title ? "accordion-content open" : "accordion-content"}>
+                        id="search-title-content"
+                        className={this.props.accordion.title ? "accordion-content open" : "accordion-content"}>
+                        <input
+                        type="text"
+                        id="search-title"
+                        onChange={this.setUnsaved}
+                        ref="title"
+                        placeholder="Search by Artwork Title..."
+                        required=""
+                        autoCapitalize="off"
+                        autoComplete="off"
+                        autoCorrect="off" />
                     </div>
                     <div
-                        className={this.state.accordion.time ? "accordion-item open" : "accordion-item"}
-                        onClick={this.toggleAccordion.bind({},"time")}>
+                        className={this.props.accordion.time ? "accordion-item open" : "accordion-item"}
+                        onClick={this.props.toggleAccordion.bind({},"time")}>
                         <h2 className="accordion-item-heading search">Time</h2>
                     </div>
                     <div
-                        id="location-content"
-                        className={this.state.accordion.time? "accordion-content open" : "accordion-content"}>
+                        id="search-time-content"
+                        className={this.props.accordion.time? "accordion-content open" : "accordion-content"}>
                     </div>
                     <div
-                        className={this.state.accordion.color ? "accordion-item open no-border-bottom" : "accordion-item no-border-bottom"}
-                        onClick={this.toggleAccordion.bind({},"color")}>
+                        className={this.props.accordion.color ? "accordion-item open no-border-bottom" : "accordion-item no-border-bottom"}
+                        onClick={this.props.toggleAccordion.bind({},"color")}>
                         <h2 className="accordion-item-heading search">Color</h2>
                     </div>
                     <div
-                        id="portfolio-content"
-                        className={this.state.accordion.color ? "accordion-content open" : "accordion-content"}>
+                        id="search-color-content"
+                        className={this.props.accordion.color ? "accordion-content open" : "accordion-content"}>
 
                     </div>
                 </article>
@@ -93,6 +132,7 @@ export default class SearchAccordion extends React.Component {
 
     componentDidMount() {
         console.log("+++++SearchHints");
+
     }
 
     componentWillReceiveProps(nextProps) {
@@ -100,35 +140,36 @@ export default class SearchAccordion extends React.Component {
     }
 
     // -------- METHODS ------------
-
-    /**
-     * TODO
-     * @param  {[type]} item [description]
-     * @return {[type]}      [description]
-     */
-    toggleAccordion = (item) => {
-        let accordion   = this.state.accordion;
-        accordion[item] = !accordion[item];
+    logChange = (val) => {
         this.setState({
-            accordion: accordion
+            artistValue: val
         });
     }
 
-    toggleAllAccordion = () => {
-        let allAccordion = this.state.allAccordion;
+    handleDelete = (i) => {
+        let tags = this.state.tags;
+        tags.splice(i, 1);
+        this.setState({tags: tags});
+    }
 
-        let accordion   = {
-            display_name: !allAccordion,
-            avatar      : !allAccordion,
-            bio         : !allAccordion,
-            location    : !allAccordion,
-            portfolio   : !allAccordion,
-            social_media: !allAccordion
-        };
-
-        this.setState({
-            accordion: accordion,
-            allAccordion: !allAccordion
+    handleAddition = (tag) => {
+        let tags = this.state.tags;
+        tags.push({
+            id: tags.length + 1,
+            text: tag
         });
+
+        this.setState({tags: tags});
+    }
+
+    handleDrag = (tag, currPos, newPos) => {
+        let tags = this.state.tags;
+
+        // mutate array
+        tags.splice(currPos, 1);
+        tags.splice(newPos, 0, tag);
+
+        // re-render
+        this.setState({ tags: tags });
     }
 }

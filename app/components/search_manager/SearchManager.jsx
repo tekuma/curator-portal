@@ -17,11 +17,19 @@ export default class SearchManager extends React.Component {
     state = {
         searchCategory: {
             artist: false,
-            tag: false,
+            tag: true,
             title: false,
             time: false,
             color: false
-        }
+        },
+        accordion: {
+            artist      : false,
+            tag         : false,
+            title       : false,
+            time        : false,
+            color       : false
+        },
+        allAccordion    : false
     }
 
     constructor(props) {
@@ -82,7 +90,9 @@ export default class SearchManager extends React.Component {
                     className="search-manager-container">
                     <SearchHints
                         searchCategory={this.state.searchCategory} />
-                    <SearchAccordion />
+                    <SearchAccordion
+                        accordion={this.state.accordion}
+                        toggleAccordion={this.toggleAccordion} />
                     <div className="search-tools">
                         <div className="search-tool right-border">
                             <img src="assets/images/icons/cross.svg" />
@@ -90,7 +100,9 @@ export default class SearchManager extends React.Component {
                                 Clear
                             </h4>
                         </div>
-                        <div className="search-tool">
+                        <div
+                            onClick={this.toggleAllAccordion}
+                            className="search-tool">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
@@ -136,7 +148,9 @@ export default class SearchManager extends React.Component {
                     className="search-manager-container">
                     <SearchHints
                         searchCategory={this.state.searchCategory} />
-                    <SearchAccordion />
+                    <SearchAccordion
+                        accordion={this.state.accordion}
+                        toggleAccordion={this.toggleAccordion} />
                     <div className="search-tools">
                         <div className="search-tool right-border">
                             <img src="assets/images/icons/cross.svg" />
@@ -144,7 +158,9 @@ export default class SearchManager extends React.Component {
                                 Clear
                             </h4>
                         </div>
-                        <div className="search-tool">
+                        <div
+                            onClick={this.toggleAllAccordion}
+                            className="search-tool">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
@@ -160,4 +176,34 @@ export default class SearchManager extends React.Component {
     }
 
 // ============= Methods ===============
+
+    /**
+     * TODO
+     * @param  {[type]} item [description]
+     * @return {[type]}      [description]
+     */
+    toggleAccordion = (item) => {
+        let accordion   = this.state.accordion;
+        accordion[item] = !accordion[item];
+        this.setState({
+            accordion: accordion
+        });
+    }
+
+    toggleAllAccordion = () => {
+        let allAccordion = this.state.allAccordion;
+
+        let accordion   = {
+            artist  : !allAccordion,
+            tag     : !allAccordion,
+            title   : !allAccordion,
+            time    : !allAccordion,
+            color   : !allAccordion
+        };
+
+        this.setState({
+            accordion: accordion,
+            allAccordion: !allAccordion
+        });
+    }
 }
