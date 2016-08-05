@@ -69,7 +69,7 @@ export default class SearchAccordion extends React.Component {
                             name="artist-search"
                             value={this.state.artistValue}
                             placeholder="Search by Artist Name..."
-                            onChange={this.logChange}
+                            onChange={this.artistChange}
                             />
                     </div>
                     <div
@@ -140,10 +140,16 @@ export default class SearchAccordion extends React.Component {
     }
 
     // -------- METHODS ------------
-    logChange = (val) => {
+    artistChange = (artist) => {
         this.setState({
-            artistValue: val
+            artistValue: artist
         });
+
+        if (artist) {
+            this.props.toggleSearchCategory("artist", true);
+        } else {
+            this.props.toggleSearchCategory("artist", false);
+        }
     }
 
     handleDelete = (i) => {

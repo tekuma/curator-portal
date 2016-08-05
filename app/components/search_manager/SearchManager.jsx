@@ -15,9 +15,9 @@ import SearchToggler                 from './SearchToggler.jsx';
  */
 export default class SearchManager extends React.Component {
     state = {
-        searchCategory: {
+        searchCategories: {
             artist: false,
-            tag: true,
+            tag: false,
             title: false,
             time: false,
             color: false
@@ -89,10 +89,11 @@ export default class SearchManager extends React.Component {
                     style={containerWidth}
                     className="search-manager-container">
                     <SearchHints
-                        searchCategory={this.state.searchCategory} />
+                        searchCategories={this.state.searchCategories} />
                     <SearchAccordion
                         accordion={this.state.accordion}
-                        toggleAccordion={this.toggleAccordion} />
+                        toggleAccordion={this.toggleAccordion}
+                        toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
                         <div className="search-tool right-border">
                             <img src="assets/images/icons/cross.svg" />
@@ -147,10 +148,11 @@ export default class SearchManager extends React.Component {
                     style={containerWidth}
                     className="search-manager-container">
                     <SearchHints
-                        searchCategory={this.state.searchCategory} />
+                        searchCategories={this.state.searchCategories} />
                     <SearchAccordion
                         accordion={this.state.accordion}
-                        toggleAccordion={this.toggleAccordion} />
+                        toggleAccordion={this.toggleAccordion}
+                        toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
                         <div className="search-tool right-border">
                             <img src="assets/images/icons/cross.svg" />
@@ -204,6 +206,15 @@ export default class SearchManager extends React.Component {
         this.setState({
             accordion: accordion,
             allAccordion: !allAccordion
+        });
+    }
+
+    toggleSearchCategory = (category, bool) => {
+        let searchCategories = this.state.searchCategories;
+        searchCategories[category] = bool;
+
+        this.setState({
+            searchCategories: searchCategories
         });
     }
 }

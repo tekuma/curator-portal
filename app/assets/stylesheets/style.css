@@ -645,6 +645,7 @@ header.black {
 input[type=search].search-input {
 	position: absolute;
 	top: 12px;
+	right: 0px;
 	border: solid 1px #444444;
 	outline: none;
 	background: #3b3b3b;
