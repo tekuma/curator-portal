@@ -25,6 +25,7 @@ export default class SearchAccordion extends React.Component {
         clearable: true,
         artistValue: "",
         tags: [],
+        time: "",
         suggestions: ["happy","sad", "sane", "elephant", "sunset"]
 
     }
@@ -114,6 +115,61 @@ export default class SearchAccordion extends React.Component {
                     <div
                         id="search-time-content"
                         className={this.props.accordion.time? "accordion-content open" : "accordion-content"}>
+                        <div>
+                            <label
+                                    htmlFor="search-time-day"
+                                    className="search-time-label">
+                                    <input
+                                        type="radio"
+                                        id="search-time-day"
+                                        name="time"
+                                        className="search-time-radio"
+                                        defaultValue="Past 24 Hours"
+                                        onChange={this.setTime} />
+                                    Past 24 Hours
+                              </label>
+                              <label
+                                  htmlFor="search-time-week"
+                                  className="search-time-label">
+                                  <input
+                                      type="radio"
+                                      id="search-time-week"
+                                      name="time"
+                                      className="search-time-radio"
+                                      defaultValue="Past Week"
+                                      onChange={this.setTime} />
+                                  Past Week
+                            </label>
+                            <label
+                                htmlFor="search-time-range"
+                                className="search-time-label">
+                                    <input
+                                        type="radio"
+                                        id="search-time-range"
+                                        name="time"
+                                        className="search-time-radio"
+                                        defaultValue="Range of Time"
+                                        onChange={this.setTime} />
+                                    <div id="from-range">
+                                        <span>From</span>
+                                        <input
+                                        type="text"
+                                        className="search-time-range-input"
+                                        id="search-time-from"
+                                        ref="fromTime"
+                                        placeholder="mm/dd/yyyy" />
+                                    </div>
+                                    <div id="to-range">
+                                        <span>To</span>
+                                        <input
+                                        type="text"
+                                        className="search-time-range-input"
+                                        id="search-time-to"
+                                        ref="toTime"
+                                        placeholder="mm/dd/yyyy" />
+                                    </div>
+                            </label>
+                        </div>
                     </div>
                     <div
                         className={this.props.accordion.color ? "accordion-item open no-border-bottom" : "accordion-item no-border-bottom"}
@@ -177,5 +233,11 @@ export default class SearchAccordion extends React.Component {
 
         // re-render
         this.setState({ tags: tags });
+    }
+
+    setTime = (e) => {
+        this.setState({
+            time: e.target.value
+        });
     }
 }

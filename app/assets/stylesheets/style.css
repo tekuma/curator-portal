@@ -1889,6 +1889,25 @@ input[type=number]::-webkit-outer-spin-button {
 	position: absolute;
 }
 
+.search-time-radio {
+	display: inline-block;
+	position: relative;
+	margin: 0;
+    margin-top: 25px;
+    margin-right: 10px;
+	white-space: nowrap;
+    margin-bottom: 0;
+	padding-left: 10px;
+	font-weight: 400;
+}
+
+.search-time-label {
+	display: block;
+	font-weight: 400;
+	padding: 10px;
+	width: 250px;
+}
+
 textarea.bio {
 	background-color: #f4f6f7;
 	border: 1.5px solid #d6d3ce;
@@ -3376,6 +3395,10 @@ login-button.left {
 	height: 100px;
 }
 
+.search-accordion #search-time-content.accordion-content.open {
+	height: 300px;
+}
+
 .edit-accordion #email-content.accordion-content.open {
 	height: 200px;
 	padding: 40px;
@@ -3941,6 +3964,31 @@ label.age-confirm-label {
 #search-title {
 	border: 2px solid #dddddd;
 	border-radius: 0px;
+}
+
+.accordion-content .search-time-label div {
+	width: 180px;
+	margin: 0;
+	display: inline-block;
+}
+
+.accordion-content .search-time-label #to-range {
+	position: relative;
+	left: 22px;
+}
+
+.accordion-content input#search-time-from.search-time-range-input,
+.accordion-content input#search-time-to.search-time-range-input {
+	position: relative;
+	left: 10px;
+	width: 125px;
+	border: 2px solid #dddddd;
+	border-radius: 0px;
+	margin: 5px;
+}
+
+.accordion-content input#search-time-to.search-time-range-input {
+	left: 32px;
 }
 
 /*========================================== */
@@ -4531,20 +4579,20 @@ font-weight: 100;
 }
 .Select-placeholder,
 .Select--single > .Select-control .Select-value {
-  bottom: 0;
-  font-size: 0.9em;
-  color: #000;
-  left: 0;
-  line-height: 34px;
-  padding-left: 10px;
-  padding-right: 10px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  	bottom: 0;
+  	font-size: 0.9em;
+  	color: #aaaaaa;
+  	left: 0;
+  	line-height: 34px;
+  	padding-left: 10px;
+  	padding-right: 10px;
+  	position: absolute;
+  	right: 0;
+  	top: 0;
+  	max-width: 100%;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+  	white-space: nowrap;
 }
 .has-value.Select--single > .Select-control .Select-value .Select-value-label,
 .has-value.is-pseudo-focused.Select--single > .Select-control .Select-value .Select-value-label {
