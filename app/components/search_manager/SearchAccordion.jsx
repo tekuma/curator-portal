@@ -179,7 +179,147 @@ export default class SearchAccordion extends React.Component {
                     <div
                         id="search-color-content"
                         className={this.props.accordion.color ? "accordion-content open" : "accordion-content"}>
-
+                        <div>
+                            <div className="color-box-wrapper">
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#dc4f23"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#e88a1a"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#ea9b1a"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#eac82b"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#e5de2d"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#98c43d"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#ffffff"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#cf2f3f"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#c22689"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#7400e9"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#3000eb"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#2565ea"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#10c3eb"
+                                    }}>
+                                </div>
+                                <div
+                                    className="color-box"
+                                    style={{
+                                        backgroundColor: "#000000"
+                                    }}>
+                                </div>
+                            </div>
+                            <div className="search-color-ranges">
+                                <div className="search-color-range">
+                                    <input
+                                        type="radio"
+                                        id="search-color-one"
+                                        name="color"
+                                        className="search-color-radio"
+                                        defaultValue="colorOne"
+                                        onChange={this.setTime} />
+                                    <label
+                                        htmlFor="search-color-one"
+                                        className="color-box"
+                                        style={{
+                                            backgroundColor: "#dc4f23"
+                                        }}>
+                                    </label>
+                                    <input type="range" />
+                                </div>
+                                <div className="search-color-range">
+                                    <input
+                                        type="radio"
+                                        id="search-color-two"
+                                        name="color"
+                                        className="search-color-radio"
+                                        defaultValue="colorOne"
+                                        onChange={this.setTime} />
+                                    <label
+                                        htmlFor="search-color-two"
+                                        className="color-box"
+                                        style={{
+                                            backgroundColor: "#98c43d"
+                                        }}>
+                                    </label>
+                                    <input type="range" />
+                                </div>
+                                <div className="search-color-range">
+                                    <input
+                                        type="radio"
+                                        id="search-color-three"
+                                        name="color"
+                                        className="search-color-radio"
+                                        defaultValue="colorOne"
+                                        onChange={this.setTime} />
+                                    <label
+                                        htmlFor="search-color-three"
+                                        className="color-box"
+                                        style={{
+                                            backgroundColor: "#10c3eb"
+                                        }}>
+                                    </label>
+                                    <input type="range" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </article>
             </div>
