@@ -42,7 +42,7 @@ export default class SearchAccordion extends React.Component {
         },
         suggestions: ["happy","sad", "sane", "elephant", "sunset"],
         htmlColors: [
-           {  
+           {
               "name":"Black",
               "hex":"000000",
               "hue":0,
@@ -1454,6 +1454,9 @@ export default class SearchAccordion extends React.Component {
                 }
             }
         }
+
+        // Toggles Search Hint
+        this.props.toggleSearchCategory("color", true);
     }
 
     varyColor = (rangeInputNum) => {
@@ -1489,6 +1492,9 @@ export default class SearchAccordion extends React.Component {
         this.setState({
             searchColors: searchColors
         });
+
+        // Toggles Search Hint
+        this.props.toggleSearchCategory("color", true);
     }
 
     sortColors = () => {
