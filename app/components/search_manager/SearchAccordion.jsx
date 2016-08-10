@@ -1302,8 +1302,8 @@ export default class SearchAccordion extends React.Component {
     componentDidMount() {
         console.log("+++++SearchAccordion");
         console.log(`There are ${this.state.htmlColors.length} colors!`);
-        this.sortColors();
 
+        // Pick 14 Colors to display in Colors Search Tab
         for (let i = 0; i < 140; i++) {
             if(i % 10 == 0) {
                 this.state.selectableColors.push(`#${this.state.htmlColors[i].hex}`);
@@ -1358,16 +1358,12 @@ export default class SearchAccordion extends React.Component {
                 this.setState({
                     time: time
                 });
-                console.log("Search Past 24 Hours");
-                console.log("Here is state time: ", this.state.time);
                 break;
             case "week":
                 time.week.selected = true;
                 this.setState({
                     time: time
                 });
-                console.log("Search Past Week");
-                console.log("Here is state time: ", this.state.time);
                 break;
             case "range":
                 time.range.selected = true;
@@ -1378,8 +1374,6 @@ export default class SearchAccordion extends React.Component {
                 this.setState({
                     time: time
                 });
-                console.log(`Searching from: ${fromDate} to ${toDate}`);
-                console.log("Here is state time: ", this.state.time);
                 break;
         }
 

@@ -97,13 +97,13 @@ export default class SearchManager extends React.Component {
                     <div className="search-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool">
+                            className="search-tool right-border">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
                             </h4>
                         </div>
-                        <div className="search-tool right-border">
+                        <div className="search-tool">
                             <img src="assets/images/icons/cross.svg" />
                             <h4 className="search-tool-writing">
                                 Clear
@@ -156,13 +156,13 @@ export default class SearchManager extends React.Component {
                     <div className="search-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool">
+                            className="search-tool right-border">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
                             </h4>
                         </div>
-                        <div className="search-tool right-border">
+                        <div className="search-tool">
                             <img src="assets/images/icons/cross.svg" />
                             <h4 className="search-tool-writing">
                                 Clear
