@@ -3319,12 +3319,14 @@ login-button.left {
 }
 
 .edit-accordion #display-name-content,
-.edit-accordion #legal-name-content{
+.edit-accordion #legal-name-content
+.search-accordion #search-artist-content {
 	z-index: 7;
 }
 
 .edit-accordion #avatar-content,
-.edit-accordion #email-content {
+.edit-accordion #email-content,
+.search-accordion #search-tag-content {
 	z-index: 6;
 }
 .edit-accordion #avatar-content .edit-avatar-no-avatar-icon {
@@ -3333,17 +3335,20 @@ login-button.left {
 
 
 .edit-accordion #bio-content,
-.edit-accordion #email-verified-content {
+.edit-accordion #email-verified-content,
+.search-accordion #search-title-content {
 	z-index: 5;
 }
 
 .edit-accordion #location-content,
-.edit-accordion #password-content {
+.edit-accordion #password-content,
+.search-accordion #search-time-content {
 	z-index: 4;
 }
 
 .edit-accordion #portfolio-content,
-.edit-accordion #paypal-content {
+.edit-accordion #paypal-content,
+.search-accordion #search-color-content {
 	z-index: 3;
 }
 
@@ -3982,16 +3987,11 @@ label.age-confirm-label {
 
 .accordion-content input#search-time-from.search-time-range-input,
 .accordion-content input#search-time-to.search-time-range-input {
-	position: relative;
-	left: 10px;
-	width: 125px;
+	width: 180px;
 	border: 2px solid #dddddd;
 	border-radius: 0px;
+	padding: 0.5em .75em;
 	margin: 5px;
-}
-
-.accordion-content input#search-time-to.search-time-range-input {
-	left: 32px;
 }
 
 .search-color-ranges {
@@ -4031,7 +4031,7 @@ label.age-confirm-label {
 .search-color-range input[type=range]::-webkit-slider-thumb {
   height: 18px;
   width: 18px;
-  background: #ec167e;
+  background: #000000;
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -6.5px;
@@ -4052,7 +4052,7 @@ label.age-confirm-label {
 .search-color-range input[type=range]::-moz-range-thumb {
   height: 18px;
   width: 18px;
-  background: #ec167e;
+  background: #000000;
   cursor: pointer;
 }
 
@@ -4077,7 +4077,7 @@ label.age-confirm-label {
 .search-color-range input[type=range]::-ms-thumb {
   height: 18px;
   width: 18px;
-  background: #ec167e;
+  background: #000000;
   cursor: pointer;
 }
 

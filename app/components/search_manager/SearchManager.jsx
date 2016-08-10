@@ -95,18 +95,18 @@ export default class SearchManager extends React.Component {
                         toggleAccordion={this.toggleAccordion}
                         toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
-                        <div className="search-tool right-border">
-                            <img src="assets/images/icons/cross.svg" />
-                            <h4 className="search-tool-writing">
-                                Clear
-                            </h4>
-                        </div>
                         <div
                             onClick={this.toggleAllAccordion}
                             className="search-tool">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
+                            </h4>
+                        </div>
+                        <div className="search-tool right-border">
+                            <img src="assets/images/icons/cross.svg" />
+                            <h4 className="search-tool-writing">
+                                Clear
                             </h4>
                         </div>
                     </div>
@@ -154,18 +154,18 @@ export default class SearchManager extends React.Component {
                         toggleAccordion={this.toggleAccordion}
                         toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
-                        <div className="search-tool right-border">
-                            <img src="assets/images/icons/cross.svg" />
-                            <h4 className="search-tool-writing">
-                                Clear
-                            </h4>
-                        </div>
                         <div
                             onClick={this.toggleAllAccordion}
                             className="search-tool">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
+                            </h4>
+                        </div>
+                        <div className="search-tool right-border">
+                            <img src="assets/images/icons/cross.svg" />
+                            <h4 className="search-tool-writing">
+                                Clear
                             </h4>
                         </div>
                     </div>
