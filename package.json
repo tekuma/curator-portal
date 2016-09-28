@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "lint": "jscs"
   },
   "keywords": [
     "tekuma",
@@ -22,6 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "babel-preset-survivejs-kanban": "^0.3.3",
+    "file-saver": "^1.3.2",
     "firebase": "^3.2.1",
     "imports-loader": "^0.6.5",
     "material-ui": "^0.15.2",
@@ -42,7 +44,7 @@
     "react-selectize": "^2.0.3",
     "react-tag-input": "^4.1.0",
     "react-tap-event-plugin": "^1.0.0",
-    "webpack": "^1.13.1",
+    "webpack": "^1.13.2",
     "webpack-dev-server": "^1.14.1"
   },
   "devDependencies": {
@@ -52,16 +54,17 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-react-hmre": "^1.1.1",
     "css-loader": "^0.23.1",
+    "dotenv": "^2.0.0",
+    "extract-text-webpack-plugin": "^2.0.0-beta.2",
     "file-loader": "^0.9.0",
+    "jscs": "^3.0.7",
+    "json-loader": "^0.5.4",
     "npm-install-webpack-plugin": "^4.0.3",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1",
-    "webpack-merge": "^0.14.0",
-    "json-loader": "^0.5.4",
-    "dotenv": "^2.0.0",
-    "extract-text-webpack-plugin": "^2.0.0-beta.2"
+    "webpack-merge": "^0.14.0"
   }
 }
