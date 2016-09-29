@@ -19,7 +19,7 @@
     "MIT",
     "technology"
   ],
-  "author": "Afika Nyati, Stephen White, Kun Qian",
+  "author": "Scott Livingston, Stephen White, Afika Nyati, Kun Qian",
   "license": "ISC",
   "dependencies": {
     "babel-preset-survivejs-kanban": "^0.3.3",
