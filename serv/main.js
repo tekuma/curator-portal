@@ -29,7 +29,9 @@ db.connect();
 app.get('/search', function (req, res) {
     var restext = '<!DOCTYPE html><html><head></head><body>';
     if (req.query.q) {
-        db.query('SELECT * FROM artworks',
+        var query = '%'+req.query.q+'%';
+        db.query('SELECT * FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?',
+               [query, query],
 	       function (err, rows, fields) {
 	         if (err) throw err;
             restext += '<ul>\n';
