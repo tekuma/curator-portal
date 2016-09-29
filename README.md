@@ -17,3 +17,14 @@ For the server-side,
 ```
 node serv/main.js
 ```
+
+## Testing
+
+https://hub.docker.com/_/mysql/
+To get it, `docker pull mysql:latest`
+
+To initialize a MySQL database in a Docker container for testing,
+
+    ./tests/init.sh
+
+and use the connection configuration in tests/testdbconf.json.
