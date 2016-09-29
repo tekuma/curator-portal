@@ -10,16 +10,18 @@ var express = require('express');
 var app = express();
 
 var mysql = require('mysql');
+
+var dbconf = require('../tests/testdbconf.json');
 var db = mysql.createConnection({
-    host: '104.196.127.226',
-    ssl: {
-      ca: fs.readFileSync(__dirname + '/cert/server-ca.pem'),
-      cert: fs.readFileSync(__dirname + '/cert/client-cert.pem'),
-      key: fs.readFileSync(__dirname + '/cert/client-key.pem')
-    },
-    user: 'root',
-    password: fs.readFileSync(__dirname + '/cert/root-passwd.txt'),
-    database: 'Tekuma_artworkdb'
+    host: dbconf.host,
+//    ssl: {
+//      ca: fs.readFileSync(__dirname + '/cert/server-ca.pem'),
+//      cert: fs.readFileSync(__dirname + '/cert/client-cert.pem'),
+//      key: fs.readFileSync(__dirname + '/cert/client-key.pem')
+//    },
+    user: dbconf.user,
+    password: dbconf.password,
+    database: dbconf.database
 });
 
 db.connect();
