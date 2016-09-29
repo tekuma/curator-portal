@@ -20,12 +20,12 @@ export default class SearchBar extends React.Component {
         return (
             <div>
                 <div id="search-bar">
-                    <form>
+                    <form action="search">
                         <input
                             ref="searchTerm"
                             className="search-input"
                             placeholder="Search by artist, title, tag ..."
-                            type="search" name="search" id="search"
+                            type="search" name="q" id="search"
                             autoFocus={true} />
                     </form>
                 </div>
