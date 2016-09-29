@@ -2,5 +2,18 @@
 --------------------------
 The curators interface for accessing the Tekuma Art Database
 
-## Usage
-This project is in development. Clone, run `npm install`, and serve to use.
+## Preparations
+
+This project is in development. Clone, and run `npm install`.
+
+## Development
+
+To start the development Web server that provides client-side code,
+```
+npm run start
+```
+
+For the server-side,
+```
+node serv/main.js
+```
