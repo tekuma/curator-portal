@@ -1,15 +1,18 @@
 import React from 'react';
 
 export default class SearchResults extends React.Component {
-    state = {results: []}
+    state = {results: [], query: ''}
 
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
+        if (this.state.query.length === 0) {
+            return;
+        }
         $.ajax({
-            url: 'search?q=beef',
+            url: 'search?q='+String(this.state.query),
             dataType: 'json',
             cache: false,
             success: function (data) {
