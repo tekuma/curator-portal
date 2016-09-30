@@ -7,10 +7,11 @@
  */
 
 // Libs
-import React              from 'react';
-import Snackbar           from 'material-ui/Snackbar';
-import getMuiTheme        from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider   from 'material-ui/styles/MuiThemeProvider';
+import React                from 'react';
+import Snackbar             from 'material-ui/Snackbar';
+import firebase             from 'firebase'
+import getMuiTheme          from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
 
 injectTapEventPlugin({
@@ -19,19 +20,28 @@ injectTapEventPlugin({
   }
 }); // Initializing to enable Touch Tap events. It is global
 
+
+// Initialize Firebase
+var config = {
+  apiKey           : "AIzaSyDPLbeNTIctAEKu14VFeQuun8wz6ZbdTWU",
+  authDomain       : "curator-tekuma.firebaseapp.com",
+  databaseURL      : "https://curator-tekuma.firebaseio.com",
+  storageBucket    : "curator-tekuma.appspot.com",
+  messagingSenderId: "319359735831"
+};
+firebase.initializeApp(config);
+
 // Files
-import CurationHeader from './components/headers/CurationHeader';
-import ArtworkManager from './components/artwork_manager/ArtworkManager';
-import Artwork from './components/artwork_manager/Artwork';
-import SearchManager from './components/search_manager/SearchManager';
-import SearchResults from './components/search_manager/SearchResults';
+import PreAuth  from './components/auth/PreAuth';
+import PostAuth from './components/auth/PostAuth';
+
 
 /**
  * a
  */
 export default class App extends React.Component {
     state = {
-        managerIsOpen: true
+        loggedIn: false
     };
 
     constructor(props) {
@@ -43,21 +53,30 @@ export default class App extends React.Component {
     }
 
     render() {
-        return(
-            <div>
-                <CurationHeader />
-                <SearchResults />
-                <SearchManager
-                    managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager} />
-
-            </div>
-        );
+        if (this.state.loggedIn) {
+            return(
+                <PostAuth />
+            )
+        } else {
+            return(
+                <PreAuth
+                    authenticateWithPassword={this.authenticateWithPassword} />
+            )
+        }
     }
 
     componentDidMount() {
         console.log("++++++App");
         window.addEventListener("resize", this.rerender);
+
+        //LISTENER: listen for auth state changes
+        firebase.auth().onAuthStateChanged( (currentUser)=>{
+            if (currentUser) {
+                this.setState({loggedIn: true});
+            } else {
+                this.setState({loggedIn: false});
+            }
+        });
 
     }
 
@@ -67,20 +86,26 @@ export default class App extends React.Component {
 
 // ============= Methods ===============
 
+    /**
+     * Sign a user in via email/password
+     * @param  {Object} data - object containing login info
+     */
+    authenticateWithPassword = (data) => {
+        firebase.auth().signInWithEmailAndPassword(data.email, data.password)
+        .then( (thisUser) => {
+            console.log(">Password Auth successful for:", thisUser.displayName);
+        }).catch( (error) => {
+            console.error(error);
+            this.setState({
+                errors: this.state.errors.concat(error.message)
+            });
+        });
+    }
+
     rerender = () => {
         this.setState({});
     }
 
-    /**
-     * This method is used by the Search Manager Toggler element
-     * to toggle the boolean value of this.state.managerIsOpen
-     * to change the state of the the Album Manager component
-     * from open to closed.
-     */
-    toggleManager = () => {
-        this.setState({
-            managerIsOpen: !this.state.managerIsOpen
-        });
-    };
+
 
 }//END App
