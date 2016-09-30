@@ -714,7 +714,8 @@ input::-webkit-search-cancel-button {
 /* Album Manager */
 
 .album-manager,
-.search-manager {
+.search-manager,
+.search-results {
 	position: absolute;
 	top:60px;
 	z-index: 5;

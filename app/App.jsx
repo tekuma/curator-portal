@@ -24,6 +24,7 @@ import CurationHeader from './components/headers/CurationHeader';
 import ArtworkManager from './components/artwork_manager/ArtworkManager';
 import Artwork from './components/artwork_manager/Artwork';
 import SearchManager from './components/search_manager/SearchManager';
+import SearchResults from './components/search_manager/SearchResults';
 
 /**
  * a
@@ -45,9 +46,11 @@ export default class App extends React.Component {
         return(
             <div>
                 <CurationHeader />
+                <SearchResults />
                 <SearchManager
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager} />
+
             </div>
         );
     }
