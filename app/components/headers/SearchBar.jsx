@@ -20,20 +20,23 @@ export default class SearchBar extends React.Component {
         return (
             <div>
                 <div id="search-bar">
-                    <form action="search">
+
                         <input
                             ref="searchTerm"
                             className="search-input"
                             placeholder="Search by artist, title, tag ..."
                             type="search" name="q" id="search"
-                            autoFocus={true} />
-                    </form>
+                            onKeyPress={this.doSearch}
+                            autoFocus={true}
+                        />
+
                 </div>
             </div>
         );
     }
 
     componentDidMount() {
+        this.props.setQueryString("TEST"); //remove after debugging
         console.log("+++++SearchBar");
     }
 
@@ -42,6 +45,12 @@ export default class SearchBar extends React.Component {
     }
 
     // ------------ METHODS -------------
+
+
+    doSearch = (e) => {
+        this.props.setQueryString(this.refs.searchTerm.value)
+    }
+
     search = () => {
         let searchTerm = this.refs.searchTerm.value;
         this.props.setSearchTerm(searchTerm);

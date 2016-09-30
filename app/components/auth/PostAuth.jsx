@@ -19,7 +19,8 @@ import SearchResults  from '../search_manager/SearchResults';
  */
 export default class App extends React.Component {
     state = {
-        managerIsOpen: true
+        managerIsOpen: true,
+        queryString: ""
     };
 
     constructor(props) {
@@ -33,11 +34,16 @@ export default class App extends React.Component {
     render() {
         return(
             <div>
-                <CurationHeader />
-                <SearchResults />
+                <CurationHeader
+                    setQueryString={this.setQueryString}
+                />
+                <SearchResults
+                    queryString={this.state.queryString}
+                />
                 <SearchManager
                     managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager} />
+                    toggleManager={this.toggleManager}
+                 />
 
             </div>
         );
@@ -68,6 +74,10 @@ export default class App extends React.Component {
         this.setState({});
     }
 
+    setQueryString = (input) => {
+        console.log(">>> Updating query string:", input);
+        this.setState({queryString:input});
+    }
     /**
      * This method is used by the Search Manager Toggler element
      * to toggle the boolean value of this.state.managerIsOpen

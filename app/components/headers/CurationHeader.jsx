@@ -51,7 +51,9 @@ export default class PostAuthHeader extends React.Component {
                       </svg>
                 	</div>
                     <SearchBar
-                        setSearchTerm={this.setSearchTerm} />
+                        setSearchTerm ={this.setSearchTerm}
+                        setQueryString={this.props.setQueryString}
+                         />
                     <OverlayTrigger placement="bottom" overlay={searchTooltip}>
                 	       <div className="header-icons search">
                                 <div

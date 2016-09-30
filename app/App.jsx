@@ -8,8 +8,8 @@
 
 // Libs
 import React                from 'react';
+import firebase             from 'firebase';
 import Snackbar             from 'material-ui/Snackbar';
-import firebase             from 'firebase'
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
