@@ -6,6 +6,7 @@
 
 var fs = require('fs');
 
+var https = require('https');
 var express = require('express');
 var app = express();
 
@@ -15,9 +16,9 @@ var dbconf = require('../tests/testdbconf.json');
 var db = mysql.createConnection({
     host: dbconf.host,
 //    ssl: {
-//      ca: fs.readFileSync(__dirname + '/cert/server-ca.pem'),
-//      cert: fs.readFileSync(__dirname + '/cert/client-cert.pem'),
-//      key: fs.readFileSync(__dirname + '/cert/client-key.pem')
+//      ca: fs.readFileSync(__dirname + '/cert/sql-server-ca.pem'),
+//      cert: fs.readFileSync(__dirname + '/cert/sql-client-cert.pem'),
+//      key: fs.readFileSync(__dirname + '/cert/sql-client-key.pem')
 //    },
     user: dbconf.user,
     password: dbconf.password,
@@ -50,6 +51,9 @@ app.get('/search', function (req, res) {
 
 app.use('/', express.static('build'));
 
-app.listen(3030, function () {
-    console.log('Listening on port 3030...');
-});
+https.createServer({ciphers:'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256',
+                    honorCipherOrder: true,
+                    key: fs.readFileSync(__dirname + '/../tests/cert/selfsigned.key'),
+                    cert: fs.readFileSync(__dirname + '/../tests/cert/selfsigned.crt'),
+                    ca: [fs.readFileSync(__dirname + '/../tests/cert/selfsigned.csr')]
+		   }, app).listen(3030);
