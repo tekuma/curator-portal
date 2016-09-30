@@ -31,24 +31,17 @@ var db = mysql.createConnection({
 db.connect();
 
 app.get('/search', function (req, res) {
-    var restext = '<!DOCTYPE html><html><head></head><body>';
+    var restext = '';
     if (req.query.q) {
         var query = '%'+req.query.q+'%';
         db.query('SELECT * FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?',
                [query, query],
 	       function (err, rows, fields) {
 	         if (err) throw err;
-            restext += '<ul>\n';
-            rows.forEach(function (row) {
-                 restext += '<li>'+JSON.stringify(row)+'</li>\n';
-            });
-	    restext += '</ul>\n';
-	    restext += '</body></html>';
-            res.send(restext);
+            res.json({rows: rows})
         });
     } else {
-        restext += '</body></html>';
-        res.send(restext);
+        res.json({rows: null});
     }
 });
 
