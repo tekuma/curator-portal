@@ -7,7 +7,7 @@
 var firebase = require('firebase');
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
-    serviceAccount: require('./cert/curator-tekuma-d21282e18db0.json')
+    serviceAccount: require('./cert/curator-tekuma.json')
 });
 
 var fs = require('fs');
