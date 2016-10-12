@@ -25,25 +25,23 @@ export default class SearchResults extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.query.length === 0) {
+    }
+
+    componentWillReceiveProps(updates){
+        console.log("=========");
+        if (updates.queryString.length === 0) {
             return;
         }
-        console.log(">> Query String:", queryString);
+
+        console.log(">> Query String:", updates.queryString);
         $.ajax({
-            url: 'search?q='+String(this.props.queryString),
+            url: 'search?q='+String(updates.queryString),
             dataType: 'json',
             cache: false,
             success: function (data) {
                 this.setState({results: data.rows});
             }.bind(this)
         });
-    }
-
-    componentWillReceiveProps(updates){
-        console.log("=========");
-        console.log("Recieved query string in SearchResults ->", updates.queryString);
-        //
-        //TODO : Do AJAX request with query string in the WillReceiveProps method.
     }
 
 }
