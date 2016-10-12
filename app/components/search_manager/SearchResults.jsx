@@ -41,7 +41,9 @@ export default class SearchResults extends React.Component {
         firebase.auth().currentUser.getToken(true).then(function(idToken) {
             console.log(">> Query String:", updates.queryString);
             $.ajax({
-                url: 'search?q='+String(updates.queryString)+'&auth='+String(idToken),
+                url: ('search?q='
+                      +String.replace(updates.queryString, '&', ' and ')
+                      +'&auth='+String(idToken)),
                 dataType: 'json',
                 cache: false,
                 success: updateResultsList
