@@ -36,7 +36,6 @@ export default class SearchBar extends React.Component {
     }
 
     componentDidMount() {
-        this.props.setQueryString("TEST"); //remove after debugging
         console.log("+++++SearchBar");
     }
 
