@@ -1,0 +1,11 @@
+{
+"host": "104.198.210.91",
+"user": "root",
+"password": "0>?y4xL%[$;5?NVN3O49C=}UDM(t%.#N|4+n`",
+"database": "Tekuma_artworkdb",
+"ssl": {
+    "ca": "test-sql-server-ca.pem",
+    "cert": "test-sql-client-cert.pem",
+    "key": "test-sql-client-key.pem"
+}
+}

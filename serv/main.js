@@ -21,7 +21,7 @@ app.use(helmet());
 
 var mysql = require('mysql');
 
-var dbconf = require('../tests/testdbconf.json');
+var dbconf = require('./test-remote-dbconf.json');
 if (dbconf.ssl) {
     dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
     dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
