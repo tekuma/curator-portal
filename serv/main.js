@@ -19,9 +19,11 @@ var app = express();
 var helmet = require('helmet');
 app.use(helmet());
 
-var mysql = require('mysql');
+var servconf = require('./server-config.json');
 
-var dbconf = require('./test-remote-dbconf.json');
+
+var mysql = require('mysql');
+var dbconf = require(servconf.artworkdb);
 if (dbconf.ssl) {
     dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
     dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
@@ -66,4 +68,4 @@ https.createServer({ciphers:'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-
                     key: fs.readFileSync(__dirname + '/../tests/cert/selfsigned.key'),
                     cert: fs.readFileSync(__dirname + '/../tests/cert/selfsigned.crt'),
                     ca: [fs.readFileSync(__dirname + '/../tests/cert/selfsigned.csr')]
-                   }, app).listen(3030);
+                   }, app).listen(servconf.port);
