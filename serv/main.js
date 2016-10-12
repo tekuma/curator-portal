@@ -22,18 +22,12 @@ app.use(helmet());
 var mysql = require('mysql');
 
 var dbconf = require('../tests/testdbconf.json');
-var db = mysql.createConnection({
-    host: dbconf.host,
-//    ssl: {
-//      ca: fs.readFileSync(__dirname + '/cert/sql-server-ca.pem'),
-//      cert: fs.readFileSync(__dirname + '/cert/sql-client-cert.pem'),
-//      key: fs.readFileSync(__dirname + '/cert/sql-client-key.pem')
-//    },
-    user: dbconf.user,
-    password: dbconf.password,
-    database: dbconf.database
-});
-
+if (dbconf.ssl) {
+    dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
+    dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
+    dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
+}
+var db = mysql.createConnection(dbconf);
 db.connect();
 
 app.get('/search', function (req, res) {
