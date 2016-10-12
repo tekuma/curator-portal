@@ -1,0 +1,4 @@
+{
+    "artworkdb": "../tests/testdbconf.json",
+    "port": 3030
+}
