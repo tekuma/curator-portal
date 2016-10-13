@@ -17,7 +17,10 @@ exports.connectdb = (dbconf) => {
     db = mysql.createConnection(dbconf);
     db.connect();
     console.log('Connected to MySQL database.');
-    return db;
+}
+
+exports.disconnectdb = () => {
+    db.end();
 }
 
 exports.q = (query) => {
