@@ -62,7 +62,12 @@ To initialize a local MySQL database in a Docker container for testing,
 
     ./tests/init.sh
 
-and use the connection configuration in tests/testdbconf.json.
+and use the connection configuration in tests/testdbconf.json by changing
+server-config.json to point to the relevant remote testing database
+configuration:
+```js
+"artworkdb": "../tests/testdbconf.json"
+```
 
 
 ## Deployment
