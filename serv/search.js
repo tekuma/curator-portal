@@ -5,6 +5,7 @@
 // created by Scott C. Livingston
 
 
+var fs = require('fs');
 var mysql = require('mysql');
 exports.connectdb = (dbconf) => {
     if (dbconf.ssl) {
