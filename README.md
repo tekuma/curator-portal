@@ -27,6 +27,11 @@ testing. During testing, it is critical not to use the production
 (a.k.a. deployed) database because insertions, deletions, and other table
 modifications. Each possibility that is currently supported is described below.
 
+To perform all tests on the server software,
+
+    npm run testserv
+
+
 ### Using an existing remote database
 
 There is a CloudSQL database named "test-artworkdb" on the Google Cloud project
