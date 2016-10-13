@@ -19,18 +19,10 @@ var app = express();
 var helmet = require('helmet');
 app.use(helmet());
 
-var servconf = require('./server-config.json');
-
-
-var mysql = require('mysql');
-var dbconf = require(servconf.artworkdb);
-if (dbconf.ssl) {
-    dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
-    dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
-    dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
-}
-var db = mysql.createConnection(dbconf);
-db.connect();
+const servconf = require('./server-config.json');
+const search = require('./search.js');
+const dbconf = require(servconf.artworkdb);
+var db = search.connectdb(dbconf);
 
 app.get('/search', function (req, res) {
     if (!req.query.auth) {
@@ -39,19 +31,9 @@ app.get('/search', function (req, res) {
     } else {
 
         firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
-
-            if (req.query.q) {
-                var query = '%'+req.query.q+'%';
-                db.query('SELECT * FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?',
-                         [query, query],
-                         function (err, rows, fields) {
-                             if (err) throw err;
-                             res.json({rows: rows})
-                         });
-            } else {
-                res.json({rows: null});
-            }
-
+            search.q( db, req.query.q ).then(function(rows) {
+                res.json({rows: rows});
+            });
         }).catch(function(error) {
             console.log('firebase auth failed with error: ', error);
             res.send('access denied.');
