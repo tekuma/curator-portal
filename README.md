@@ -41,14 +41,20 @@ database configuration:
 ### Initializing a remote database for testing
 
 Go to the the Google Cloud project curator-tekuma, and perform the following:
-* create a new "2nd generation" CloudSQL instance;
-* go to the instance details, and select the "Access Control" tab;
-* select the "SSL" sub-tab;
-* select the option to require that all connections use SSL;
-* click on the button "Create a Client Certificate", and download all
-  certificates and keys; there should be three: the server CA, and the client
-  key and client certificate.
+1. create a new "2nd generation" CloudSQL instance;
+2. go to the instance details, and select the "Access Control" tab;
+3. select the "SSL" sub-tab;
+4. select the option to require that all connections use SSL;
+5. click on the button "Create a Client Certificate", and download all
+   certificates and keys; there should be three: the server CA, and the client
+   key and client certificate;
+6. now select the "Users" sub-tab (still within the "Access Control" tab),
+   and change the root password;
+7. select the "Authorisation" sub-tab (still within the "Access Control" tab),
+   and authorize a network for accessing the instance.
 
+Create a database named `Tekuma_artworkdb`, and then enter initial data from
+tests/initdb.sql in the sourcetree.
 ```sh
 mysql -uroot '--password=PASSPHRASE' --host=104.198.210.91 --ssl-cert=serv/cert/test-sql-client-cert.pem --ssl-key=serv/cert/test-sql-client-key.pem --ssl-ca=serv/cert/test-sql-server-ca.pem < tests/initdb.sql
 ```
