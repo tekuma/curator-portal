@@ -17,6 +17,8 @@ For the server-side,
 ```
 node serv/main.js
 ```
+which in a testing configuration will bind to port 3030, so in your browser you
+can GET https://127.0.0.1:3030
 
 ## Testing
 
