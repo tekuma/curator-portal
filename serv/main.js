@@ -1,4 +1,4 @@
-// artworks search server
+// artworks search server - main entry point
 //
 // Copyright 2016 Tekuma Inc.
 // All rights reserved.

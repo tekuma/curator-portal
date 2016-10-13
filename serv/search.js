@@ -1,3 +1,10 @@
+// artworks search server - routines for searching, db connection
+//
+// Copyright 2016 Tekuma Inc.
+// All rights reserved.
+// created by Scott C. Livingston
+
+
 var mysql = require('mysql');
 exports.connectdb = (dbconf) => {
     if (dbconf.ssl) {
