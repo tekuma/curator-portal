@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "testserv": "mocha tests/serv",
     "build": "webpack",
     "start": "webpack-dev-server",
     "lint": "jscs"
@@ -60,6 +61,7 @@
     "helmet": "^2.2.0",
     "jscs": "^3.0.7",
     "json-loader": "^0.5.4",
+    "mocha": "^3.1.2",
     "mysql": "^2.11.1",
     "npm-install-webpack-plugin": "^4.0.3",
     "raw-loader": "^0.5.1",
