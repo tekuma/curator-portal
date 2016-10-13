@@ -7,19 +7,20 @@
 
 var fs = require('fs');
 var mysql = require('mysql');
+var db;
 exports.connectdb = (dbconf) => {
     if (dbconf.ssl) {
         dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
         dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
         dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
     }
-    var db = mysql.createConnection(dbconf);
+    db = mysql.createConnection(dbconf);
     db.connect();
     console.log('Connected to MySQL database.');
     return db;
 }
 
-exports.q = (db, query) => {
+exports.q = (query) => {
     console.log('Received search query:', query);
     if (query) {
         return (new Promise(function(resolve, reject) {

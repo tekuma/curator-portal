@@ -22,7 +22,7 @@ app.use(helmet());
 const servconf = require('./server-config.json');
 const search = require('./search.js');
 const dbconf = require(servconf.artworkdb);
-var db = search.connectdb(dbconf);
+search.connectdb(dbconf);
 
 app.get('/search', function (req, res) {
     if (!req.query.auth) {
@@ -31,7 +31,7 @@ app.get('/search', function (req, res) {
     } else {
 
         firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
-            search.q( db, req.query.q ).then(function(rows) {
+            search.q( req.query.q ).then(function(rows) {
                 res.json({rows: rows});
             });
         }).catch(function(error) {
