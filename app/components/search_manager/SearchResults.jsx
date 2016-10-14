@@ -1,6 +1,9 @@
 import React from 'react';
 import firebase from 'firebase';
 
+import CurationHeader from '../headers/CurationHeader';
+import HamburgerIcon  from '../headers/HamburgerIcon';
+
 export default class SearchResults extends React.Component {
     state = {
         results: []
@@ -15,14 +18,18 @@ export default class SearchResults extends React.Component {
     }
 
     render() {
-        return (
-            <section className="search-results"><div>
-                <ul>{this.state.results.map(row =>
-                    <li><span id="artist">{row.artist}</span>
-                    <span id="title">{row.title}</span></li>)}
-                </ul>
-            </div></section>
+        return(
+            <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                <CurationHeader
+                    setQueryString={this.props.setQueryString}
+                />
+                <div
+                    onClick     ={this.toggleNav}
+                    onTouchTap  ={this.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+            </div>
         );
+
     }
 
     componentDidMount() {

@@ -39,26 +39,22 @@ export default class App extends React.Component {
     render() {
         return(
             <div>
+                <HiddenNav
+                    navIsOpen      ={this.state.navIsOpen}
+                    changeAppLayout={this.changeAppLayout} />
                 <HamburgerIcon
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
-                <div className={this.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
-                    <HiddenNav
-                        user           ={this.state.user}
-                        navIsOpen      ={this.state.navIsOpen}
-                        changeAppLayout={this.changeAppLayout} />
-                </div>
+
                 <SearchResults
                     queryString={this.state.queryString}
+                    setQueryString={this.setQueryString }
+                    navIsOpen={this.state.navIsOpen}
                 />
                 <SearchManager
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}
                  />
-                 <CurationHeader
-                     setQueryString={this.setQueryString}
-                 />
-
             </div>
         );
     }
@@ -116,13 +112,11 @@ export default class App extends React.Component {
     changeAppLayout = (view) => {
         if(this.state.navIsOpen) {
             this.setState({
-                currentAppLayout: view,
                 navIsOpen: false,
                 managerIsOpen: true
             });
         } else {
             this.setState({
-                currentAppLayout: view,
                 managerIsOpen: true
             });
         }
