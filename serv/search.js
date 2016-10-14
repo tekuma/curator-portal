@@ -28,7 +28,7 @@ exports.q = (query) => {
     if (query) {
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
-            db.query('SELECT * FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?',
+            db.query('SELECT artist, title, description, tags, origin, thumbnail_url FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?',
                      [ex, ex],
                      function (err, rows, fields) {
                          if (err) throw err;
