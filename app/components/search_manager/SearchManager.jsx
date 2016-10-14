@@ -6,9 +6,9 @@ import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 import update                       from 'react-addons-update';
 
 // Files
-import SearchAccordion                       from './SearchAccordion.jsx';
-import SearchHints                       from './SearchHints.jsx';
-import SearchToggler                 from './SearchToggler.jsx';
+import SearchAccordion              from './SearchAccordion.jsx';
+import SearchHints                  from './SearchHints.jsx';
+import SearchToggler                from './SearchToggler.jsx';
 
 /**
  * TODO

@@ -13,6 +13,8 @@ import ArtworkManager from '../artwork_manager/ArtworkManager';
 import Artwork        from '../artwork_manager/Artwork';
 import SearchManager  from '../search_manager/SearchManager';
 import SearchResults  from '../search_manager/SearchResults';
+import HamburgerIcon  from '../headers/HamburgerIcon';
+import HiddenNav      from '../nav/HiddenNav';
 
 /**
  * a
@@ -20,7 +22,10 @@ import SearchResults  from '../search_manager/SearchResults';
 export default class App extends React.Component {
     state = {
         managerIsOpen: true,
-        queryString: ""
+        queryString  : "",
+        navIsOpen    : false,
+        user         : {},
+
     };
 
     constructor(props) {
@@ -34,15 +39,24 @@ export default class App extends React.Component {
     render() {
         return(
             <div>
-                <CurationHeader
-                    setQueryString={this.setQueryString}
-                />
+                <HamburgerIcon
+                    toggleNav={this.toggleNav}
+                    navIsOpen={this.state.navIsOpen} />
+                <div className={this.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                    <HiddenNav
+                        user           ={this.state.user}
+                        navIsOpen      ={this.state.navIsOpen}
+                        changeAppLayout={this.changeAppLayout} />
+                </div>
                 <SearchResults
                     queryString={this.state.queryString}
                 />
                 <SearchManager
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}
+                 />
+                 <CurationHeader
+                     setQueryString={this.setQueryString}
                  />
 
             </div>
@@ -62,6 +76,11 @@ export default class App extends React.Component {
             }
         });
 
+        // Set user object
+        // this.setState({
+        //
+        // });
+
     }
 
     componentWillUnmount() {
@@ -74,10 +93,50 @@ export default class App extends React.Component {
         this.setState({});
     }
 
+    /**
+     * This method is used by the Hamburger Icon component to
+     * toggle the boolean value of this.state.navIsOpen
+     * to change the state of the Hidden Navigation component
+     * from open to closed.
+     */
+    toggleNav = () => {
+        this.setState({
+            navIsOpen: !this.state.navIsOpen,
+            managerIsOpen: true
+        });
+    };
+
+    /**
+     * This method is used by the HiddenNav component and PostAuthHeader component
+     * to switch the the layout currently being displayed in the Root App Layout component
+     * by changing this.state.currentAppLayout.
+     * The value can be: Views.UPLOAD, Views.ARTWORKS, and Views.PROFILE
+     * @param  {[A field of the Views object]} view [View to be displayed]
+     */
+    changeAppLayout = (view) => {
+        if(this.state.navIsOpen) {
+            this.setState({
+                currentAppLayout: view,
+                navIsOpen: false,
+                managerIsOpen: true
+            });
+        } else {
+            this.setState({
+                currentAppLayout: view,
+                managerIsOpen: true
+            });
+        }
+    }
+
+    /**
+     * [setQueryString description]
+     * @param {[type]} input [description]
+     */
     setQueryString = (input) => {
         console.log(">>> Updating query string:", input);
         this.setState({queryString:input});
     }
+
     /**
      * This method is used by the Search Manager Toggler element
      * to toggle the boolean value of this.state.managerIsOpen
