@@ -1,9 +1,11 @@
-import React from 'react';
+import React    from 'react';
 import firebase from 'firebase';
+
+import ArtworkManager from '../artwork_manager/ArtworkManager';
 
 export default class SearchResults extends React.Component {
     state = {
-        results: []
+        results: ["thing1","thing2"] //TODO remove 
     }
 
     constructor(props) {
@@ -11,25 +13,32 @@ export default class SearchResults extends React.Component {
     }
 
     componentWillMount() {
-
+        console.log("-----SearchResults");
     }
 
     render() {
         return (
-            <section className="search-results"><div>
-                <ul>{this.state.results.map(row =>
-                    <li><span id="artist">{row.artist}</span>
-                    <span id="title">{row.title}</span></li>)}
-                </ul>
-            </div></section>
+            <ArtworkManager
+                results = {this.state.results}
+                managerIsOpen={this.props.managerIsOpen}
+            />
         );
     }
 
+    /*
+    <section className="search-results"><div>
+        <ul>{this.state.results.map(row =>
+            <li><span id="artist">{row.artist}</span>
+            <span id="title">{row.title}</span></li>)}
+        </ul>
+    </div></section>
+     */
+
     componentDidMount() {
+        console.log("+++++SearchResults");
     }
 
     componentWillReceiveProps(updates){
-        console.log("=========");
         if (updates.queryString.length === 0) {
             return;
         }
