@@ -17,7 +17,7 @@ export default class Artwork extends React.Component {
 
     render() {
         let imageName = "0xDEADBEEF"; //TODO replace with results data from props
-        let imageURL  = "https://res.cloudinary.com/tekuma-io/image/fetch/f_auto,w_550/https://firebasestorage.googleapis.com/v0/b/art-uploads/o/portal%252FcacxZwqfArVzrUXD5tn1t24OlJJ2%252Fuploads%252F-KNiwWVqgSGDmyd1Prgw%3Falt%3Dmedia%26token%3D11370312-1f3b-4ced-981e-dad98fa26e36"
+        let imageURL = "https://pbs.twimg.com/profile_images/784738313034948608/kf8ZaTnU.jpg";
         return (
             <article
                 className="artwork">

@@ -57,12 +57,12 @@ export default class App extends React.Component {
         if (this.state.loggedIn) {
             return(
                 <PostAuth />
-            )
+            );
         } else {
             return(
                 <PreAuth
                     authenticateWithPassword={this.authenticateWithPassword} />
-            )
+            );
         }
     }
 

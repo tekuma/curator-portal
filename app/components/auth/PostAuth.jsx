@@ -13,8 +13,9 @@ import ArtworkManager from '../artwork_manager/ArtworkManager';
 import Artwork        from '../artwork_manager/Artwork';
 import SearchManager  from '../search_manager/SearchManager';
 import SearchResults  from '../search_manager/SearchResults';
-// import HamburgerIcon  from '../headers/HamburgerIcon';
-// import HiddenNav      from '../nav/HiddenNav';
+import HamburgerIcon  from '../headers/HamburgerIcon';
+import HiddenNav      from '../nav/HiddenNav';
+
 
 /**
  * a
@@ -39,17 +40,20 @@ export default class App extends React.Component {
     render() {
         return(
             <div>
+                <HiddenNav
+                    navIsOpen      ={this.state.navIsOpen}
+                    changeAppLayout={this.changeAppLayout} />
+                <HamburgerIcon
+                    toggleNav={this.toggleNav}
+                    navIsOpen={this.state.navIsOpen} />
                 <SearchResults
                     queryString={this.state.queryString}
-                    managerIsOpen={this.state.managerIsOpen}
-                />
-                <SearchManager
+                    setQueryString={this.setQueryString }
+                    navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}
-                 />
-                 <CurationHeader
-                     setQueryString={this.setQueryString}
-                 />
+                />
+
             </div>
         );
     }
@@ -107,13 +111,11 @@ export default class App extends React.Component {
     changeAppLayout = (view) => {
         if(this.state.navIsOpen) {
             this.setState({
-                currentAppLayout: view,
                 navIsOpen: false,
                 managerIsOpen: true
             });
         } else {
             this.setState({
-                currentAppLayout: view,
                 managerIsOpen: true
             });
         }

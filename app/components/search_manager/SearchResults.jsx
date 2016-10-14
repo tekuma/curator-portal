@@ -1,11 +1,16 @@
+// Dependencies
 import React    from 'react';
 import firebase from 'firebase';
-
+// Components
 import ArtworkManager from '../artwork_manager/ArtworkManager';
+import CurationHeader from '../headers/CurationHeader';
+import HamburgerIcon  from '../headers/HamburgerIcon';
+import SearchManager  from './SearchManager';
+
 
 export default class SearchResults extends React.Component {
     state = {
-        results: ["thing1","thing2"] //TODO remove 
+        results: ["thing1","thing2", "thing3"] //TODO remove
     }
 
     constructor(props) {
@@ -17,12 +22,26 @@ export default class SearchResults extends React.Component {
     }
 
     render() {
-        return (
-            <ArtworkManager
-                results = {this.state.results}
-                managerIsOpen={this.props.managerIsOpen}
-            />
+        return(
+            <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                <CurationHeader
+                    setQueryString={this.props.setQueryString}
+                />
+                <ArtworkManager
+                    results = {this.state.results}
+                    managerIsOpen={this.props.managerIsOpen}
+                />
+                <SearchManager
+                    managerIsOpen={this.props.managerIsOpen}
+                    toggleManager={this.props.toggleManager}
+                 />
+                <div
+                    onClick     ={this.toggleNav}
+                    onTouchTap  ={this.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+            </div>
         );
+
     }
 
     /*
