@@ -10,7 +10,7 @@ import SearchManager  from './SearchManager';
 
 export default class SearchResults extends React.Component {
     state = {
-        results: ["thing1","thing2", "thing3"] //TODO remove
+        results: []
     }
 
     constructor(props) {
