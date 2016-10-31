@@ -1,10 +1,10 @@
 // Libs
 import React     from 'react';
-import SearchBar from './SearchBar';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 
 // Files
-import Views from '../../constants/Views';
+import ProjectSelector from './ProjectSelector';
+import Views     from '../../constants/Views';
 
 /**
  * TODO
@@ -50,7 +50,7 @@ export default class PostAuthHeader extends React.Component {
                         </g>
                       </svg>
                 	</div>
-                    <SearchBar
+                    <ProjectSelector
                         setSearchTerm ={this.setSearchTerm}
                         setQueryString={this.props.setQueryString}
                          />

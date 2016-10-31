@@ -1046,6 +1046,7 @@ export default class SearchAccordion extends React.Component {
         super(props);
     }
 
+
     componentWillMount() {
         console.log("-----SearchAccordion");
     }

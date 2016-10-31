@@ -44,6 +44,11 @@ export default class App extends React.Component {
         loggedIn: false
     };
 
+    paths = {
+        projects : `projects/`,
+        paths    : `users/`
+    }
+
     constructor(props) {
         super(props);
     }
@@ -95,12 +100,70 @@ export default class App extends React.Component {
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
         .then( (thisUser) => {
             console.log(">Password Auth successful for:", thisUser.displayName);
+            this.checkReturningUser(thisUser);
         }).catch( (error) => {
             console.error(error);
             this.setState({
                 errors: this.state.errors.concat(error.message)
             });
         });
+    }
+
+    /**
+     * [checkReturningUser description]
+     * @param  {[type]} user [description]
+     * @return {[type]}      [description]
+     */
+    checkReturningUser = (user) => {
+        let uid = firebase.auth().currentUser.uid;
+        let allUIDs = firebase.database().ref(this.paths.users).once('value', (snapshot)=>{
+            if (!snapshot.hasChild(uid)) {
+                this.createNewUser(user);
+            }
+        })
+    }
+
+    /**
+     * TODO
+     * @param  {[type]} user [description]
+     * @return {[type]}      [description]
+     */
+    createNewUser = (user) => {
+        // Create an initial projec
+        let projectID =  this.createNewProject();
+        console.log(">>>> ID", projectID);
+        let projects = [projectID];
+        let child = {
+            email       : user.email,
+            display_name: user.displayName,
+            uid         : user.uid,
+            projects    : projects
+        };
+        let uid = user.uid;
+        const userPath = `users/${uid}`;
+        firebase.database().ref(userPath).set(child);
+    }
+
+    /**
+     * Create a new project in the database
+     * @return {String} [the project ID]
+     */
+    createNewProject = () => {
+        let projectsRef = firebase.database().ref(this.paths.projects);
+        let projectRef  = projectsRef.push();
+        let projectID   =  projectRef.key;
+        let project = {
+            id     : projectID,
+            name   : "New Project",
+            curator: firebase.auth().currentUser.uid,
+            created: new Date().toISOString()
+        };
+
+
+        projectRef.set(project, ()=>{
+            console.log(`>>Project: ${projectID} created.`);
+        });
+        return projectID;
     }
 
     rerender = () => {

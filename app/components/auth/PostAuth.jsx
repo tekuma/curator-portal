@@ -12,7 +12,7 @@ import CurationHeader from '../headers/CurationHeader';
 import ArtworkManager from '../artwork_manager/ArtworkManager';
 import Artwork        from '../artwork_manager/Artwork';
 import SearchManager  from '../search_manager/SearchManager';
-import SearchResults  from '../search_manager/SearchResults';
+import SearchMain  from '../search_manager/SearchMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 
@@ -46,7 +46,7 @@ export default class App extends React.Component {
                 <HamburgerIcon
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
-                <SearchResults
+                <SearchMain
                     queryString={this.state.queryString}
                     setQueryString={this.setQueryString }
                     navIsOpen={this.state.navIsOpen}
