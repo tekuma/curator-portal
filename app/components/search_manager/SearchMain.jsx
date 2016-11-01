@@ -9,7 +9,10 @@ import SearchManager  from './SearchManager';
 
 export default class SearchMain extends React.Component {
     state = {
-        results: ["thing1","thing2", "thing3"] //TODO remove
+        results       : ["thing1","thing2", "thing3"],          //TODO replace with firebase calls
+        projects      : ["New Project", "84 Winter St", "GRT"], //TODO
+        currentProject: ""
+
     }
 
     constructor(props) {
@@ -24,7 +27,9 @@ export default class SearchMain extends React.Component {
         return(
             <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                 <CurationHeader
-                    setQueryString={this.props.setQueryString}
+                    currentProject={this.state.currentProject}
+                    changeProject={this.changeProject}
+                    projects={this.state.projects}
                 />
                 <ArtworkManager
                     results = {this.state.results}
@@ -69,4 +74,16 @@ export default class SearchMain extends React.Component {
             });
         }).catch(function(err) {});
     }
+
+    // =============== Methods =====================
+
+    /**
+     * Updates the value of this.state.currentProject
+     * @param  {String} newName [name of new current project]
+     */
+    changeProject = (newName) => {
+        this.setState({currentProject:newName});
+        console.log("Updated project to ->", newName);
+    }
+
 }

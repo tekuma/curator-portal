@@ -17,7 +17,7 @@ export default class Artwork extends React.Component {
 
     render() {
         let imageName = "0xDEADBEEF"; //TODO replace with results data from props
-        let imageURL = "https://pbs.twimg.com/profile_images/784738313034948608/kf8ZaTnU.jpg";
+        let imageURL = "https://pbs.twimg.com/profile_images/789881245631033345/HyA1_ENe.jpg";
         return (
             <article
                 className="artwork">

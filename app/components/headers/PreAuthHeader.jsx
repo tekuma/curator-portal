@@ -2,7 +2,6 @@
 import React     from 'react';
 
 // Files
-import SearchBar from './SearchBar';
 
 /**
  * TODO

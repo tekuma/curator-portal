@@ -23,52 +23,63 @@ export default class PostAuthHeader extends React.Component {
     }
 
     render() {
-        const searchTooltip = (
+
+        const addArtworkTooltip = (
             <Tooltip
-                id="search-tooltip"
+                id="add-artwork-tooltip"
                 className="tooltip">
-                Search artworks
+                Add Artworks to project..
             </Tooltip>
         );
 
         return (
             <div>
                 <header className="black">
-                	<div
-                        className="tekuma-logo"
-                  >
-                      <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
-                        <g>
+                	<div  className="tekuma-logo" >
+                        <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
                             <g>
-                                <rect x="56.8" y="57.4" width="886.3" height="886.3"/>
-                                <rect x="322.7" y="323.3" width="354.5" height="354.5"/>
-                                <line x1="677.3" y1="323.3" x2="943.2" y2="57.4"/>
-                                <line x1="322.7" y1="323.3" x2="56.8" y2="57.4"/>
-                                <line x1="322.7" y1="677.9" x2="56.8" y2="943.8"/>
-                                <line x1="677.3" y1="677.9" x2="943.2" y2="943.8"/>
+                                <g>
+                                    <rect x="56.8" y="57.4" width="886.3" height="886.3"/>
+                                    <rect x="322.7" y="323.3" width="354.5" height="354.5"/>
+                                    <line x1="677.3" y1="323.3" x2="943.2" y2="57.4"/>
+                                    <line x1="322.7" y1="323.3" x2="56.8" y2="57.4"/>
+                                    <line x1="322.7" y1="677.9" x2="56.8" y2="943.8"/>
+                                    <line x1="677.3" y1="677.9" x2="943.2" y2="943.8"/>
+                                </g>
                             </g>
-                        </g>
-                      </svg>
+                        </svg>
                 	</div>
-                    <ProjectSelector
-                        setSearchTerm ={this.setSearchTerm}
-                        setQueryString={this.props.setQueryString}
-                         />
-                    <OverlayTrigger placement="bottom" overlay={searchTooltip}>
-                	       <div className="header-icons search">
-                                <div
-                                    onClick={this.search}>
-                                    <img
-                                        onClick={this.search}
-                                        id="search-icon"
-                                        src="assets/images/icons/search.svg" />
-                                </div>
-            	           </div>
-                    </OverlayTrigger>
-            	</header>
+                    <div className="project-selector-containter">
+                    <div className="project-selector">
+                        <ProjectSelector
+                            currentProject={this.props.currentProject}
+                            changeProject={this.props.changeProject}
+                            projects={this.props.projects}
+                        />
+                    </div>
+                    </div>
+
+                    <div className="header-icons">
+                        <OverlayTrigger placement="bottom" overlay={addArtworkTooltip}>
+                             <div
+                                 className="header-icon"
+
+                                >
+                                 <img src='assets/images/icons/plus-pink.svg' />
+                             </div>
+                        </OverlayTrigger>
+
+
+                    </div>
+
+        	</header>
             </div>
         );
     }
+    //
+    ///
+    ///                             onClick={}
+                                // onTouchTap={}
 
     componentDidMount() {
         console.log("+++++CurationHeader");

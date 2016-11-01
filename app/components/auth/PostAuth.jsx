@@ -1,6 +1,3 @@
-/*
- */
-
 // Libs
 import React              from 'react';
 import Snackbar           from 'material-ui/Snackbar';
@@ -12,7 +9,7 @@ import CurationHeader from '../headers/CurationHeader';
 import ArtworkManager from '../artwork_manager/ArtworkManager';
 import Artwork        from '../artwork_manager/Artwork';
 import SearchManager  from '../search_manager/SearchManager';
-import SearchMain  from '../search_manager/SearchMain';
+import SearchMain     from '../search_manager/SearchMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 
