@@ -55,7 +55,7 @@ export default class LandingPage extends React.Component {
 
                             </div>
                             <form className="signup-form page-1">
-                                <h2 className="separator"><span>or</span></h2>
+                                <h2 className="separator"><span>   Curator    </span></h2>
                                 <div className="top-form">
                                     <ul>
                                         <li id="email-landing">
@@ -107,8 +107,6 @@ export default class LandingPage extends React.Component {
 
     componentDidMount() {
         console.log('+++++LandingPage');
-        console.log(this.props);
-
     }
 
     componentWillReceiveProps(nextProps) {
@@ -137,7 +135,7 @@ onLogin = (e) => {
         this.state.errors.push("Please enter an email address.");
     } else if(!/.+@.+\..+/.test(email)) {
         this.state.errors.push("The email address you supplied is invalid.");
-    }
+e   }
 
     if(password.length == 0) {
         this.state.errors.push("Please enter your password.");
