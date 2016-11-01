@@ -8,7 +8,7 @@ import SearchManager  from './SearchManager';
 
 
 export default class SearchMain extends React.Component {
-    state = {``
+    state = {
         results       : ["thing1","thing2", "thing3"],          //TODO replace with firebase calls
         projects      : ["New Project", "84 Winter St", "GRT"], //TODO
         currentProject: ""

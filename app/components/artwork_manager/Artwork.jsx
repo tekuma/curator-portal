@@ -1,10 +1,10 @@
 // Libs
 import React    from 'react';
 import firebase from 'firebase';
-import {DragSource, DropTarget} from 'react-dnd';
+import {DragSource, DropTarget}  from 'react-dnd';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 
-// Files
+
 
 export default class Artwork extends React.Component {
     constructor(props) {
@@ -16,20 +16,27 @@ export default class Artwork extends React.Component {
     }
 
     render() {
-        let imageName = "0xDEADBEEF"; //TODO replace with results data from props
-        let imageURL = "https://pbs.twimg.com/profile_images/789881245631033345/HyA1_ENe.jpg";
+        let imageName;
+        let imageURL;
+        if (this.props.result.thumbnail_url){
+            imageURL = this.props.result.thumbnail_url;
+        } else {
+            imageURL = "https://pbs.twimg.com/profile_images/789881245631033345/HyA1_ENe.jpg";
+        }
+        if (this.props.result.title) {
+            imageName = this.props.result.title;
+        } else {
+            imageName = "0xDEADBEEF";
+        }
 
         return (
             <article
                 className="artwork">
-                <div
-                    className="artwork-image"
-
-                    >
-                    <img src={this.props.result.thumbnail_url} />
+                <div className="artwork-image">
+                    <img src={imageURL} />
                 </div>
                 <div className="artwork-info review">
-                    <h3 className="artwork-name review"> {this.props.result.title} </h3>
+                    <h3 className="artwork-name review"> {imageName} </h3>
                 </div>
             </article>
         );
