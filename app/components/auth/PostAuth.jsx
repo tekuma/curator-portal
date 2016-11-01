@@ -1,8 +1,8 @@
 // Libs
-import React              from 'react';
-import Snackbar           from 'material-ui/Snackbar';
-import getMuiTheme        from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider   from 'material-ui/styles/MuiThemeProvider';
+import React                from 'react';
+import Snackbar             from 'material-ui/Snackbar';
+import getMuiTheme          from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
 // Files
 import CurationHeader from '../headers/CurationHeader';
@@ -15,9 +15,9 @@ import HiddenNav      from '../nav/HiddenNav';
 
 
 /**
- * a
+ * Component Rendered following successful log in.
  */
-export default class App extends React.Component {
+export default class PostAuth extends React.Component {
     state = {
         managerIsOpen: true,
         queryString  : "",
@@ -38,7 +38,7 @@ export default class App extends React.Component {
         return(
             <div>
                 <HiddenNav
-                    navIsOpen      ={this.state.navIsOpen}
+                    navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
                 <HamburgerIcon
                     toggleNav={this.toggleNav}
@@ -48,9 +48,7 @@ export default class App extends React.Component {
                     setQueryString={this.setQueryString }
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager}
-                />
-
+                    toggleManager={this.toggleManager}  />
             </div>
         );
     }
@@ -58,20 +56,6 @@ export default class App extends React.Component {
     componentDidMount() {
         console.log("++++++PostAuth");
         window.addEventListener("resize", this.rerender);
-
-        //LISTENER: listen for auth state changes
-        firebase.auth().onAuthStateChanged( (currentUser)=>{
-            if (currentUser) {
-                this.setState({loggedIn: true});
-            } else {
-                this.setState({loggedIn: false});
-            }
-        });
-
-        // Set user object
-        // this.setState({
-        //
-        // });
 
     }
 
@@ -81,6 +65,9 @@ export default class App extends React.Component {
 
 // ============= Methods ===============
 
+    /**
+     * Helper method to force a re-rendering of this component
+     */
     rerender = () => {
         this.setState({});
     }
@@ -139,4 +126,4 @@ export default class App extends React.Component {
         });
     };
 
-}//END App
+}

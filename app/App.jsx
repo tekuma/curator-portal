@@ -37,7 +37,7 @@ import PostAuth from './components/auth/PostAuth';
 
 
 /**
- * a
+ * Root of App
  */
 export default class App extends React.Component {
     state = {
@@ -109,23 +109,27 @@ export default class App extends React.Component {
     }
 
     /**
-     * [checkReturningUser description]
-     * @param  {[type]} user [description]
-     * @return {[type]}      [description]
+     * This method checks if a user's data structure has been initiated in the
+     * Firebase Database. If not, it is created; else, does nothing.
+     * @param  {Object} user firebase user object
+     * @return {Boolean}      if a returning user
      */
     checkReturningUser = (user) => {
         let uid = firebase.auth().currentUser.uid;
         let allUIDs = firebase.database().ref(this.paths.users).once('value', (snapshot)=>{
             if (!snapshot.hasChild(uid)) {
                 this.createNewUser(user);
+                return false;
+            } else {
+                return true;
             }
+
         })
     }
 
     /**
-     * TODO
+     * Initializes the user in the Firebase Database datastructure
      * @param  {[type]} user [description]
-     * @return {[type]}      [description]
      */
     createNewUser = (user) => {
         // Create an initial projec
@@ -165,6 +169,9 @@ export default class App extends React.Component {
         return projectID;
     }
 
+    /**
+     * Helper method to force a re-rending of this component
+     */
     rerender = () => {
         this.setState({});
     }

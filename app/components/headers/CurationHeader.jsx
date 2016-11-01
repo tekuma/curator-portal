@@ -1,13 +1,12 @@
 // Libs
 import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
-
 // Files
 import ProjectSelector from './ProjectSelector';
-import Views     from '../../constants/Views';
+import Views           from '../../constants/Views';
 
 /**
- * TODO
+ * CurationHeader is omnipresent in the portal once the user is authenticated.
  */
 export default class PostAuthHeader extends React.Component {
     state = {
@@ -76,10 +75,10 @@ export default class PostAuthHeader extends React.Component {
             </div>
         );
     }
-    //
-    ///
-    ///                             onClick={}
-                                // onTouchTap={}
+
+    //TODO: Add functionality to the '+' button with:
+    // onClick={}
+    // onTouchTap={}
 
     componentDidMount() {
         console.log("+++++CurationHeader");
@@ -91,6 +90,9 @@ export default class PostAuthHeader extends React.Component {
 
     // ------------ METHODS -------------
 
+    /**
+     *  Deprecated. FIXME remove method.
+     */
     setSearchTerm = (searchTerm) => {
         this.setState({
             searchTerm: searchTerm
