@@ -18,6 +18,7 @@ export default class Artwork extends React.Component {
     render() {
         let imageName = "0xDEADBEEF"; //TODO replace with results data from props
         let imageURL = "https://pbs.twimg.com/profile_images/789881245631033345/HyA1_ENe.jpg";
+
         return (
             <article
                 className="artwork">
@@ -25,10 +26,10 @@ export default class Artwork extends React.Component {
                     className="artwork-image"
 
                     >
-                    <img src={imageURL} />
+                    <img src={this.props.result.thumbnail_url} />
                 </div>
                 <div className="artwork-info review">
-                    <h3 className="artwork-name review"> {imageName} </h3>
+                    <h3 className="artwork-name review"> {this.props.result.title} </h3>
                 </div>
             </article>
         );
