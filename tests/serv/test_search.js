@@ -9,8 +9,14 @@ describe('search', function() {
     before('Opening database connection', function() {
         var db = search.connectdb(dbconf, 'sqlite3');
         db.serialize(function () {
-            db.run('CREATE TABLE artworks (artist TEXT, title TEXT, description TEXT, date_of_addition DATETIME, artist_uid CHAR(255), artwork_uid CHAR(255), date_of_creation DATETIME, tags TEXT, thumbnail_url CHAR(255), origin CHAR(32), reverse_lookup CHAR(255), META TEXT)');
-            var insert_template = db.prepare('INSERT INTO artworks (artist, title, tags) VALUES (?, ?, ?)');
+            db.run('CREATE TABLE artworks ' +
+                   '(artist TEXT, title TEXT, description TEXT,' +
+                   ' date_of_addition DATETIME, artist_uid CHAR(255),' +
+                   ' artwork_uid CHAR(255), date_of_creation DATETIME,' +
+                   ' tags TEXT, thumbnail_url CHAR(255), origin CHAR(32),' +
+                   ' reverse_lookup CHAR(255), META TEXT)');
+            var insert_template = db.prepare('INSERT INTO artworks ' +
+                                             '(artist, title, tags) VALUES (?, ?, ?)');
             insert_template.run(['Scott', 'deadbeef', '32bit,Intel']);
             insert_template.run(['Scott', 'f00f', 'hex']);
             insert_template.finalize();
