@@ -42,6 +42,10 @@ exports.connectdb = (dbconf, provider) => {
     return db;
 }
 
+exports.provider = () => {
+    return db_provider;
+}
+
 exports.disconnectdb = () => {
     if (db_provider === 'mysql') {
         db.end();
