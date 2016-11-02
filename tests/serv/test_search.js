@@ -6,7 +6,7 @@ const dbconf = require('../testdbconf.json');
 
 describe('search', function() {
 
-    beforeEach('Opening database connection', function() {
+    before('Opening database connection', function() {
         var db = search.connectdb(dbconf, 'sqlite3');
         db.serialize(function () {
             db.run('CREATE TABLE artworks (artist TEXT, title TEXT, description TEXT, date_of_addition DATETIME, artist_uid CHAR(255), artwork_uid CHAR(255), date_of_creation DATETIME, tags TEXT, thumbnail_url CHAR(255), origin CHAR(32), reverse_lookup CHAR(255), META TEXT)');
@@ -16,7 +16,7 @@ describe('search', function() {
             insert_template.finalize();
         });
     });
-    afterEach('Closing database connection', function() {
+    after('Closing database connection', function() {
         search.disconnectdb();
     });
 
