@@ -57,11 +57,6 @@ exports.disconnectdb = () => {
 exports.q = (query) => {
     console.log('Received search query:', query);
     if (query) {
-        if (db_provider === 'mysql') {
-            var query_method = db.query;
-        } else {  // === 'sqlite'
-            var query_method = db.all;
-        }
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
             var sql_template = 'SELECT ' +
