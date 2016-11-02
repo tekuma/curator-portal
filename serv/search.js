@@ -60,7 +60,10 @@ exports.q = (query) => {
         }
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
-            var sql_template = 'SELECT artist, title, description, tags, origin, thumbnail_url FROM `artworks` WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?';
+            var sql_template = 'SELECT ' +
+                'artist, title, description, tags, origin, thumbnail_url ' +
+                'FROM `artworks` ' +
+                'WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?';
 
             if (db_provider === 'mysql') {
                 db.query(sql_template,
