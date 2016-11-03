@@ -20,6 +20,7 @@ exports.connectdb = (dbconf, provider) => {
 
         var sqlite3 = require('sqlite3');
         db = new sqlite3.Database(':memory:');
+        console.log('Connected to SQLite in-memory database.');
 
     } else if (provider.toLowerCase() === 'mysql') {
         provider = 'mysql';  // Normalize provider name
