@@ -1,4 +1,4 @@
-var assert = require('assert');
+const assert = require('assert');
 
 const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');

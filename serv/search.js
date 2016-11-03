@@ -5,7 +5,7 @@
 // created by Scott C. Livingston
 
 
-var fs = require('fs');
+const fs = require('fs');
 var db_provider
 var db;
 

@@ -4,19 +4,19 @@
 // All rights reserved.
 // created by Scott C. Livingston
 
-var firebase = require('firebase');
+const firebase = require('firebase');
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
     serviceAccount: require('./cert/curator-tekuma.json')
 });
 
-var fs = require('fs');
+const fs = require('fs');
 
-var https = require('https');
-var express = require('express');
+const https = require('https');
+const express = require('express');
 var app = express();
 
-var helmet = require('helmet');
+const helmet = require('helmet');
 app.use(helmet());
 
 const servconf = require('./server-config.json');
