@@ -1,4 +1,6 @@
 const assert = require('assert');
+const fs = require('fs');
+const readline = require('readline');
 
 const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
@@ -15,17 +17,20 @@ describe('search', function() {
         }
         if (search.provider() === 'sqlite') {
             db.serialize(function () {
-                db.run('CREATE TABLE artworks ' +
-                       '(artist TEXT, title TEXT, description TEXT,' +
-                       ' date_of_addition DATETIME, artist_uid CHAR(255),' +
-                       ' artwork_uid CHAR(255), date_of_creation DATETIME,' +
-                       ' tags TEXT, thumbnail_url CHAR(255), origin CHAR(32),' +
-                       ' reverse_lookup CHAR(255), META TEXT)');
-                var insert_template = db.prepare('INSERT INTO artworks ' +
-                                                 '(artist, title, tags) VALUES (?, ?, ?)');
-                insert_template.run(['Scott', 'deadbeef', '32bit,Intel']);
-                insert_template.run(['Scott', 'f00f', 'hex']);
-                insert_template.finalize();
+                const fd = fs.openSync('conf/initdb.sql', 'r');
+                const initdb_istream = fs.createReadStream(null, {fd: fd})
+                const rl = readline.createInterface({input: initdb_istream});
+                rl.on('line', (line) => {
+                    db.run(line);
+                }).on('close', () => {
+
+                    var insert_template = db.prepare('INSERT INTO artworks ' +
+                                                     '(uid, title) VALUES (?, ?)');
+                    insert_template.run(['deadbeef', '4 beef']);
+                    insert_template.run(['f00fba4', 'frozzle']);
+                    insert_template.finalize();
+
+                });
             });
         }
     });

@@ -60,20 +60,20 @@ exports.q = (query) => {
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
             var sql_template = 'SELECT ' +
-                'artist, title, description, tags, origin, thumbnail_url ' +
+                'title, description, origin, thumbnail_url ' +
                 'FROM `artworks` ' +
-                'WHERE LOWER(`artist`) LIKE ? OR LOWER(`title`) LIKE ?';
+                'WHERE LOWER(`title`) LIKE ?';
 
             if (db_provider === 'mysql') {
                 db.query(sql_template,
-                     [ex, ex],
+                     [ex],
                      function (err, rows, fields) {
                          if (err) throw err;
                          resolve(rows);
                      });
             } else {
                 db.all(sql_template,
-                     [ex, ex],
+                     [ex],
                      function (err, rows, fields) {
                          if (err) throw err;
                          resolve(rows);
