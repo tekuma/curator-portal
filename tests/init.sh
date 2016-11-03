@@ -3,7 +3,7 @@ docker run -d -p 127.0.0.1:3306:3306 -e MYSQL_DATABASE=Tekuma_artworkdb -e MYSQL
 
 while true; do
     sleep 2
-    if mysql -uTekuma_searcher --password=deadbeef --host=127.0.0.1 < tests/initdb.sql; then
+    if echo 'use Tekuma_artworkdb;' | cat - tests/initdb.sql | mysql -uTekuma_searcher --password=deadbeef --host=127.0.0.1; then
         break
     fi
 done
