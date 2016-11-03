@@ -71,7 +71,7 @@ To get it, `docker pull mysql:latest`
 
 To initialize a local MySQL database in a Docker container for testing,
 
-    ./tests/init.sh
+    ./tests/init-dcontainer.sh
 
 and use the connection configuration in tests/testdbconf.json by changing
 server-config.json to point to the relevant remote testing database
