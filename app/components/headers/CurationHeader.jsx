@@ -10,7 +10,8 @@ import Views           from '../../constants/Views';
  */
 export default class PostAuthHeader extends React.Component {
     state = {
-        searchTerm: ""
+        searchTerm: "",
+        artworkBuffer: ["test art 1", "test art 2"]
     }
 
     constructor(props) {
@@ -62,7 +63,8 @@ export default class PostAuthHeader extends React.Component {
                         <OverlayTrigger placement="bottom" overlay={addArtworkTooltip}>
                              <div
                                  className="header-icon"
-
+                                 onClick={this.handleProjectAdditions}
+                                 onTouchTap={this.handleProjectAdditions}
                                 >
                                  <img src='assets/images/icons/plus-pink.svg' />
                              </div>
@@ -77,8 +79,7 @@ export default class PostAuthHeader extends React.Component {
     }
 
     //TODO: Add functionality to the '+' button with:
-    // onClick={}
-    // onTouchTap={}
+
 
     componentDidMount() {
         console.log("+++++CurationHeader");
@@ -89,6 +90,11 @@ export default class PostAuthHeader extends React.Component {
     }
 
     // ------------ METHODS -------------
+
+    handleProjectAdditions = () => {
+        this.props.addArtworksToProject(this.state.artworkBuffer);
+        console.log(">>Art: ", this.state.artworkBuffer);
+    }
 
     /**
      *  Deprecated. FIXME remove method.

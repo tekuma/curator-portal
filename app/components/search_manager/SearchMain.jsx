@@ -11,7 +11,8 @@ export default class SearchMain extends React.Component {
     state = {
         results       : ["thing1","thing2", "thing3"],          //TODO replace with firebase calls
         projects      : ["New Project", "84 Winter St", "GRT"], //TODO
-        currentProject: ""
+        currentProject: "",
+        artworkBuffer : []
     }
 
     constructor(props) {
@@ -29,6 +30,7 @@ export default class SearchMain extends React.Component {
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
                     projects={this.state.projects}
+                    addArtworksToProject={this.addArtworksToProject}
                 />
                 <ArtworkManager
                     results = {this.state.results}
@@ -84,5 +86,29 @@ export default class SearchMain extends React.Component {
         this.setState({currentProject:newName});
         console.log("Updated project to ->", newName);
     }
+
+    /**
+     * Takes in artworks to be extended to existing artworks in current 'project'
+     * @param {[Array]} artworks [description]
+     */
+    addArtworksToProject = (updates) => {
+        console.log(">>adding artworks");
+        this.setState({artworkBuffer:updates});
+
+        //get current project ID
+        //make firebase calls
+        let projectID  = "-KUd7ZoWtuWtU4XGIgXA"; //FIXME replace with this.state.currentProejctID
+        let projectRef = `projects/${projectID}`
+        console.log(projectRef);
+        firebase.database().ref(projectRef).transaction((node)=>{
+            console.log(node);
+            node.artworks.push(updates);
+            return node;
+        },()=>{
+            console.log(">>Project Updated successfully");
+        });
+
+    }
+
 
 }
