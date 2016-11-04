@@ -4,19 +4,19 @@
 // All rights reserved.
 // created by Scott C. Livingston
 
-var firebase = require('firebase');
+const firebase = require('firebase');
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
     serviceAccount: require('./cert/curator-tekuma.json')
 });
 
-var fs = require('fs');
+const fs = require('fs');
 
-var https = require('https');
-var express = require('express');
+const https = require('https');
+const express = require('express');
 var app = express();
 
-var helmet = require('helmet');
+const helmet = require('helmet');
 app.use(helmet());
 
 const servconf = require('./server-config.json');
@@ -41,8 +41,6 @@ app.get('/search', function (req, res) {
 
     }
 });
-
-app.use('/', express.static('build'));
 
 
 https.createServer({ciphers:'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256',
