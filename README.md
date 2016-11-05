@@ -61,7 +61,7 @@ Go to the the Google Cloud project curator-tekuma, and perform the following:
 Create a database named `Tekuma_artworkdb`, and then enter initial data from
 tests/initdb.sql in the sourcetree.
 ```sh
-mysql -uroot '--password=PASSPHRASE' --host=104.198.210.91 --ssl-cert=serv/cert/test-sql-client-cert.pem --ssl-key=serv/cert/test-sql-client-key.pem --ssl-ca=serv/cert/test-sql-server-ca.pem < tests/initdb.sql
+mysql -uroot '--password=PASSPHRASE' --host=104.198.210.91 --ssl-cert=serv/cert/test-sql-client-cert.pem --ssl-key=serv/cert/test-sql-client-key.pem --ssl-ca=serv/cert/test-sql-server-ca.pem < conf/initdb.sql
 ```
 
 ### Creating a local MySQL database in a Docker container
