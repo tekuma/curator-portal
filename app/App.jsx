@@ -1,9 +1,9 @@
 /*
- *  Root of Artist.tekuma.io: Web framework build on
+ *  Root of curator.tekuma.io: Web framework build on
  *  Firebase+ReactJS, written in JS ES6 compiled with babelJS,
  *  Bundled with webpack and NPM.
- *  written for Tekuma Inc, summer 2016 by:
- *  Stephen White and Afika Nyati
+ *  written for Tekuma Inc, by
+ *  Stephen White, Afika Nyati, and Scott Livingston.
  */
 
 // Libs
@@ -60,7 +60,7 @@ export default class App extends React.Component {
     render() {
         if (this.state.loggedIn) {
             return(
-                <PostAuth />
+                <PostAuth/>
             );
         } else {
             return(

@@ -39,6 +39,7 @@ export default class SearchMain extends React.Component {
                 <SearchManager
                     managerIsOpen={this.props.managerIsOpen}
                     toggleManager={this.props.toggleManager}
+                    doQuery={this.doQuery}
                  />
                 <div
                     onClick     ={this.toggleNav}
@@ -55,15 +56,22 @@ export default class SearchMain extends React.Component {
     }
 
     componentWillReceiveProps(updates){
+
+    }
+
+    // =============== Methods =====================
+
+    /**
+     * [doQuery description] TODO
+     * @param  {[type]} queryString [description]
+     * @return {[type]}             [description]
+     */
+    doQuery = (queryString) => {
         if (updates.queryString.length === 0) {
             return;
         }
 
-        var updateResultsList = (function(data) {
-            this.setState({results: data.rows});
-        }.bind(this));
-
-        firebase.auth().currentUser.getToken(true).then(function(idToken) {
+        firebase.auth().currentUser.getToken(true).then( (idToken)=>{
             console.log(">> Query String:", updates.queryString);
             $.ajax({
                 url: ('search?q='
@@ -71,12 +79,22 @@ export default class SearchMain extends React.Component {
                       +'&auth='+String(idToken)),
                 dataType: 'json',
                 cache: false,
-                success: updateResultsList
+                success: this.updateResults
             });
-        }).catch(function(err) {});
+        }).catch((err)=>{
+            //pass
+        });
     }
 
-    // =============== Methods =====================
+    /**
+     * [updateResults description]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    updateResults = (data) => {
+        this.setState({results: data.rows});
+    }
+
 
     /**
      * Updates the value of this.state.currentProject

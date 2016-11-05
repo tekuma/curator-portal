@@ -9,6 +9,8 @@ import Select                       from 'react-select';
 import { WithContext as ReactTags } from 'react-tag-input';
 import uuid from 'node-uuid';
 
+// @Afika,  props has this.props.doQuery(queryString), which should be called on
+// key event by the search bar 
 
 export default class SearchAccordion extends React.Component {
     state = {
@@ -40,7 +42,7 @@ export default class SearchAccordion extends React.Component {
                 to: ""
             },
         },
-        suggestions: ["happy","sad", "sane", "elephant", "sunset"],
+        suggestions: ["happy","sad", "insane", "membrane", "hydrophilic"],
         htmlColors: [
            {
               "name":"Black",

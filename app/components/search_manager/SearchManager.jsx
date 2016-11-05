@@ -17,10 +17,10 @@ export default class SearchManager extends React.Component {
     state = {
         searchCategories: {
             artist: false,
-            tag: false,
-            title: false,
-            time: false,
-            color: false
+            tag   : false,
+            title : false,
+            time  : false,
+            color : false
         },
         accordion: {
             artist      : false,
@@ -93,6 +93,7 @@ export default class SearchManager extends React.Component {
                     <SearchAccordion
                         accordion={this.state.accordion}
                         toggleAccordion={this.toggleAccordion}
+                        doQuery={this.props.doQuery}
                         toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
                         <div
@@ -152,6 +153,7 @@ export default class SearchManager extends React.Component {
                     <SearchAccordion
                         accordion={this.state.accordion}
                         toggleAccordion={this.toggleAccordion}
+                        doQuery={this.props.doQuery}
                         toggleSearchCategory={this.toggleSearchCategory} />
                     <div className="search-tools">
                         <div
@@ -192,6 +194,10 @@ export default class SearchManager extends React.Component {
         });
     }
 
+    /**
+     * [toggleAllAccordion description]
+     * @return {[type]} [description]
+     */
     toggleAllAccordion = () => {
         let allAccordion = this.state.allAccordion;
 
