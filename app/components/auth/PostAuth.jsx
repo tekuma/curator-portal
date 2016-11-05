@@ -20,7 +20,6 @@ import HiddenNav      from '../nav/HiddenNav';
 export default class PostAuth extends React.Component {
     state = {
         managerIsOpen: true,
-        queryString  : "",
         navIsOpen    : false,
         user         : {},
 
@@ -44,8 +43,6 @@ export default class PostAuth extends React.Component {
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
                 <SearchMain
-                    queryString={this.state.queryString}
-                    setQueryString={this.setQueryString }
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}  />
@@ -105,14 +102,6 @@ export default class PostAuth extends React.Component {
         }
     }
 
-    /**
-     * [setQueryString description]
-     * @param {[type]} input [description]
-     */
-    setQueryString = (input) => {
-        console.log(">>> Updating query string:", input);
-        this.setState({queryString:input});
-    }
 
     /**
      * This method is used by the Search Manager Toggler element

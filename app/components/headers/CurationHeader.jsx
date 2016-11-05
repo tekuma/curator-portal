@@ -10,7 +10,7 @@ import Views           from '../../constants/Views';
  */
 export default class PostAuthHeader extends React.Component {
     state = {
-        searchTerm: "",
+        searchTerm   : "",
         artworkBuffer: ["test art 1", "test art 2"]
     }
 
@@ -78,8 +78,6 @@ export default class PostAuthHeader extends React.Component {
         );
     }
 
-    //TODO: Add functionality to the '+' button with:
-
 
     componentDidMount() {
         console.log("+++++CurationHeader");
@@ -96,13 +94,4 @@ export default class PostAuthHeader extends React.Component {
         console.log(">>Art: ", this.state.artworkBuffer);
     }
 
-    /**
-     *  Deprecated. FIXME remove method.
-     */
-    setSearchTerm = (searchTerm) => {
-        this.setState({
-            searchTerm: searchTerm
-        });
-        console.log("Here is the Search Term: ", this.state.searchTerm);
-    }
 }

@@ -87,9 +87,7 @@ export default class SearchMain extends React.Component {
     }
 
     /**
-     * [updateResults description]
-     * @param  {[type]} data [description]
-     * @return {[type]}      [description]
+     * updates the this.state.results to be data.rows
      */
     updateResults = (data) => {
         this.setState({results: data.rows});
@@ -107,20 +105,24 @@ export default class SearchMain extends React.Component {
 
     /**
      * Takes in artworks to be extended to existing artworks in current 'project'
-     * @param {[Array]} artworks [description]
+     * Note that this array acts as a Set, in that only unique elements should be
+     * allowed to appear. Duplicates are ignored, and order is un-important.
+     * @param {Array} artworks A list of artworks currently in the project.
      */
     addArtworksToProject = (updates) => {
-        console.log(">>adding artworks");
+        console.log(">>adding artworks", updates);
         this.setState({artworkBuffer:updates});
 
-        //get current project ID
-        //make firebase calls
         let projectID  = "-KUd7ZoWtuWtU4XGIgXA"; //FIXME replace with this.state.currentProejctID
         let projectRef = `projects/${projectID}`
-        console.log(projectRef);
+
         firebase.database().ref(projectRef).transaction((node)=>{
-            console.log(node);
-            node.artworks.push(updates);
+            if (!node.artworks) {
+                node.artworks = [];
+            }
+            let unique = new Set(node.artworks.concat(updates));
+            node.artworks = Array.from(unique);
+            console.log(node.artworks);
             return node;
         },()=>{
             console.log(">>Project Updated successfully");
