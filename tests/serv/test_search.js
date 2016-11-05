@@ -21,21 +21,21 @@ describe('search', function() {
 
         if (search.provider() === 'sqlite') {
             db.serialize(function () {
-                const fd = fs.openSync('conf/initdb.sql', 'r');
-                const initdb_istream = fs.createReadStream(null, {fd: fd})
-                const rl = readline.createInterface({input: initdb_istream});
-                rl.on('line', (line) => {
+                const initdb = fs.readFileSync('conf/initdb.sql',
+                                               {encoding: 'utf-8'});
+                initdb_lines = initdb.split('\n');
+                for (var i = 0; i < initdb_lines.length; i++) {
+                    var line = initdb_lines[i].trim();
+                    if (line.length === 0)
+                        continue;
                     db.run(line);
-                }).on('close', () => {
-
-                    var insert_template = db.prepare('INSERT INTO artworks ' +
-                                                     '(uid, title) VALUES (?, ?)');
-                    for (var i = 0; i < initial_data.length; i++) {
-                        insert_template.run(initial_data[i]);
-                    }
-                    insert_template.finalize();
-
-                });
+                }
+                var insert_template = db.prepare('INSERT INTO artworks ' +
+                                                 '(uid, title) VALUES (?, ?)');
+                for (var i = 0; i < initial_data.length; i++) {
+                    insert_template.run(initial_data[i]);
+                }
+                insert_template.finalize();
             });
             done();
         } else {  // === 'mysql'

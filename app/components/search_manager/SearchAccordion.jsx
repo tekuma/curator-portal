@@ -1077,6 +1077,18 @@ export default class SearchAccordion extends React.Component {
                 className="search-accordion-wrapper">
                 <article
                     className="search-accordion">
+                    <div id="search-bar">
+
+                         <input
+                             ref="searchTerm"
+                             className="search-input"
+                             placeholder="Search..."
+                             type="search" name="q" id="search"
+                             onKeyPress={this.doSearch}
+                             autoFocus={true}
+                         />
+
+                    </div>
                     <div
                         className={this.props.accordion.artist ? "accordion-item open" : "accordion-item"}
                         onClick={this.props.toggleAccordion.bind({},"artist")}>
@@ -1320,6 +1332,10 @@ export default class SearchAccordion extends React.Component {
     }
 
     // -------- METHODS ------------
+    doSearch = (e) => {
+        console.log('doSearch: '+this.refs.searchTerm.value);
+    }
+
     artistChange = (artist) => {
         this.setState({
             artist: artist
