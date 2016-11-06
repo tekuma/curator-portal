@@ -47,6 +47,24 @@ exports.provider = () => {
     return db_provider;
 }
 
+exports.initdb = () => {
+    if (db_provider === 'sqlite') {
+        db.serialize(function () {
+            const initdb = fs.readFileSync('conf/initdb.sql',
+                                           {encoding: 'utf-8'});
+            initdb_lines = initdb.split('\n');
+            for (let i = 0; i < initdb_lines.length; i++) {
+                let line = initdb_lines[i].trim();
+                if (line.length === 0)
+                    continue;
+                db.run(line);
+            }
+        });
+    } else {  // === 'mysql'
+
+    }
+}
+
 exports.disconnectdb = () => {
     if (db_provider === 'mysql') {
         db.end();

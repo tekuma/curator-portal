@@ -6,7 +6,6 @@
 
 
 const assert = require('assert');
-const fs = require('fs');
 const readline = require('readline');
 
 const search = require('../../serv/search.js');
@@ -27,16 +26,8 @@ describe('search', function() {
                               ['f00fba4', 'frozzle']];
 
         if (search.provider() === 'sqlite') {
+            search.initdb();
             db.serialize(function () {
-                const initdb = fs.readFileSync('conf/initdb.sql',
-                                               {encoding: 'utf-8'});
-                initdb_lines = initdb.split('\n');
-                for (var i = 0; i < initdb_lines.length; i++) {
-                    var line = initdb_lines[i].trim();
-                    if (line.length === 0)
-                        continue;
-                    db.run(line);
-                }
                 var insert_template = db.prepare('INSERT INTO artworks ' +
                                                  '(uid, title) VALUES (?, ?)');
                 for (var i = 0; i < initial_data.length; i++) {
