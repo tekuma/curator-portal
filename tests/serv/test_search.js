@@ -1,3 +1,10 @@
+// tests for search routines
+//
+// Copyright 2016 Tekuma Inc.
+// All rights reserved.
+// created by Scott C. Livingston
+
+
 const assert = require('assert');
 const fs = require('fs');
 const readline = require('readline');
