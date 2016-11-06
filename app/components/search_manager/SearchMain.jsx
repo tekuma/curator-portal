@@ -67,7 +67,7 @@ export default class SearchMain extends React.Component {
      * @return {[type]}             [description]
      */
     doQuery = (queryString) => {
-        if (updates.queryString.length === 0) {
+        if (queryString.length === 0) {
             return;
         }
 

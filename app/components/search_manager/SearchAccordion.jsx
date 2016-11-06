@@ -1101,7 +1101,7 @@ export default class SearchAccordion extends React.Component {
                         <input
                         type="text"
                         id="search-general"
-                        onChange={this.generalChange}
+                        onKeyPress={this.generalChange}
                         ref="general"
                         placeholder="Search by Artist, Title, ..."
                         autoCapitalize="off"
@@ -1351,9 +1351,6 @@ export default class SearchAccordion extends React.Component {
     }
 
     // -------- METHODS ------------
-    doSearch = (e) => {
-        console.log('doSearch: '+this.refs.searchTerm.value);
-    }
 
     artistChange = (artist) => {
         this.setState({
@@ -1368,19 +1365,23 @@ export default class SearchAccordion extends React.Component {
         }
     }
 
-    generalChange = () => {
-        let general = this.refs.general.value;
+    generalChange = (e) => {
+        if (e.key === "Enter") {
+            let general = this.refs.general.value;
+            console.log(">>",general);
+            this.setState({
+                general: general
+            });
+            
+            this.props.doQuery(general)
 
-        this.setState({
-            general: general
-        });
-
-        // Toggles Search Hint
-        if (general.length) {
-            this.props.toggleSearchCategory("general", true);
-            console.log("Set toggleSearchCategory")
-        } else {
-            this.props.toggleSearchCategory("general", false);
+            // Toggles Search Hint
+            if (general.length) {
+                this.props.toggleSearchCategory("general", true);
+                console.log("Set toggleSearchCategory")
+            } else {
+                this.props.toggleSearchCategory("general", false);
+            }
         }
     }
 
