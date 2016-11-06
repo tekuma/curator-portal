@@ -24,15 +24,22 @@ Now, GET https://127.0.0.1/ to interact with the development server.
 
 ## Testing
 
-There are several possibilities for creating or using a MySQL database for
-testing. During testing, it is critical not to use the production
-(a.k.a. deployed) database because insertions, deletions, and other table
-modifications. Each possibility that is currently supported is described below.
-
 To perform all tests on the server software,
 
     npm run testserv
 
+The default testing configuration does NOT require access to a MySQL
+database. Instead, an in-memory SQLite database is used. The database provider
+during testing can be chosen via the environment variable TEKUMA_TEST_DB. If it
+is not defined or `TEKUMA_TEST_DB=sqlite`, SQLite is used. To use MySQL (consult
+notes below about how to access various MySQL servers),
+
+    export TEKUMA_TEST_DB=mysql
+
+There are several possibilities for creating or using a MySQL database for
+testing.  During testing, it is critical not to use the production database
+because insertions, deletions, and other table modifications. Each possibility
+for MySQL servers that is currently supported during testing is described below.
 
 ### Using an existing remote database
 
