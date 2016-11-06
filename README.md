@@ -8,17 +8,19 @@ This project is in development. Clone, and run `npm install`.
 
 ## Development
 
-To start the development Web server that provides client-side code,
-```
-npm run start
-```
+To start the development Web server, use
 
-For the server-side,
-```
-node serv/main.js
-```
-which in a testing configuration will bind to port 3030, so in your browser you
-can GET https://127.0.0.1:3030
+    ./dev-spin.sh
+
+which depends on nginx to be installed on the development system. Instructions
+to obtain nginx are available at http://nginx.org/en/docs/install.html
+For testing, client-side code is provider by `webpack-dev-server`, which
+monitors app/ and automatically updates the output (no need to `npm run build`
+during development). As part of `dev-spin.sh`, the search process binds stdin,
+so you can stop it using Ctrl-C (also known as keyboard interrupt or SIGINT).
+
+Now, GET https://127.0.0.1/ to interact with the development server.
+
 
 ## Testing
 
