@@ -45,6 +45,7 @@ if (cmd_q_string != null) {
         process.exit();
 
     });
+
 } else {
 
     app.get('/search', function (req, res) {
