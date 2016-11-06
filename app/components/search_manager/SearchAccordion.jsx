@@ -10,7 +10,7 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import uuid from 'node-uuid';
 
 // @Afika,  props has this.props.doQuery(queryString), which should be called on
-// key event by the search bar 
+// key event by the search bar
 
 export default class SearchAccordion extends React.Component {
     state = {
@@ -26,6 +26,7 @@ export default class SearchAccordion extends React.Component {
             "Clio Berta"
         ],
         clearable: true,
+        general: "",
         artist: "",
         title: "",
         tags: [],
@@ -1055,7 +1056,7 @@ export default class SearchAccordion extends React.Component {
 
     render() {
         let wrapperHeight = {
-            height: window.innerHeight - 240
+            height: window.innerHeight - 4*60 // - Header Height (60px) - Search Tools Height (60px) - Search Button Height (60px) - Search Hints Height (60px)
         }
 
         let options = this.state.artistNames.map(function(artist){
@@ -1088,6 +1089,24 @@ export default class SearchAccordion extends React.Component {
                              autoFocus={true}
                          />
 
+                    </div>
+                    <div
+                        className={this.props.accordion.general ? "accordion-item open" : "accordion-item"}
+                        onClick={this.props.toggleAccordion.bind({},"metadata")}>
+                        <h2 className="accordion-item-heading search">General</h2>
+                    </div>
+                    <div
+                        id="search-general-content"
+                        className={this.props.accordion.metadata ? "accordion-content open" : "accordion-content"}>
+                        <input
+                        type="text"
+                        id="search-general"
+                        onChange={this.generalChange}
+                        ref="general"
+                        placeholder="Search by Artist, Title, ..."
+                        autoCapitalize="off"
+                        autoComplete="off"
+                        autoCorrect="off" />
                     </div>
                     <div
                         className={this.props.accordion.artist ? "accordion-item open" : "accordion-item"}
@@ -1346,6 +1365,22 @@ export default class SearchAccordion extends React.Component {
             this.props.toggleSearchCategory("artist", true);
         } else {
             this.props.toggleSearchCategory("artist", false);
+        }
+    }
+
+    generalChange = () => {
+        let general = this.refs.general.value;
+
+        this.setState({
+            general: general
+        });
+
+        // Toggles Search Hint
+        if (general.length) {
+            this.props.toggleSearchCategory("general", true);
+            console.log("Set toggleSearchCategory")
+        } else {
+            this.props.toggleSearchCategory("general", false);
         }
     }
 

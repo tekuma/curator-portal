@@ -25,6 +25,11 @@ export default class SearchHints extends React.Component {
             <div
                 className="search-hints">
                 <div className="hint">
+                    <h3 className="hint-heading">General</h3>
+                    <div
+                        className={this.props.searchCategories.general ? "hint-circle filled" : "hint-circle"} />
+                </div>
+                <div className="hint">
                     <h3 className="hint-heading">Artist</h3>
                     <div
                         className={this.props.searchCategories.artist ? "hint-circle filled" : "hint-circle"} />

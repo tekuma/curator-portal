@@ -16,6 +16,7 @@ import SearchToggler                from './SearchToggler.jsx';
 export default class SearchManager extends React.Component {
     state = {
         searchCategories: {
+            general: false,
             artist: false,
             tag   : false,
             title : false,
@@ -23,6 +24,7 @@ export default class SearchManager extends React.Component {
             color : false
         },
         accordion: {
+            general    : false,
             artist      : false,
             tag         : false,
             title       : false,
@@ -222,5 +224,7 @@ export default class SearchManager extends React.Component {
         this.setState({
             searchCategories: searchCategories
         });
+
+        console.log("Set it in State searchManager");;
     }
 }
