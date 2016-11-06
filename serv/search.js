@@ -47,7 +47,7 @@ exports.provider = () => {
     return db_provider;
 }
 
-exports.initdb = () => {
+exports.cleardb = () => {
     if (db_provider === 'sqlite') {
         db.serialize(function () {
             const initdb = fs.readFileSync('conf/initdb.sql',

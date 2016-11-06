@@ -26,7 +26,7 @@ describe('search', function() {
                               ['f00fba4', 'frozzle']];
 
         if (search.provider() === 'sqlite') {
-            search.initdb();
+            search.cleardb();
             db.serialize(function () {
                 var insert_template = db.prepare('INSERT INTO artworks ' +
                                                  '(uid, title) VALUES (?, ?)');
