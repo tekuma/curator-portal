@@ -14,6 +14,10 @@ for (let i = 1; i < process.argv.length; i++) {
     } else if (process.argv[i] == '-v') {
         verbose = true;
     } else if (process.argv[i] == '-q') {
+        if (process.argv.length - i < 2) {
+            console.log('ERROR: Missing query string. Try `serv/main.js -h`.');
+            process.exit(1);
+        }
         cmd_q_string = process.argv.slice(i+1).join(' ');
     }
 }
