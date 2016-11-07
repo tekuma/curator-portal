@@ -26,8 +26,15 @@ describe('search', function() {
                                   {uid: 'f00fba54', title: 'frozzle'},
                                   {uid: 'abc123d4', title: 'Scott\'s entry'}];
 
+        const initial_artists = [{uid: 'ii1j1srh', artist: 'Diane', human_name: 'Diane'},
+                                 {uid: 'sth14sth', artist: 'Ricardo', human_name: 'Ricardo'},
+                                 {uid: 'ubldh51l', artist: 'nocturnalnectar', human_name: 'Scott'}];
+
         search.cleardb().then(function () {
-            search.insert_artworks(initial_data).then(function() { done(); });
+            Promise.all([
+                search.insert_artworks(initial_artworks),
+                search.insert_artists(initial_artists)
+            ]).then( function () { done(); } );
         });
     });
     after('Closing database connection', function() {
