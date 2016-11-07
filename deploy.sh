@@ -6,4 +6,4 @@
 #
 # rsync to site
 
-rsync -v --exclude=.git --exclude=app --delete -z -a -e 'ssh -i serv/cert/trial-instance-key' . scottclivingston@curator.tekuma.io:/home/scottclivingston/curator-portal
+rsync -v --exclude=.git --exclude=app --exclude=node_modules --delete -z -a -e 'ssh -i serv/cert/trial-instance-key' . scottclivingston@curator.tekuma.io:/home/scottclivingston/curator-portal
