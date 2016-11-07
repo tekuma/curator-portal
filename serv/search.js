@@ -49,17 +49,23 @@ exports.provider = () => {
 
 exports.cleardb = () => {
     if (db_provider === 'sqlite') {
-        db.serialize(function () {
-            const initdb = fs.readFileSync('conf/initdb.sql',
-                                           {encoding: 'utf-8'});
-            initdb_lines = initdb.split('\n');
-            for (let i = 0; i < initdb_lines.length; i++) {
-                let line = initdb_lines[i].trim();
-                if (line.length === 0)
-                    continue;
-                db.run(line);
-            }
-        });
+        return (new Promise(function(resolve, reject) {
+
+            db.serialize(function () {
+                const initdb = fs.readFileSync('conf/initdb.sql',
+                                               {encoding: 'utf-8'});
+                initdb_lines = initdb.split('\n');
+                for (let i = 0; i < initdb_lines.length; i++) {
+                    let line = initdb_lines[i].trim();
+                    if (i === initdb_lines.length - 1) {
+                        db.run(line, resolve);
+                    } else {
+                        db.run(line);
+                    }
+                }
+            });
+
+        }));
     } else {  // === 'mysql'
 
     }

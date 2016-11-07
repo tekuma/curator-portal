@@ -26,16 +26,16 @@ describe('search', function() {
                               ['f00fba4', 'frozzle']];
 
         if (search.provider() === 'sqlite') {
-            search.cleardb();
-            db.serialize(function () {
-                var insert_template = db.prepare('INSERT INTO artworks ' +
-                                                 '(uid, title) VALUES (?, ?)');
-                for (var i = 0; i < initial_data.length; i++) {
-                    insert_template.run(initial_data[i]);
-                }
-                insert_template.finalize();
+            search.cleardb().then(function () {
+                db.serialize(function () {
+                    var insert_template = db.prepare('INSERT INTO artworks ' +
+                                                     '(uid, title) VALUES (?, ?)');
+                    for (var i = 0; i < initial_data.length; i++) {
+                        insert_template.run(initial_data[i]);
+                    }
+                    insert_template.finalize(done);
+                });
             });
-            done();
         } else {  // === 'mysql'
             db.query('insert into artworks (uid, title) values (?, ?), (?, ?)',
                      initial_data[0].concat(initial_data[1]),
