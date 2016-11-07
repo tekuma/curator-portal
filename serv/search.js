@@ -81,7 +81,7 @@ exports.disconnectdb = () => {
 
 exports.q = (query) => {
     console.log('Received search query:', query);
-    if (query) {
+    if (query || query === '') {
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
             var sql_template = 'SELECT ' +
