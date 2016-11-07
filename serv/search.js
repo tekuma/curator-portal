@@ -119,10 +119,11 @@ exports.insert_artwork = (artwork) => {
     if (db_provider === 'mysql') {
 
         return (new Promise(function(resolve, reject) {
-            db.query('INSERT INTO artworks (uid, title, artist_uid) VALUES (?, ?, ?)',
+            db.query('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
                      [artwork.uid,
                       artwork.title,
-                      artwork.artist_uid || null],
+                      artwork.artist_uid || null,
+                      artwork.thumbnail_url || null],
                      function (err) {
                          if (err) throw err;
                          resolve();
@@ -132,9 +133,11 @@ exports.insert_artwork = (artwork) => {
     } else {  // === 'sqlite'
 
         return (new Promise(function(resolve, reject) {
-            db.run('INSERT INTO artworks (uid, title) VALUES (?, ?)',
+            db.run('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
                      [artwork.uid,
-                      artwork.title],
+                      artwork.title,
+                      artwork.artist_uid || null,
+                      artwork.thumbnail_url || null],
                      function (err) {
                          if (err) throw err;
                          resolve();
