@@ -12,7 +12,14 @@ if pgrep nginx > /dev/null; then
     sudo nginx -s stop
 fi
 
+cleanup () {
+    kill $webpackserv_pid;
+    sudo nginx -s stop
+}
+
 echo Running from directory `pwd`
 sudo nginx -c `pwd`/conf/dev-nginx.conf
 nohup npm run start&
+webpackserv_pid=$!
+trap cleanup INT
 node serv/main.js
