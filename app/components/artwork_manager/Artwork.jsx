@@ -26,7 +26,7 @@ export default class Artwork extends React.Component {
         if (this.props.result.title) {
             imageName = this.props.result.title;
         } else {
-            imageName = "0xDEADBEEF";
+            imageName = "(no title)";
         }
 
         return (
