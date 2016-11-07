@@ -37,12 +37,14 @@ describe('search', function() {
                 });
             });
         } else {  // === 'mysql'
-            db.query('insert into artworks (uid, title) values (?, ?), (?, ?)',
-                     initial_data[0].concat(initial_data[1]),
-                     function (err, rows, fields) {
-                         if (err) throw done(err);
-                         done();
-                     });
+            search.cleardb().then(function () {
+                db.query('insert into artworks (uid, title) values (?, ?), (?, ?)',
+                         initial_data[0].concat(initial_data[1]),
+                         function (err, rows, fields) {
+                             if (err) throw done(err);
+                             done();
+                         });
+            });
         }
     });
     after('Closing database connection', function() {

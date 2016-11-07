@@ -5,9 +5,12 @@
 // created by Scott C. Livingston
 
 
+const assert = require('assert');
 const fs = require('fs');
+
 var db_provider
 var db;
+var db_config;
 
 exports.connectdb = (dbconf, provider) => {
     if (typeof provider === 'undefined') {
@@ -25,7 +28,7 @@ exports.connectdb = (dbconf, provider) => {
     } else if (provider.toLowerCase() === 'mysql') {
         provider = 'mysql';  // Normalize provider name
 
-        var mysql = require('mysql');
+        const mysql = require('mysql');
         if (dbconf.ssl) {
             dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
             dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
@@ -40,6 +43,7 @@ exports.connectdb = (dbconf, provider) => {
     }
 
     db_provider = provider;
+    db_config = dbconf;
     return db;
 }
 
@@ -67,7 +71,39 @@ exports.cleardb = () => {
 
         }));
     } else {  // === 'mysql'
+        return (new Promise(function(resolve, reject) {
 
+            const mysql = require('mysql');
+
+            var multi_db_config = Object.create(db_config);
+            multi_db_config.multipleStatements = true;
+
+            const multi_db = mysql.createConnection(multi_db_config);
+            multi_db.connect();
+
+            multi_db.query('SHOW TABLES', function (err, rows) {
+                assert.ifError(err);
+                var dropcreate = '';
+                for (let i = 0; i < rows.length; i++) {
+                    dropcreate += ('DROP TABLE '
+                                   + rows[i].Tables_in_Tekuma_artworkdb + ';');
+                }
+
+                const initdb = fs.readFileSync('conf/initdb.sql',
+                                               {encoding: 'utf-8'});
+                dropcreate += initdb.split('\n').join('; ') + ';';
+
+                multi_db.query(dropcreate,
+                               function (err) {
+                                   assert.ifError(err);
+                                   multi_db.end(function (err) {
+                                       assert.ifError(err);
+                                       resolve();
+                                   });
+                               });
+            });
+
+        }));
     }
 }
 
