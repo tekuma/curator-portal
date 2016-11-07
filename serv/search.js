@@ -119,9 +119,10 @@ exports.insert_artwork = (artwork) => {
     if (db_provider === 'mysql') {
 
         return (new Promise(function(resolve, reject) {
-            db.query('INSERT INTO artworks (uid, title) VALUES (?, ?)',
+            db.query('INSERT INTO artworks (uid, title, artist_uid) VALUES (?, ?, ?)',
                      [artwork.uid,
-                      artwork.title],
+                      artwork.title,
+                      artwork.artist_uid || null],
                      function (err) {
                          if (err) throw err;
                          resolve();
@@ -192,7 +193,8 @@ exports.insert_artists = (artists) => {
 
 exports.q = (query) => {
     console.log('Received search query:', query);
-    if (query || query === '') {
+    if (query === '') {
+
         return (new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
             var sql_template = 'SELECT ' +
@@ -216,6 +218,102 @@ exports.q = (query) => {
                      });
             }
         }));
+
+    } else if (query) {
+
+        artworks_direct = new Promise(function(resolve, reject) {
+            var ex = '%'+query+'%';
+            var sql_template = 'SELECT ' +
+                'title, description, origin, thumbnail_url ' +
+                'FROM `artworks` ' +
+                'WHERE LOWER(`title`) LIKE ?';
+
+            if (db_provider === 'mysql') {
+                db.query(sql_template,
+                         [ex],
+                         function (err, rows, fields) {
+                             if (err) throw err;
+                             resolve(rows);
+                         });
+            } else {
+                db.all(sql_template,
+                     [ex],
+                     function (err, rows, fields) {
+                         if (err) throw err;
+                         resolve(rows);
+                     });
+            }
+        });
+        artists_direct = (new Promise(function(resolve, reject) {
+            var ex = '%'+query+'%';
+            var sql_template = 'SELECT ' +
+                'uid, artist ' +
+                'FROM `artists` ' +
+                'WHERE LOWER(`artist`) LIKE ? OR LOWER(`human_name`) LIKE ?';
+
+            if (db_provider === 'mysql') {
+                db.query(sql_template,
+                         [ex, ex],
+                         function (err, rows, fields) {
+                             if (err) throw err;
+                             resolve(rows);
+                         });
+            } else {
+                db.all(sql_template,
+                       [ex, ex],
+                       function (err, rows, fields) {
+                           if (err) throw err;
+                           resolve(rows);
+                       });
+            }
+        })).then(function (rows) {
+            if (rows.length === 0) {
+                return (new Promise(function(resolve, reject) {
+                    resolve(rows);
+                }));
+            }
+
+            var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
+            console.log(uid_exprs[0]);
+
+            return (new Promise(function(resolve, reject) {
+                var ex = '%'+query+'%';
+                var sql_template = 'SELECT ' +
+                    'title, description, origin, thumbnail_url ' +
+                    'FROM `artworks` ' +
+                    'WHERE ' + uid_exprs.join(' OR ')
+
+                if (db_provider === 'mysql') {
+                    db.query(sql_template,
+                             function (err, rows, fields) {
+                                 if (err) throw err;
+                                 resolve(rows);
+                             });
+                } else {
+                    db.all(sql_template,
+                           function (err, rows, fields) {
+                               if (err) throw err;
+                               resolve(rows);
+                           });
+                }
+            }));
+        });
+
+        return Promise.all([artworks_direct, artists_direct]).then(function (qrows) {
+            return (new Promise(function(resolve, reject) {
+
+                var rows = qrows[0];
+                var row_uids = rows.map(row => row.uid);
+                for (let i = 0; i < qrows[1].length; i++) {
+                    if (!row_uids.includes(qrows[1][i].uid)) {
+                        rows[rows.length] = qrows[1];
+                    }
+                }
+                resolve(rows);
+
+            }));
+        });
+
     } else {
         return null;
     }
