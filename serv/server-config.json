@@ -1,5 +1,5 @@
 {
-    "artworkdb": "./test-remote-dbconf.json",
+    "artworkdb": "../tests/testdbconf.json",
     "httpscert": {
 	"key": "../tests/cert/selfsigned.key",
 	"cert": "../tests/cert/selfsigned.crt",
