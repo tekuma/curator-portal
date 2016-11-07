@@ -151,6 +151,45 @@ exports.insert_artworks = (artworks) => {
     return Promise.all(promises);
 }
 
+exports.insert_artist = (artist) => {
+    if (db_provider === 'mysql') {
+
+        return (new Promise(function(resolve, reject) {
+            db.query('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
+                     [artist.uid,
+                      artist.artist,
+                      artist.human_name],
+                     function (err) {
+                         if (err) throw err;
+                         resolve();
+                     });
+        }));
+
+    } else {  // === 'sqlite'
+
+        return (new Promise(function(resolve, reject) {
+            db.run('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
+                   [artist.uid,
+                    artist.artist,
+                    artist.human_name],
+                   function (err) {
+                       if (err) throw err;
+                       resolve();
+                   });
+        }));
+
+    }
+}
+
+exports.insert_artists = (artists) => {
+    var promises = [];
+    for (let i = 0; i < artists.length; i++) {
+        promises[i] = exports.insert_artist(artists[i]);
+    }
+    return Promise.all(promises);
+}
+
+
 exports.q = (query) => {
     console.log('Received search query:', query);
     if (query || query === '') {
