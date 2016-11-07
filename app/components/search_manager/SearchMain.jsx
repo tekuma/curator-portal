@@ -72,17 +72,15 @@ export default class SearchMain extends React.Component {
         }
 
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            console.log(">> Query String:", updates.queryString);
+            console.log(">> Query String:", queryString);
             $.ajax({
                 url: ('search?q='
-                      +String.replace(updates.queryString, '&', ' and ')
+                      +String.replace(queryString, '&', ' and ')
                       +'&auth='+String.replace(idToken, '&', ' and ', )),
                 dataType: 'json',
                 cache: false,
                 success: this.updateResults
             });
-        }).catch((err)=>{
-            //pass
         });
     }
 
