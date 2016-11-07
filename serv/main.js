@@ -6,23 +6,31 @@
 
 var cmd_q_string = null;
 var verbose = false;
+var use_mockup_firebase = false;
 for (let i = 1; i < process.argv.length; i++) {
     if (process.argv[i] === '-h'
         || process.argv[i] === '--help') {
-        console.log('Usage: serv/main.js [-h] [-q SEARCH...]');
+        console.log('Usage: serv/main.js [-h] [--firebase-mockup] [-q SEARCH...]');
         process.exit();
-    } else if (process.argv[i] == '-v') {
+    } else if (process.argv[i] === '-v') {
         verbose = true;
-    } else if (process.argv[i] == '-q') {
+    } else if (process.argv[i] === '-q') {
         if (process.argv.length - i < 2) {
             console.log('ERROR: Missing query string. Try `serv/main.js -h`.');
             process.exit(1);
         }
         cmd_q_string = process.argv.slice(i+1).join(' ');
+    } else if (process.argv[i] === '--firebase-mockup') {
+        use_mockup_firebase = true;
     }
 }
 
-const firebase = require('firebase');
+if (use_mockup_firebase) {
+    var firebase_path = '../tests/mock/firebase';
+} else {
+    var firebase_path = 'firebase';
+}
+const firebase = require(firebase_path);
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
     serviceAccount: require('./cert/curator-tekuma.json')
