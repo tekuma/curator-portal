@@ -22,4 +22,4 @@ sudo nginx -c `pwd`/conf/dev-nginx.conf
 nohup npm run start&
 webpackserv_pid=$!
 trap cleanup INT
-node serv/main.js
+node serv/main.js --firebase-mockup
