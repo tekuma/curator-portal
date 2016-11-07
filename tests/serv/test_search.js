@@ -23,7 +23,8 @@ describe('search', function() {
         }
 
         const initial_data = [{uid: 'deadbeef', title: '4 beef'},
-                              {uid: 'f00fba54', title: 'frozzle'}];
+                              {uid: 'f00fba54', title: 'frozzle'},
+                              {uid: 'abc123d4', title: 'Scott\'s entry'}];
 
         search.cleardb().then(function () {
             search.insert_artworks(initial_data).then(function() { done(); });
