@@ -92,7 +92,7 @@ configuration:
 
 ## Deployment
 
-Create a snapshot of the repository, which will be used as a starting point for
-building and deploying the site.
+Change to have `"artworkdb": "./remote-dbconf.json"`, and then, rsync relevant
+data to the GCE instance:
 
-    git archive --format=tar --prefix=curator-portal/ HEAD |gzip -9 > deploy.tar.gz
+    ./deploy.sh
