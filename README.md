@@ -92,7 +92,14 @@ configuration:
 
 ## Deployment
 
-Change to have `"artworkdb": "./remote-dbconf.json"`, and then, rsync relevant
-data to the GCE instance:
+Change to have `"artworkdb": "./remote-dbconf.json"`, and then, build the
+client-side bundle, and rsync relevant data to the GCE instance:
 
+    npm run build
     ./deploy.sh
+
+From the instance, stop nginx if it is running, `sudo nginx -s stop`, then
+
+    cd ~/curator-portal
+    sudo nginx -c `pwd`/conf/nginx.conf
+    screen -d -m node serv/main.js
