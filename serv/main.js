@@ -53,9 +53,9 @@ search.connectdb(dbconf);
 if (cmd_q_string != null) {
 
     search.q( cmd_q_string ).then(function(rows) {
-        console.log(rows);
-        process.exit();
-
+        console.log('Found', rows.length, 'rows');
+        console.log(rows.map(row => String(row.title)));
+        search.disconnectdb();
     });
 
 } else {
