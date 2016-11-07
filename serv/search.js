@@ -115,6 +115,42 @@ exports.disconnectdb = () => {
     }
 }
 
+exports.insert_artwork = (artwork) => {
+    if (db_provider === 'mysql') {
+
+        return (new Promise(function(resolve, reject) {
+            db.query('INSERT INTO artworks (uid, title) VALUES (?, ?)',
+                     [artwork.uid,
+                      artwork.title],
+                     function (err) {
+                         if (err) throw err;
+                         resolve();
+                     });
+        }));
+
+    } else {  // === 'sqlite'
+
+        return (new Promise(function(resolve, reject) {
+            db.run('INSERT INTO artworks (uid, title) VALUES (?, ?)',
+                     [artwork.uid,
+                      artwork.title],
+                     function (err) {
+                         if (err) throw err;
+                         resolve();
+                     });
+        }));
+
+    }
+}
+
+exports.insert_artworks = (artworks) => {
+    var promises = [];
+    for (let i = 0; i < artworks.length; i++) {
+        promises[i] = exports.insert_artwork(artworks[i]);
+    }
+    return Promise.all(promises);
+}
+
 exports.q = (query) => {
     console.log('Received search query:', query);
     if (query || query === '') {

@@ -22,30 +22,12 @@ describe('search', function() {
             var db = search.connectdb(dbconf, 'sqlite');
         }
 
-        const initial_data = [['deadbeef', '4 beef'],
-                              ['f00fba4', 'frozzle']];
+        const initial_data = [{uid: 'deadbeef', title: '4 beef'},
+                              {uid: 'f00fba54', title: 'frozzle'}];
 
-        if (search.provider() === 'sqlite') {
-            search.cleardb().then(function () {
-                db.serialize(function () {
-                    var insert_template = db.prepare('INSERT INTO artworks ' +
-                                                     '(uid, title) VALUES (?, ?)');
-                    for (var i = 0; i < initial_data.length; i++) {
-                        insert_template.run(initial_data[i]);
-                    }
-                    insert_template.finalize(done);
-                });
-            });
-        } else {  // === 'mysql'
-            search.cleardb().then(function () {
-                db.query('insert into artworks (uid, title) values (?, ?), (?, ?)',
-                         initial_data[0].concat(initial_data[1]),
-                         function (err, rows, fields) {
-                             if (err) throw done(err);
-                             done();
-                         });
-            });
-        }
+        search.cleardb().then(function () {
+            search.insert_artworks(initial_data).then(function() { done(); });
+        });
     });
     after('Closing database connection', function() {
         search.disconnectdb();
