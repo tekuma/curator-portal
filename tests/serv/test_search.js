@@ -24,11 +24,18 @@ describe('search', function() {
 
         const initial_artworks = [{uid: 'deadbeef', title: '4 beef'},
                                   {uid: 'f00fba54', title: 'frozzle'},
-                                  {uid: 'abc123d4', title: 'Scott\'s entry'}];
+                                  {uid: 'abc123d4', title: 'Scott\'s entry',
+                                   artist_uid: 'ubldh51l'}];
 
         const initial_artists = [{uid: 'ii1j1srh', artist: 'Diane', human_name: 'Diane'},
                                  {uid: 'sth14sth', artist: 'Ricardo', human_name: 'Ricardo'},
                                  {uid: 'ubldh51l', artist: 'nocturnalnectar', human_name: 'Scott'}];
+
+        const initial_labels = [{uid: 'xbldh51l',
+                                 term: 'name in title', labeltype: 'keywords'}];
+        const initial_associations = [{label_uid: 'xbldh51l',
+                                       object_uid: 'abc123d4', object_table: 'artworks'}];
+
 
         search.cleardb().then(function () {
             Promise.all([
