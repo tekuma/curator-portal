@@ -75,8 +75,8 @@ export default class SearchMain extends React.Component {
             console.log(">> Query String:", queryString);
             $.ajax({
                 url: ('search?q='
-                      +String.replace(queryString, '&', ' and ')
-                      +'&auth='+String.replace(idToken, '&', ' and ', )),
+                      +queryString.replace('&', ' and ')
+                      +'&auth='+idToken.replace('&', ' and ')),
                 dataType: 'json',
                 cache: false,
                 success: this.updateResults
