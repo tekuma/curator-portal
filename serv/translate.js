@@ -35,7 +35,8 @@ exports.translate_from_tekuma_firebase = (filename) => {
             artworks[artworks.length] = {
                 uid: firebase_db[artist_uid].artworks[artwork].id,
                 title: firebase_db[artist_uid].artworks[artwork].title || '',
-                thumbnail_url: firebase_db[artist_uid].artworks[artwork].fullsize_url || 'nil'
+                artist_uid: artist_uid,
+                thumbnail_url: firebase_db[artist_uid].artworks[artwork].fullsize_url || 'nil',
             };
         }
         promises[promises.length] = search.insert_artworks(artworks);

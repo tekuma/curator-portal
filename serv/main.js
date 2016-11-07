@@ -54,7 +54,9 @@ if (cmd_q_string != null) {
 
     search.q( cmd_q_string ).then(function(rows) {
         console.log('Found', rows.length, 'rows');
-        console.log(rows.map(row => String(row.title)));
+        console.log(rows.map(row => {
+            return row.uid + ': ' + String(row.title);
+        }));
         search.disconnectdb();
     });
 

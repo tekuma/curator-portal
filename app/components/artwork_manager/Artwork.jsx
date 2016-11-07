@@ -28,6 +28,8 @@ export default class Artwork extends React.Component {
         } else {
             imageName = "(no title)";
         }
+        let imageUID = this.props.result.uid || "(unknown)";
+        let artistUID = this.props.result.artist_uid || "(unknown)";;
 
         return (
             <article
@@ -36,7 +38,9 @@ export default class Artwork extends React.Component {
                     <img src={imageURL} />
                 </div>
                 <div className="artwork-info review">
-                    <h3 className="artwork-name review"> {imageName} </h3>
+                <h3 className="artwork-name review"> {imageName} </h3>
+                <h3 className="artwork-name review"> artwork UID: {imageUID} </h3>
+                <h3 className="artwork-name review"> artist UID: {artistUID} </h3>
                 </div>
             </article>
         );

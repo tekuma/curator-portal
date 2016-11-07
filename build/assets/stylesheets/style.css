@@ -1368,7 +1368,7 @@ main, .artworks {
 	min-height: 40px;
 }
 
-.artwork-name {
+.artwork-name, .artwork-uid, .artist-uid {
 	margin: 0;
 	margin-bottom: 20px;
 	opacity: 0.87;

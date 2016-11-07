@@ -227,7 +227,7 @@ exports.q = (query) => {
         artworks_direct = new Promise(function(resolve, reject) {
             var ex = '%'+query+'%';
             var sql_template = 'SELECT ' +
-                'title, description, origin, thumbnail_url ' +
+                'uid, title, artist_uid, description, origin, thumbnail_url ' +
                 'FROM `artworks` ' +
                 'WHERE LOWER(`title`) LIKE ?';
 
@@ -282,7 +282,7 @@ exports.q = (query) => {
             return (new Promise(function(resolve, reject) {
                 var ex = '%'+query+'%';
                 var sql_template = 'SELECT ' +
-                    'title, description, origin, thumbnail_url ' +
+                    'uid, title, artist_uid, description, origin, thumbnail_url ' +
                     'FROM `artworks` ' +
                     'WHERE ' + uid_exprs.join(' OR ')
 
@@ -312,7 +312,12 @@ exports.q = (query) => {
                         rows[rows.length] = qrows[1];
                     }
                 }
-                resolve(rows);
+                resolve(rows.map(row => {
+
+                    row.title = String(row.title);
+                    return row;
+
+                }));
 
             }));
         });
