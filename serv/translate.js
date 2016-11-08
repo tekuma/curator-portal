@@ -63,5 +63,3 @@ for (let i = 1; i < process.argv.length; i++) {
 
     }
 }
-
-//console.log(fs.readFileSync(process.argv
