@@ -57,6 +57,14 @@ describe('search', function() {
     });
 
     describe('#q', function() {
+        it('should find at least one row from "BEEF" query because case insensitivity', function() {
+            return search.q('BEEF').then(function(rows) {
+                assert( rows.length > 0 );
+            });
+        });
+    });
+
+    describe('#q', function() {
         it('should not find any rows from "some_random_text_aksrarhxschal" query', function() {
             return search.q('some_random_text_aksrarhxschal').then(function(rows) {
                 assert( rows.length === 0 );
