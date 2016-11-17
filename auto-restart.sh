@@ -9,8 +9,15 @@
 
 export NODE_ENV=production
 
+kill_bk () {
+    kill ${child_pid}
+    exit
+}
+trap kill_bk INT
+
 while true; do
     node serv/main.js&
-    echo PID: $!
+    child_pid=$!
+    echo PID: ${child_pid}
     wait $!
 done
