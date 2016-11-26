@@ -6,6 +6,7 @@ import uuid           from 'node-uuid';
 import DisplayNameTag from './DisplayNameTag';
 import LogoutButton   from './LogoutButton';
 import NavItems       from './NavItems';
+import Roles          from '../../constants/Roles';
 // import Views          from '../../constants/Views';
 
 
@@ -15,14 +16,14 @@ export default class HiddenNav extends React.Component {
             id   : uuid.v4(),
             item : 'Search',
             icon : 'assets/images/icons/search.svg',
-            href : "search",
+            href : Roles.SEARCH,
             title: 'Search the Tekuma art DB'
         },
         {
             id   : uuid.v4(),
             item : 'Manage',
             icon : 'assets/images/icons/manage.svg',
-            href : "manage",
+            href : Roles.MANAGE,
             title: 'Manage Projects'
         }
     ];

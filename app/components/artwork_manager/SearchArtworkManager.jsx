@@ -12,7 +12,6 @@ import Artwork    from './Artwork';
  */
 export default class ArtworkManager extends React.Component {
     state = {
-        results :[] // list of Artwork objects in the current album
     };
 
     constructor(props) {

@@ -2,7 +2,7 @@
 import React    from 'react';
 import firebase from 'firebase';
 // Components
-import ArtworkManager from '../artwork_manager/ArtworkManager';
+import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
 import CurationHeader from '../headers/CurationHeader';
 import SearchManager  from './SearchManager';
 
@@ -27,12 +27,13 @@ export default class SearchMain extends React.Component {
         return(
             <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                 <CurationHeader
+                    role={this.props.role}
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
                     projects={this.props.projects}
                     addArtworksToProject={this.addArtworksToProject}
                 />
-                <ArtworkManager
+              <SearchArtworkManager
                     results = {this.state.results}
                     managerIsOpen={this.props.managerIsOpen}
                     addArtworkToBuffer={this.addArtworkToBuffer}

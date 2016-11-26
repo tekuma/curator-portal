@@ -59,7 +59,7 @@ export default class Artwork extends React.Component {
 
     toggleArtworkSelection = () => {
 
-        // Add to buffer if originally false, else remove it
+        // Add to addition or deletion buffer if originally false, else remove it addition/deletion buffer
         if (!this.state.selected) {
             this.props.addArtworkToBuffer(this.props.result);
         } else {

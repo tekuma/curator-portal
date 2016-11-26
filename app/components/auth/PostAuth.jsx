@@ -7,14 +7,11 @@ import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
 // Files
 import CurationHeader from '../headers/CurationHeader';
-import ArtworkManager from '../artwork_manager/ArtworkManager';
-import Artwork        from '../artwork_manager/Artwork';
-import SearchManager  from '../search_manager/SearchManager';
 import SearchMain     from '../search_manager/SearchMain';
 import ManagerMain    from '../manage/ManagerMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
-import Roles          from '../constants/Roles';
+import Roles          from '../../constants/Roles';
 
 
 /**
@@ -38,9 +35,10 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        if (Roles.SEARCH) {
+        if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
         } else {
+            console.log("GOing to Manage (PostAuth)");
             return this.goToManage();
         }
     }
@@ -68,6 +66,7 @@ export default class PostAuth extends React.Component {
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
                 <SearchMain
+                    role={this.state.role}
                     projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
@@ -87,6 +86,7 @@ export default class PostAuth extends React.Component {
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
                 <ManagerMain
+                    role={this.state.role}
                     projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
@@ -131,6 +131,7 @@ export default class PostAuth extends React.Component {
                 managerIsOpen: true,
                 role:role
             });
+            console.log("Changed ROLE: ", role);
         } else {
             this.setState({
                 managerIsOpen: true,

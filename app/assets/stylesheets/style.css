@@ -4151,6 +4151,37 @@ label.age-confirm-label {
 
 /*========================================== */
 
+/* Project Manager */
+.project-name-writing {
+	margin: 10px;
+}
+
+.project-name {
+	margin: 0;
+	color: #ffffff;
+}
+
+.edit-project-name {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	border-radius: 3px;
+  appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+  padding: 0.75em .60em;
+  width: 80%;
+	height: 40px;
+	background-color: #f4f6f7;
+  border: 1.5px solid #d6d3ce;
+  color: #000000;
+	font-weight: 500;
+	font-family: "Raleway" , "Helvetica Neue", Helvetica, "Gill Sans", Arial, sans-serif;
+  font-size: 1.3em;
+  line-height: normal;
+}
+
 /* Animations */
 
 /* Chrome, Safari, Opera */

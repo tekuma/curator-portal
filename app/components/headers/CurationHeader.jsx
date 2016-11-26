@@ -3,7 +3,7 @@ import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 // Files
 import ProjectSelector from './ProjectSelector';
-import Roles          from '../constants/Roles';
+import Roles          from '../../constants/Roles';
 
 /**
  * CurationHeader is omnipresent in the portal once the user is authenticated.
@@ -28,7 +28,15 @@ export default class PostAuthHeader extends React.Component {
             <Tooltip
                 id="add-artwork-tooltip"
                 className="tooltip">
-                Add Artworks to project..
+                Add Selected Artworks to Project..
+            </Tooltip>
+        );
+
+        const removeArtworkTooltip = (
+            <Tooltip
+                id="remove-artwork-tooltip"
+                className="tooltip">
+                Remove Selected Artworks from Project..
             </Tooltip>
         );
 
@@ -58,11 +66,11 @@ export default class PostAuthHeader extends React.Component {
                   </div>
 
                     <div className="header-icons">
-                        <OverlayTrigger placement="bottom" overlay={addArtworkTooltip}>
+                        <OverlayTrigger placement="bottom" overlay={this.props.role == Roles.SEARCH ? addArtworkTooltip : removeArtworkTooltip}>
                              <div
                                  className="header-icon"
-                                 onClick={this.handleProjectAdditions}
-                                 onTouchTap={this.handleProjectAdditions}
+                                 onClick={this.handleProjectAdditionsOrDeletions}
+                                 onTouchTap={this.handleProjectAdditionsOrDeletions}
                                 >
                                  <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/plus-pink.svg' : 'assets/images/icons/minus-pink.svg'} />
                              </div>
@@ -90,6 +98,7 @@ export default class PostAuthHeader extends React.Component {
     handleProjectAdditionsOrDeletions = () => {
 
         if (this.props.role == Roles.SEARCH) {
+            console.log("added selected artworks: ");
             this.props.addArtworksToProject(this.state.artworkBuffer);
             console.log(">>Art: ", this.state.artworkBuffer);
         } else {

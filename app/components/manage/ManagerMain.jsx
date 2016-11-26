@@ -2,13 +2,15 @@
 import React    from 'react';
 import firebase from 'firebase';
 // Components
-import ArtworkManager from '../artwork_manager/ArtworkManager';
+import ProjectArtworkManager from '../artwork_manager/ProjectArtworkManager';
 import ProjectManager from './ProjectManager';
+import CurationHeader from '../headers/CurationHeader';
 
 
 
 export default class ManagerMain extends React.Component {
     state = {
+        projectArtworks: [],
         artworkBuffer :[],
         currentProject:[]
     }
@@ -18,21 +20,23 @@ export default class ManagerMain extends React.Component {
     }
 
     componentWillMount() {
-        console.log("-----SearchMain");
+        console.log("-----ManagerMain");
     }
 
     render() {
         return(
             <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                 <CurationHeader
+                    role={this.props.role}
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
                     projects={this.props.projects}
                 />
-                <ArtworkManager
-                    results = {this.state.results}
+              <ProjectArtworkManager
+                    projectArtworks={this.state.projectArtworks}
                     managerIsOpen={this.props.managerIsOpen}
                     addArtworkToBuffer={this.addArtworkToBuffer}
+                    removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                 />
                 <ProjectManager
                     managerIsOpen={this.props.managerIsOpen}
@@ -50,8 +54,7 @@ export default class ManagerMain extends React.Component {
 
 
     componentDidMount() {
-        console.log("+++++SearchMain");
-        this.fetchProjects();
+        console.log("+++++ManagerMain");
     }
 
     componentWillReceiveProps(updates){
@@ -127,6 +130,11 @@ export default class ManagerMain extends React.Component {
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
     }
+
+    /**
+     * Sets state.projectIDs as an array of all projectIDs of projects which
+     * this user has access to.
+     */
 
 
 }
