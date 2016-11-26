@@ -10,7 +10,8 @@ import ProjectManager from './ProjectManager';
 export default class ManagerMain extends React.Component {
     state = {
         artworkBuffer :[],
-        currentProject:[]
+        currentProject:[],
+        results:[] // contents of the project
     }
 
     constructor(props) {
@@ -60,7 +61,16 @@ export default class ManagerMain extends React.Component {
 
     // =============== Methods =====================
 
+    selectAllArt = () => {
+        let buffer = this.state.results;
+        this.setState({command:"select"});
+        this.setState({command:"",artworkBuffer:buffer})
+    }
 
+    deselectAllArt = () => {
+        this.setState({command:"deselect"});
+        this.setState({command:"",artworkBuffer:[]});
+    }
 
     /**
      * updates the this.state.results to be data.rows
@@ -83,6 +93,8 @@ export default class ManagerMain extends React.Component {
             console.log("Updated project to ->", theProj);
         }
     }
+
+    getProjectContents
 
     /**
      * Will add the contents of this.state.artworkBuffer into the project

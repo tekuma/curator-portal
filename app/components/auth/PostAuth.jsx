@@ -13,6 +13,7 @@ import SearchManager  from '../search_manager/SearchManager';
 import SearchMain     from '../search_manager/SearchMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
+import ManagerMain    from '../manage/ManagerMain';
 
 
 /**

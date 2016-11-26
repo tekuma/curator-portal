@@ -57,6 +57,17 @@ export default class Artwork extends React.Component {
         console.log("+++++++Artwork");
     }
 
+    componentWillReceiveProps(newProps) {
+        if (newProps.command === "deselect") {
+            this.setState({selected: false})
+        } else if (newProps.command === "select") {
+            this.setState({selected: true})
+        }
+    }
+    // ========= Methods ===========
+
+
+
     toggleArtworkSelection = () => {
 
         // Add to buffer if originally false, else remove it

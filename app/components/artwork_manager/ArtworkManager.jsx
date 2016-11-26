@@ -12,7 +12,6 @@ import Artwork    from './Artwork';
  */
 export default class ArtworkManager extends React.Component {
     state = {
-        results :[] // list of Artwork objects in the current album
     };
 
     constructor(props) {
@@ -29,7 +28,6 @@ export default class ArtworkManager extends React.Component {
 
     componentDidMount() {
         console.log("+++++ArtworkManager");
-        //TODO set state from props
     }
 
     componentWillReceiveProps(nextProps) {
@@ -95,6 +93,7 @@ export default class ArtworkManager extends React.Component {
                 {this.props.results.map(result => {
                     return (
                         <Artwork
+                            command={this.props.command}
                             addArtworkToBuffer={this.props.addArtworkToBuffer}
                             removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
                             result={result} />
@@ -106,97 +105,6 @@ export default class ArtworkManager extends React.Component {
         );
     };
 
-    // renderEmptyAlbum = () => {
-    //     let styleManagerClosed = {
-    //         width: window.innerWidth - 40,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleManagerOpen = {
-    //         width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleLargeScreen = {
-    //         width: window.innerWidth - 440,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleSmallScreen = {
-    //         width: window.innerWidth - 250,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let fixedWidth = {
-    //         width: window.innerWidth,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     return (
-    //         <Dropzone
-    //             style={this.props.managerIsOpen ?
-    //                         (window.innerWidth * 0.3 > 440) ?
-    //                             styleLargeScreen :
-    //                             (window.innerWidth * 0.3 > 250) ?
-    //                                 styleManagerOpen :
-    //                                 (window.innerWidth > 410) ?
-    //                                     styleSmallScreen :
-    //                                     fixedWidth
-    //                             : styleManagerClosed}
-    //             className   ="artwork-upload-box"
-    //             accept      ="image/*"
-    //             onDrop      ={this.onDrop}>
-    //             <h3 className="upload-writing big">Drop Files Here</h3>
-    //             <h3 className="upload-writing small">or Click to Upload</h3>
-    //         </Dropzone>
-    //     );
-    // }
 
-    // renderEmptyUploads = () => {
-    //
-    //     let styleManagerClosed = {
-    //         width: window.innerWidth - 40,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleManagerOpen = {
-    //         width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleLargeScreen = {
-    //         width: window.innerWidth - 440,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let styleSmallScreen = {
-    //         width: window.innerWidth - 250,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     let fixedWidth = {
-    //         width: window.innerWidth,
-    //         height: window.innerHeight - 60
-    //     };
-    //
-    //     return (
-    //         <Dropzone
-    //             style={this.props.managerIsOpen ?
-    //                         (window.innerWidth * 0.3 > 440) ?
-    //                             styleLargeScreen :
-    //                             (window.innerWidth * 0.3 > 250) ?
-    //                                 styleManagerOpen :
-    //                                 (window.innerWidth > 410) ?
-    //                                     styleSmallScreen :
-    //                                     fixedWidth
-    //                             : styleManagerClosed}
-    //             className   ="artwork-upload-box"
-    //             accept      ="image/*"
-    //             onDrop      ={this.onDrop}>
-    //             <h3 className="upload-writing big">Drop Files Here</h3>
-    //             <h3 className="upload-writing small">or Click to Upload</h3>
-    //         </Dropzone>
-    //     );
-    // }
 
 }
