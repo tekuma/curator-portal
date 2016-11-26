@@ -20,8 +20,17 @@ export default class ProjectSelector extends React.Component {
 
     render() {
         let options = this.props.projects.map( (project)=>{
-                return {label: project, value: project}
+                return {label: project[0], value: project[1]}
             });
+
+        let display;
+
+        if (this.props.currentProject.length === 0) {
+            display = "";
+        } else {
+            display = this.props.currentProject[0]; // FIXME not working
+        }
+        // console.log(display);
 
         return (
             <div>
@@ -31,7 +40,7 @@ export default class ProjectSelector extends React.Component {
                         options={options}
                         name="project-select"
                         placeholder="Select a project..."
-                        value={this.props.currentProject}
+                        value={display}
                         onChange={this.props.changeProject}
                         clearable="true"
                     />

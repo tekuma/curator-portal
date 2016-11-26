@@ -9,11 +9,9 @@ import SearchManager  from './SearchManager';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [],
-        projects      : [],
-        projectIDs    : [],
-        currentProject: "",
-        artworkBuffer : []
+        results       : ["artwork1"], // current list of search results
+        currentProject: [], // name of current project ["name", "ID"]
+        artworkBuffer : []  // a list of all artworks currently "selected"
     }
 
     constructor(props) {
@@ -30,12 +28,13 @@ export default class SearchMain extends React.Component {
                 <CurationHeader
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
-                    projects={this.state.projects}
+                    projects={this.props.projects}
                     addArtworksToProject={this.addArtworksToProject}
                 />
                 <ArtworkManager
                     results = {this.state.results}
                     managerIsOpen={this.props.managerIsOpen}
+                    addArtworkToBuffer={this.addArtworkToBuffer}
                 />
                 <SearchManager
                     managerIsOpen={this.props.managerIsOpen}
@@ -54,39 +53,81 @@ export default class SearchMain extends React.Component {
 
     componentDidMount() {
         console.log("+++++SearchMain");
-        this.fetchProjects();
+
     }
 
     componentWillReceiveProps(updates){
-
+        //pass
     }
 
     // =============== Methods =====================
     //
 
+
+
     /**
-     * Sets state.projectIDs as an array of all projectIDs of projects which
-     * this user has access to.
+     * updates the this.state.results to be data.rows
      */
-    fetchProjects = () => {
-        let projectIDs = [];
-        let thisUID    = firebase.auth().currentUser.uid;
-        let projectsPath = `users/${thisUID}/projects`;
-        firebase.database().ref(projectsPath).once('value',(snapshot)=>{
-            projectIDs = snapshot.val();
-            this.setState({
-                projectIDs: projectIDs
-            });
-            this.fetchProjectNames();
+    updateResults = (data) => {
+        this.setState({results: data.rows});
+    }
+
+    /**
+     * Updates the value of this.state.currentProject
+     * @param  {String} newName [name of new current project]
+     */
+    changeProject = (newName) => {
+        if (newName === null) {
+            this.setState({currentProject:""})
+            console.log("updated project to None");
+        } else {
+            let theProj = [newName.label, newName.value]
+            this.setState({currentProject:theProj});
+            console.log("Updated project to ->", theProj);
+        }
+    }
+
+    /**
+     * Will add the contents of this.state.artworkBuffer into the project
+     * inside of the firebase DB.
+     * Duplicates are ignored, and order is un-important.
+     */
+    addArtworksToProject = () => {
+        let updates = this.state.artworkBuffer;
+        console.log(">>adding artworks");
+
+        let projectID  = this.state.currentProject[1]; // index 1 is the ID
+        let projectRef = `projects/${projectID}`
+
+        firebase.database().ref(projectRef).transaction((node)=>{
+            if (!node.artworks) {
+                node.artworks = [];
+            }
+            let unique = new Set(node.artworks.concat(updates));
+            node.artworks = Array.from(unique);
+            console.log(node.artworks);
+            return node;
+        },()=>{
+            console.log(">>Project Updated successfully");
         });
     }
 
     /**
-     * Uses state.projectIDs to fetch the names of each project, then updates
-     * state.projects with an array of strings.
+     * 
+     * @param {[type]} artwordUID [description]
      */
-    fetchProjectNames = () => {
-        
+    addArtworkToBuffer = (artwork) => {
+        let buffer = new Set(this.state.artworkBuffer);
+        buffer.add(artwork);
+        let theBuffer = Array.from(buffer);
+        this.setState({artworkBuffer:theBuffer});
+    }
+
+    removeArtworkFromBuffer = (artwork) => {
+        let buffer = new Set(this.state.artworkBuffer);
+        buffer.delete(artwork);
+        let theBuffer = Array.from(buffer);
+        this.setState({artworkBuffer:theBuffer});
     }
 
     /**
@@ -111,50 +152,5 @@ export default class SearchMain extends React.Component {
             });
         });
     }
-
-    /**
-     * updates the this.state.results to be data.rows
-     */
-    updateResults = (data) => {
-        this.setState({results: data.rows});
-    }
-
-
-    /**
-     * Updates the value of this.state.currentProject
-     * @param  {String} newName [name of new current project]
-     */
-    changeProject = (newName) => {
-        this.setState({currentProject:newName});
-        console.log("Updated project to ->", newName.label);
-    }
-
-    /**
-     * Takes in artworks to be extended to existing artworks in current 'project'
-     * Note that this array acts as a Set, in that only unique elements should be
-     * allowed to appear. Duplicates are ignored, and order is un-important.
-     * @param {Array} artworks A list of artworks currently in the project.
-     */
-    addArtworksToProject = (updates) => {
-        console.log(">>adding artworks", updates);
-        this.setState({artworkBuffer:updates});
-
-        let projectID  = "-KUd7ZoWtuWtU4XGIgXA"; //FIXME replace with this.state.currentProejctID
-        let projectRef = `projects/${projectID}`
-
-        firebase.database().ref(projectRef).transaction((node)=>{
-            if (!node.artworks) {
-                node.artworks = [];
-            }
-            let unique = new Set(node.artworks.concat(updates));
-            node.artworks = Array.from(unique);
-            console.log(node.artworks);
-            return node;
-        },()=>{
-            console.log(">>Project Updated successfully");
-        });
-
-    }
-
 
 }

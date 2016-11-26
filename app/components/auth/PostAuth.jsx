@@ -1,5 +1,6 @@
 // Libs
 import React                from 'react';
+import firebase             from 'firebase';
 import Snackbar             from 'material-ui/Snackbar';
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
@@ -22,7 +23,8 @@ export default class PostAuth extends React.Component {
         managerIsOpen: true,
         navIsOpen    : false,
         user         : {},
-        role         : "search"
+        role         : "search",
+        projects     : []
     };
 
     constructor(props) {
@@ -42,9 +44,9 @@ export default class PostAuth extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchProjects();
         console.log("++++++PostAuth");
         window.addEventListener("resize", this.rerender);
-
     }
 
     componentWillUnmount() {
@@ -63,6 +65,7 @@ export default class PostAuth extends React.Component {
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
                 <SearchMain
+                    projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}  />
@@ -79,7 +82,8 @@ export default class PostAuth extends React.Component {
                 <HamburgerIcon
                     toggleNav={this.toggleNav}
                     navIsOpen={this.state.navIsOpen} />
-                <SearchMain
+                <ManagerMain
+                    projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}  />
@@ -143,5 +147,56 @@ export default class PostAuth extends React.Component {
             managerIsOpen: !this.state.managerIsOpen
         });
     };
+
+    /**
+     * Gathers the list of projects that this user has access to, and passes
+     * this list to fetchProjectsNames on callback.
+     */
+    fetchProjects = () => {
+        let thisUID    = firebase.auth().currentUser.uid;
+        let projectsPath = `users/${thisUID}/projects`;
+        firebase.database().ref(projectsPath).once('value',this.fetchProjectNames);
+    }
+
+    /**
+     * Uses data passed from fetchProjects  to fetch the names of each project, then updates
+     * state.projects.
+     */
+    fetchProjectNames = (snapshot) => {
+        console.log("Fetching...");
+        let projects = [];
+        let projectIDs = snapshot.val()
+        let leng = projectIDs.length;
+
+        for (var i = 0; i < leng ; i++) {
+            let projID = projectIDs[i];
+
+            let callback;
+            if (i === leng-1) { // if in last loop, pass special callback
+                callback = (snapshot) => {
+                    console.log("!!!!!!!!!!!");
+                    let data = snapshot.val()
+                    let thisProj = [data.name,data.id]
+                    projects.push(thisProj)
+                    // ids has all ids in order
+
+                    this.setState({projects:projects});
+                    console.log(this.state.projects, "SUCCESS");
+                }
+            } else {
+                callback = (snapshot) => {
+                    let data = snapshot.val()
+                    let thisProj = [data.name,data.id]
+                    projects.push(thisProj)
+                }
+            }
+
+            // make calls
+            let path   = `projects/${projID}`;
+            firebase.database().ref(path).once('value', callback,(err)=>{
+                console.log(err);
+            });
+        }
+    }
 
 }

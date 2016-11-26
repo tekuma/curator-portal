@@ -33,12 +33,10 @@ export default class HiddenNav extends React.Component {
 
     componentWillMount() {
         console.log("-----HiddenNav");
-        console.log(">>>>>");
         console.log(this.navItems);
     }
 
     render() {
-        console.log("HERE");
         const navItems = this.navItems;
         let avatar ='assets/images/default-avatar.png';
 
