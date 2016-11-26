@@ -1364,6 +1364,10 @@ main, .artworks {
 	overflow: hidden;
 }
 
+.artwork.search.selected {
+		border: 5px solid #e9217e;
+}
+
 .artwork:hover {
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19),
 	0 6px 6px rgba(0,0,0,0.23);
@@ -1377,6 +1381,10 @@ main, .artworks {
 	display: block;
 	width: 100%;
 	height: auto;
+}
+
+.artwork-image.search:hover {
+		cursor: pointer;
 }
 
 .artwork-image img {
@@ -1438,6 +1446,19 @@ main, .artworks {
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
+}
+.search-artwork-checkbox-container {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 40px;
+		height: 40px;
+		margin: 0;
+		background: #ffffff;
+}
+
+input[type=checkbox].search-artwork-checkbox {
+		margin: 0;
 }
 
 /*========================================== */
