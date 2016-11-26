@@ -20,7 +20,7 @@ export default class ProjectSelector extends React.Component {
 
     render() {
         let options = this.props.projects.map( (project)=>{
-                return {label: project[0], value: project[1]}
+                return {label: project[0], value: project[0], id:project[1]}
             });
 
         let display;
@@ -36,7 +36,7 @@ export default class ProjectSelector extends React.Component {
             <div>
                 <div id="project-selector">
                     <Select
-                        autofocus
+
                         options={options}
                         name="project-select"
                         placeholder="Select a project..."
