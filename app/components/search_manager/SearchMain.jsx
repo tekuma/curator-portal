@@ -98,7 +98,8 @@ export default class SearchMain extends React.Component {
             this.setState({currentProject:""})
             console.log("updated project to None");
         } else {
-            let theProj = [newName.label, newName.value]
+            console.log(newName);
+            let theProj = [newName.label, newName.id]
             this.setState({currentProject:theProj});
             console.log("Updated project to ->", theProj);
         }
@@ -110,12 +111,13 @@ export default class SearchMain extends React.Component {
      * Duplicates are ignored, and order is un-important.
      */
     addArtworksToProject = () => {
+        firebase.database().ref();
         let updates = this.state.artworkBuffer;
         console.log(">>adding artworks");
 
         let projectID  = this.state.currentProject[1]; // index 1 is the ID
         let projectRef = `projects/${projectID}`
-
+        console.log(projectRef);
         firebase.database().ref(projectRef).transaction((node)=>{
             if (!node.artworks) {
                 node.artworks = [];
@@ -134,17 +136,27 @@ export default class SearchMain extends React.Component {
      * @param {[type]} artwordUID [description]
      */
     addArtworkToBuffer = (artwork) => {
+        console.log(this.state.artworkBuffer);
         let buffer = new Set(this.state.artworkBuffer);
         buffer.add(artwork);
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
+        setTimeout( ()=>{
+            console.log(this.state.artworkBuffer);
+        }, 50);
+
     }
 
     removeArtworkFromBuffer = (artwork) => {
+        console.log("Remove,before",this.state.artworkBuffer);
         let buffer = new Set(this.state.artworkBuffer);
         buffer.delete(artwork);
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
+        setTimeout( ()=>{
+            console.log("remove,after",this.state.artworkBuffer);
+        }, 50);
+
     }
 
     /**
