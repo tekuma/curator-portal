@@ -20,7 +20,6 @@ export default class SearchHints extends React.Component {
     }
 
     render() {
-
         return(
             <div
                 className="search-hints">

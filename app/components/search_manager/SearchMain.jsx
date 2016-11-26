@@ -61,8 +61,24 @@ export default class SearchMain extends React.Component {
     }
 
     // =============== Methods =====================
-    //
 
+
+    /**
+     * Sets state.projectIDs as an array of all projectIDs of projects which
+     * this user has access to.
+     */
+    fetchProjects = () => {
+        let projectIDs   = [];
+        let thisUID      = firebase.auth().currentUser.uid;
+        let projectsPath = `users/${thisUID}/projects`;
+        firebase.database().ref(projectsPath).once('value',(snapshot)=>{
+            projectIDs = snapshot.val();
+            this.setState({
+                projectIDs: projectIDs
+            });
+            this.fetchProjectNames();
+        });
+    }
 
 
     /**
@@ -113,7 +129,7 @@ export default class SearchMain extends React.Component {
     }
 
     /**
-     * 
+     *
      * @param {[type]} artwordUID [description]
      */
     addArtworkToBuffer = (artwork) => {
