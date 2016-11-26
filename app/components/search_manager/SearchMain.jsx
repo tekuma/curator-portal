@@ -9,10 +9,10 @@ import SearchManager  from './SearchManager';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [{title: "Mona Lisa", uid: "abc123", artist_uid:"deadbeef"}], // current list of search results
+        results       : [{title: "Mona Lisa", uid: "abc123", artist_uid:"deadbeef"}, {title: "Art", uid: "adc231", artist_uid:"decaf"}], // current list of search results
         currentProject: [], // name of current project ["name", "ID"]
-        artworkBuffer : []  // a list of all artworks currently "selected"
-
+        artworkBuffer : [],  // a list of all artworks currently "selected"
+        command:""
     }
 
     constructor(props) {
@@ -33,7 +33,8 @@ export default class SearchMain extends React.Component {
                     projects={this.props.projects}
                     addArtworksToProject={this.addArtworksToProject}
                 />
-              <SearchArtworkManager
+                <SearchArtworkManager
+                    command={this.state.command}
                     results = {this.state.results}
                     managerIsOpen={this.props.managerIsOpen}
                     addArtworkToBuffer={this.addArtworkToBuffer}
@@ -59,29 +60,7 @@ export default class SearchMain extends React.Component {
 
     }
 
-    componentWillReceiveProps(updates){
-        //pass
-    }
-
     // =============== Methods =====================
-
-
-    /**
-     * Sets state.projectIDs as an array of all projectIDs of projects which
-     * this user has access to.
-     */
-    fetchProjects = () => {
-        let projectIDs   = [];
-        let thisUID      = firebase.auth().currentUser.uid;
-        let projectsPath = `users/${thisUID}/projects`;
-        firebase.database().ref(projectsPath).once('value',(snapshot)=>{
-            projectIDs = snapshot.val();
-            this.setState({
-                projectIDs: projectIDs
-            });
-            this.fetchProjectNames();
-        });
-    }
 
 
     /**
@@ -123,15 +102,23 @@ export default class SearchMain extends React.Component {
         console.log(projectRef);
         firebase.database().ref(projectRef).transaction((node)=>{
             if (!node.artworks) {
-                node.artworks = [];
+                node.artworks = {};
             }
-            let unique = new Set(node.artworks.concat(updates));
-            node.artworks = Array.from(unique);
-            console.log(node.artworks);
+            for (var i = 0; i < updates.length; i++) {
+                let update = updates[i]
+                let id = update.uid
+                node.artworks[id] = update
+            }
             return node;
         },()=>{
             console.log(">>Project Updated successfully");
+            this.deselectAllArt();
         });
+    }
+
+    deselectAllArt = () => {
+        this.setState({command: "deselect"});
+        this.setState({command: "",artworkBuffer:[]});
     }
 
     /**
@@ -144,10 +131,6 @@ export default class SearchMain extends React.Component {
         buffer.add(artwork);
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
-        setTimeout( ()=>{
-            console.log(this.state.artworkBuffer);
-        }, 50);
-
     }
 
     removeArtworkFromBuffer = (artwork) => {
@@ -156,10 +139,6 @@ export default class SearchMain extends React.Component {
         buffer.delete(artwork);
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
-        setTimeout( ()=>{
-            console.log("remove,after",this.state.artworkBuffer);
-        }, 50);
-
     }
 
     /**
