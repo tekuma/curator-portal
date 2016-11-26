@@ -95,6 +95,8 @@ export default class ArtworkManager extends React.Component {
                 {this.props.results.map(result => {
                     return (
                         <Artwork
+                            addArtworkToBuffer={this.props.addArtworkToBuffer}
+                            removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
                             result={result} />
                     );
                 })}

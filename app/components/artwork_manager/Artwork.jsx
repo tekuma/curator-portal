@@ -7,6 +7,10 @@ import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 
 
 export default class Artwork extends React.Component {
+    state = {
+        selected: false
+    }
+
     constructor(props) {
         super(props);
     }
@@ -33,8 +37,11 @@ export default class Artwork extends React.Component {
 
         return (
             <article
-                className="artwork">
-                <div className="artwork-image">
+                htmlFor={imageUID}
+                className={ this.state.selected ? "artwork search selected": "artwork search"}>
+                <div
+                    onClick={this.toggleArtworkSelection}
+                    className="artwork-image search">
                     <img src={imageURL} />
                 </div>
                 <div className="artwork-info review">
@@ -48,5 +55,19 @@ export default class Artwork extends React.Component {
 
     componentDidMount() {
         console.log("+++++++Artwork");
+    }
+
+    toggleArtworkSelection = () => {
+
+        // Add to buffer if originally false, else remove it
+        if (!this.state.selected) {
+            this.props.addArtworkToBuffer(this.props.result);
+        } else {
+            this.props.removeArtworkFromBuffer(this.props.result);
+        }
+
+        this.setState({
+            selected: !this.state.selected
+        });
     }
 }
