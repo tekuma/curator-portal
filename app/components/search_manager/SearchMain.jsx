@@ -94,6 +94,7 @@ export default class SearchMain extends React.Component {
      * @param  {String} newName [name of new current project]
      */
     changeProject = (newName) => {
+        console.log(newName);
         if (newName === null) {
             this.setState({currentProject:""})
             console.log("updated project to None");
