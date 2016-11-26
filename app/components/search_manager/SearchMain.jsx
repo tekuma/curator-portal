@@ -9,8 +9,8 @@ import SearchManager  from './SearchManager';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [],
-        projects      : [],
+        results       : ["result1"],
+        projects      : ["New", "Improved"],
         projectIDs    : [],
         currentProject: "",
         artworkBuffer : []
@@ -86,7 +86,7 @@ export default class SearchMain extends React.Component {
      * state.projects with an array of strings.
      */
     fetchProjectNames = () => {
-        
+
     }
 
     /**

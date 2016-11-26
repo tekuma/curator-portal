@@ -49,15 +49,13 @@ export default class PostAuthHeader extends React.Component {
                             </g>
                         </svg>
                 	</div>
-                    <div className="project-selector-containter">
-                    <div className="project-selector">
-                        <ProjectSelector
-                            currentProject={this.props.currentProject}
-                            changeProject={this.props.changeProject}
-                            projects={this.props.projects}
-                        />
-                    </div>
-                    </div>
+                  <div className="project-selector">
+                      <ProjectSelector
+                          currentProject={this.props.currentProject}
+                          changeProject={this.props.changeProject}
+                          projects={this.props.projects}
+                      />
+                  </div>
 
                     <div className="header-icons">
                         <OverlayTrigger placement="bottom" overlay={addArtworkTooltip}>
