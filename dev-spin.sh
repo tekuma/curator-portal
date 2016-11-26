@@ -13,13 +13,25 @@ if pgrep nginx > /dev/null; then
 fi
 
 cleanup () {
-    kill $webpackserv_pid;
-    sudo nginx -s stop
+    if [ -n $webpackserv_pid ]; then
+	kill $webpackserv_pid
+    fi
+    if [ -n $serv_pid ]; then
+        kill $serv_pid
+    fi
+    if [ -f /run/nginx.pid ]; then
+	sudo kill `cat /run/nginx.pid`
+    fi
+    exit
 }
+trap cleanup INT
 
 echo Running from directory `pwd`
 sudo nginx -c `pwd`/conf/dev-nginx.conf
-nohup npm run start&
+npm run start > /dev/null &
 webpackserv_pid=$!
-trap cleanup INT
-node serv/main.js --firebase-mockup
+
+node serv/main.js --firebase-mockup > /dev/null &
+serv_pid=$!
+
+wait
