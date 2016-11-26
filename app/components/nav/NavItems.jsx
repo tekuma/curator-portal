@@ -1,7 +1,7 @@
 import React   from 'react';
 import NavItem from './NavItem';
 
-export default ({navItems, changeAppLayout, signOutUser}) => {
+export default ({navItems, changeAppLayout}) => {
     return (
         <ul
             className="nav-locker scrollable"
@@ -12,22 +12,11 @@ export default ({navItems, changeAppLayout, signOutUser}) => {
                     <NavItem
                         key={item.id}
                         navItem={item}
-                        changeAppLayout={changeAppLayout} />
+                        changeAppLayout={changeAppLayout}
+                     />
                 );
             })}
-            <li
-                className="nav-item">
-                <a
-                    href="http://tekuma.io/artist/artist-faq/"
-                    target="_blank"
-                    title="Learn about Tekuma's Artist Service"
-                    >
-        			<div>
-                        <img className="nav-icon" src="assets/images/icons/gears-white.svg" />
-        				<h3 className="nav-writing"> How Does It Work?</h3>
-        			</div>
-                </a>
-    		</li>
+
         </ul>
     );
 }

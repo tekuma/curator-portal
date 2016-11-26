@@ -1,6 +1,7 @@
 //Libs
 import React     from 'react';
 import Select    from 'react-select';
+import Creatable from 'react-select';
 
 /**
  * This component handles selecting which project to add artworks too.

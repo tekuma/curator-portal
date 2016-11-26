@@ -10,7 +10,8 @@ import SearchManager  from './SearchManager';
 export default class SearchMain extends React.Component {
     state = {
         results       : [],
-        projects      : ["New Project", "84 Winter St", "GRT"], //TODO
+        projects      : [],
+        projectIDs    : [],
         currentProject: "",
         artworkBuffer : []
     }
@@ -53,6 +54,7 @@ export default class SearchMain extends React.Component {
 
     componentDidMount() {
         console.log("+++++SearchMain");
+        this.fetchProjects();
     }
 
     componentWillReceiveProps(updates){
@@ -60,6 +62,32 @@ export default class SearchMain extends React.Component {
     }
 
     // =============== Methods =====================
+    //
+
+    /**
+     * Sets state.projectIDs as an array of all projectIDs of projects which
+     * this user has access to.
+     */
+    fetchProjects = () => {
+        let projectIDs = [];
+        let thisUID    = firebase.auth().currentUser.uid;
+        let projectsPath = `users/${thisUID}/projects`;
+        firebase.database().ref(projectsPath).once('value',(snapshot)=>{
+            projectIDs = snapshot.val();
+            this.setState({
+                projectIDs: projectIDs
+            });
+            this.fetchProjectNames();
+        });
+    }
+
+    /**
+     * Uses state.projectIDs to fetch the names of each project, then updates
+     * state.projects with an array of strings.
+     */
+    fetchProjectNames = () => {
+        
+    }
 
     /**
      * [doQuery description] TODO

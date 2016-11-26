@@ -1,7 +1,7 @@
 // Libs
 import React          from 'react';
 import firebase       from 'firebase';
-// import uuid           from 'node-uuid';
+import uuid           from 'node-uuid';
 // Files
 import DisplayNameTag from './DisplayNameTag';
 import LogoutButton   from './LogoutButton';
@@ -11,14 +11,20 @@ import NavItems       from './NavItems';
 
 export default class HiddenNav extends React.Component {
     navItems = [
-        // {
-        //     id: uuid.v4(),
-        //     item: 'Artworks',
-        //     icon: '../../assets/images/icons/organize-outline.svg',
-        //     href:  Views.ARTWORKS,
-        //     title: 'Manage Artworks'
-        // }
-        //
+        {
+            id   : uuid.v4(),
+            item : 'Search',
+            icon : 'assets/images/icons/search.svg',
+            href : "search",
+            title: 'Search the Tekuma art DB'
+        },
+        {
+            id   : uuid.v4(),
+            item : 'Manage',
+            icon : 'assets/images/icons/manage.svg',
+            href : "manage",
+            title: 'Manage Projects'
+        }
     ];
 
     constructor(props) {
@@ -27,24 +33,19 @@ export default class HiddenNav extends React.Component {
 
     componentWillMount() {
         console.log("-----HiddenNav");
+        console.log(">>>>>");
+        console.log(this.navItems);
     }
 
     render() {
+        console.log("HERE");
         const navItems = this.navItems;
         let avatar ='assets/images/default-avatar.png';
-
-        // if(this.props.user.info != null &&
-        //     this.props.user.info.hasOwnProperty('avatar') &&
-        //     this.props.user.info.avatar != "") {
-        //         avatar = this.props.user.info.avatar;
-        //     } else {
-        //         avatar = //
-        //     }
 
         let avatarStyle = {
             backgroundImage: 'url(' + avatar + ')'
         }
-        let displayName = "Cool Curator";
+        let displayName = "Curator Name";
 
         // if (this.props.user.info && this.props.user.info.display_name) {
         //     displayName = this.props.user.info.display_name; // This is here because of the initial split second an account isn't created
@@ -61,7 +62,7 @@ export default class HiddenNav extends React.Component {
                     displayName={displayName}
                     navIsOpen={this.props.navIsOpen} />
                 <NavItems
-                    navItems={navItems}
+                    navItems={this.navItems}
                     changeAppLayout={this.props.changeAppLayout} />
                 <LogoutButton
                     signOutUser={this.signOutUser} />

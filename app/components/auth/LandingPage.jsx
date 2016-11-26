@@ -122,48 +122,48 @@ export default class LandingPage extends React.Component {
  * Used to log in a user
  * @param  {[HTML element]} e [The element that has been pressed]
  */
-onLogin = (e) => {
-    e.preventDefault();
+    onLogin = (e) => {
+        e.preventDefault();
 
 
-    // Clear errors from any previous form submission
-    let data = {};
-    let email = this.refs.email.value;
-    let password = this.refs.password.value;
+        // Clear errors from any previous form submission
+        let data = {};
+        let email = this.refs.email.value;
+        let password = this.refs.password.value;
 
-    if(email.length == 0) {
-        this.state.errors.push("Please enter an email address.");
-    } else if(!/.+@.+\..+/.test(email)) {
-        this.state.errors.push("The email address you supplied is invalid.");
-e   }
+        if(email.length == 0) {
+            this.state.errors.push("Please enter an email address.");
+        } else if(!/.+@.+\..+/.test(email)) {
+            this.state.errors.push("The email address you supplied is invalid.");
+        }
 
-    if(password.length == 0) {
-        this.state.errors.push("Please enter your password.");
+        if(password.length == 0) {
+            this.state.errors.push("Please enter your password.");
+        }
+
+        if(this.state.errors.length == 0) {
+            data.email = email;
+            data.password = password;
+            this.props.authenticateWithPassword(data);
+        }
+
+        this.forceUpdate();
+
+        // for(let i = 0; i < this.state.errors.length; i++) {
+        //     setTimeout(() => {
+        //         this.setState({
+        //             currentError: this.state.errors[i]
+        //         });
+        //     }, 3000 * i);
+        //
+        //     setTimeout(() => {
+        //         this.setState({
+        //             currentError: "",
+        //             errors: []
+        //         });
+        //     }, 3000 * i + 4000);
+        // }
     }
-
-    if(this.state.errors.length == 0) {
-        data.email = email;
-        data.password = password;
-        this.props.authenticateWithPassword(data);
-    }
-
-    this.forceUpdate();
-
-    // for(let i = 0; i < this.state.errors.length; i++) {
-    //     setTimeout(() => {
-    //         this.setState({
-    //             currentError: this.state.errors[i]
-    //         });
-    //     }, 3000 * i);
-    //
-    //     setTimeout(() => {
-    //         this.setState({
-    //             currentError: "",
-    //             errors: []
-    //         });
-    //     }, 3000 * i + 4000);
-    // }
-}
 
 
 

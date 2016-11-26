@@ -22,7 +22,7 @@ export default class PostAuth extends React.Component {
         managerIsOpen: true,
         navIsOpen    : false,
         user         : {},
-
+        role         : "search"
     };
 
     constructor(props) {
@@ -34,6 +34,26 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
+        if (this.state.role === "search") {
+            return this.goToSearch();
+        } else {
+            return this.goToManage();
+        }
+    }
+
+    componentDidMount() {
+        console.log("++++++PostAuth");
+        window.addEventListener("resize", this.rerender);
+
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.rerender);
+    }
+
+// =========== Flow Control =============
+
+    goToSearch = () => {
         return(
             <div>
                 <HiddenNav
@@ -50,14 +70,21 @@ export default class PostAuth extends React.Component {
         );
     }
 
-    componentDidMount() {
-        console.log("++++++PostAuth");
-        window.addEventListener("resize", this.rerender);
-
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.rerender);
+    goToManage = () => {
+        return(
+            <div>
+                <HiddenNav
+                    navIsOpen={this.state.navIsOpen}
+                    changeAppLayout={this.changeAppLayout} />
+                <HamburgerIcon
+                    toggleNav={this.toggleNav}
+                    navIsOpen={this.state.navIsOpen} />
+                <SearchMain
+                    navIsOpen={this.state.navIsOpen}
+                    managerIsOpen={this.state.managerIsOpen}
+                    toggleManager={this.toggleManager}  />
+            </div>
+        );
     }
 
 // ============= Methods ===============
@@ -89,15 +116,17 @@ export default class PostAuth extends React.Component {
      * The value can be: Views.UPLOAD, Views.ARTWORKS, and Views.PROFILE
      * @param  {[A field of the Views object]} view [View to be displayed]
      */
-    changeAppLayout = (view) => {
+    changeAppLayout = (role) => {
         if(this.state.navIsOpen) {
             this.setState({
                 navIsOpen: false,
-                managerIsOpen: true
+                managerIsOpen: true,
+                role:role
             });
         } else {
             this.setState({
-                managerIsOpen: true
+                managerIsOpen: true,
+                role:role
             });
         }
     }

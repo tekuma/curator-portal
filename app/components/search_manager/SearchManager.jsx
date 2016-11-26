@@ -17,21 +17,22 @@ export default class SearchManager extends React.Component {
     state = {
         searchCategories: {
             general: false,
-            artist: false,
-            tag   : false,
-            title : false,
-            time  : false,
-            color : false
+            artist : false,
+            tag    : false,
+            title  : false,
+            time   : false,
+            color  : false
         },
         accordion: {
-            general    : false,
-            artist      : false,
-            tag         : false,
-            title       : false,
-            time        : false,
-            color       : false
+            general : false,
+            artist  : false,
+            tag     : false,
+            title   : false,
+            time    : false,
+            color   : false
         },
-        allAccordion    : false
+        allAccordion : false
+
     }
 
     constructor(props) {
