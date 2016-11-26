@@ -3,7 +3,7 @@ import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 // Files
 import ProjectSelector from './ProjectSelector';
-import Views           from '../../constants/Views';
+import Roles          from '../constants/Roles';
 
 /**
  * CurationHeader is omnipresent in the portal once the user is authenticated.
@@ -64,7 +64,7 @@ export default class PostAuthHeader extends React.Component {
                                  onClick={this.handleProjectAdditions}
                                  onTouchTap={this.handleProjectAdditions}
                                 >
-                                 <img src='assets/images/icons/plus-pink.svg' />
+                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/plus-pink.svg' : 'assets/images/icons/minus-pink.svg'} />
                              </div>
                         </OverlayTrigger>
 
@@ -87,9 +87,16 @@ export default class PostAuthHeader extends React.Component {
 
     // ------------ METHODS -------------
 
-    handleProjectAdditions = () => {
-        this.props.addArtworksToProject(this.state.artworkBuffer);
-        console.log(">>Art: ", this.state.artworkBuffer);
+    handleProjectAdditionsOrDeletions = () => {
+
+        if (this.props.role == Roles.SEARCH) {
+            this.props.addArtworksToProject(this.state.artworkBuffer);
+            console.log(">>Art: ", this.state.artworkBuffer);
+        } else {
+            // REMOVE ARTWORKS FROM PROJECT FUNCTION
+            console.log("Removed selected artworks: ");
+        }
+
     }
 
 }

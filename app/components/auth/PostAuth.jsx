@@ -11,8 +11,10 @@ import ArtworkManager from '../artwork_manager/ArtworkManager';
 import Artwork        from '../artwork_manager/Artwork';
 import SearchManager  from '../search_manager/SearchManager';
 import SearchMain     from '../search_manager/SearchMain';
+import ManagerMain    from '../manage/ManagerMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
+import Roles          from '../constants/Roles';
 
 
 /**
@@ -23,7 +25,7 @@ export default class PostAuth extends React.Component {
         managerIsOpen: true,
         navIsOpen    : false,
         user         : {},
-        role         : "search",
+        role         : Roles.SEARCH,
         projects     : []
     };
 
@@ -36,7 +38,7 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        if (this.state.role === "search") {
+        if (Roles.SEARCH) {
             return this.goToSearch();
         } else {
             return this.goToManage();
@@ -59,6 +61,7 @@ export default class PostAuth extends React.Component {
         return(
             <div>
                 <HiddenNav
+                    role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
                 <HamburgerIcon
@@ -77,6 +80,7 @@ export default class PostAuth extends React.Component {
         return(
             <div>
                 <HiddenNav
+                    role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
                 <HamburgerIcon
