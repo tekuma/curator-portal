@@ -3,15 +3,13 @@ import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 // Files
 import ProjectSelector from './ProjectSelector';
-import Roles          from '../../constants/Roles';
+import Roles           from '../../constants/Roles';
 
 /**
  * CurationHeader is omnipresent in the portal once the user is authenticated.
  */
 export default class PostAuthHeader extends React.Component {
     state = {
-        searchTerm   : "",
-        artworkBuffer: ["test art 1", "test art 2"]
     }
 
     constructor(props) {
@@ -95,17 +93,16 @@ export default class PostAuthHeader extends React.Component {
 
     // ------------ METHODS -------------
 
+    /**
+     * 
+     * @return {[type]} [description]
+     */
     handleProjectAdditionsOrDeletions = () => {
-
         if (this.props.role == Roles.SEARCH) {
-            console.log("added selected artworks: ");
-            this.props.addArtworksToProject(this.state.artworkBuffer);
-            console.log(">>Art: ", this.state.artworkBuffer);
+            this.props.addArtworksToProject();
         } else {
-            // REMOVE ARTWORKS FROM PROJECT FUNCTION
-            console.log("Removed selected artworks: ");
+            this.props.deleteArtworksFromProject();
         }
-
     }
 
 }

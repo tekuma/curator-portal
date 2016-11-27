@@ -11,9 +11,9 @@ import CurationHeader from '../headers/CurationHeader';
 export default class ManagerMain extends React.Component {
     state = {
         projectArtworks: [],
-        artworkBuffer :[],
-        currentProject:[],
-        results:[] // contents of the project
+        artworkBuffer  : [],
+        currentProject : [],
+        command        : "",
     }
 
     constructor(props) {
@@ -32,8 +32,10 @@ export default class ManagerMain extends React.Component {
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
                     projects={this.props.projects}
+                    deleteArtworksFromProject={this.deleteArtworksFromProject}
                 />
               <ProjectArtworkManager
+                    command={this.state.command}
                     projectArtworks={this.state.projectArtworks}
                     managerIsOpen={this.props.managerIsOpen}
                     addArtworkToBuffer={this.addArtworkToBuffer}
@@ -56,6 +58,7 @@ export default class ManagerMain extends React.Component {
 
     componentDidMount() {
         console.log("+++++ManagerMain");
+        this.fetchProjectArtworks();
     }
 
     componentWillReceiveProps(updates){
@@ -64,22 +67,45 @@ export default class ManagerMain extends React.Component {
 
     // =============== Methods =====================
 
+    /**
+     * This method sets the state.command to be "select",
+     * just for an instant. This is then sent down the tree to
+     * Artwork.jsx, where it can mutate the state of artwork.
+     */
     selectAllArt = () => {
-        let buffer = this.state.results;
+        let buffer = this.state.projectArtworks;
         this.setState({command:"select"});
         this.setState({command:"",artworkBuffer:buffer})
     }
-
     deselectAllArt = () => {
         this.setState({command:"deselect"});
         this.setState({command:"",artworkBuffer:[]});
     }
 
     /**
-     * updates the this.state.results to be data.rows
+     * When called, will fetch all artworks from the Project
+     * in the firebase database.
      */
-    updateResults = (data) => {
-        this.setState({results: data.rows});
+    fetchProjectArtworks = () => {
+        if (this.state.currentProject.length == 2) {
+            console.log("not null");
+            console.log(this.state.currentProject);
+            let projectID = this.state.currentProject[1];
+            let path = `projects/${projectID}`
+            console.log(path);
+            firebase.database().ref(path).on("value", (snapshot)=>{
+                let art = [];
+                let node = snapshot.val();
+                console.log("here", node);
+
+                for (var key in node.artworks) { // obj -> array
+                    if (node.artworks.hasOwnProperty(key)) {
+                        art.push(node.artworks[key]);
+                    }
+                }
+                this.setState({projectArtworks:art});
+            });
+        }
     }
 
     /**
@@ -91,13 +117,15 @@ export default class ManagerMain extends React.Component {
             this.setState({currentProject:""})
             console.log("updated project to None");
         } else {
-            let theProj = [newName.label, newName.value]
+            let theProj = [newName.label, newName.id];
             this.setState({currentProject:theProj});
+            setTimeout( ()=>{
+                this.fetchProjectArtworks();
+            }, 50);
             console.log("Updated project to ->", theProj);
         }
     }
 
-    getProjectContents
 
     /**
      * Will add the contents of this.state.artworkBuffer into the project
@@ -113,27 +141,25 @@ export default class ManagerMain extends React.Component {
 
         firebase.database().ref(projectRef).transaction((node)=>{
             if (!node.artworks) {
-                node.artworks = [];
+                node.artworks = {};
             }
-            let projectArt = new Set(node.artworks);
+
             for (var i = 0; i < updates.length; i++) {
                 let update = updates[i];
-                projectArt.delete(update);
+                let id = update.uid; // uid or id ?
+                node.artworks[id] = null; //delete
             }
-            node.artworks = Array.from(projectArt);
-            console.log(node.artworks);
             return node;
         },()=>{
             console.log(">>Project Updated successfully");
         });
     }
-
+    
 
     addArtworkToBuffer = (artwork) => {
-        let buffer = new Set(this.state.artworkBuffer);
-        buffer.add(artwork);
-        let theBuffer = Array.from(buffer);
-        this.setState({artworkBuffer:theBuffer});
+        let buffer = this.state.artworkBuffer;
+        buffer.push(artwork);
+        this.setState({artworkBuffer:buffer});
     }
 
     removeArtworkFromBuffer = (artwork) => {
@@ -142,11 +168,5 @@ export default class ManagerMain extends React.Component {
         let theBuffer = Array.from(buffer);
         this.setState({artworkBuffer:theBuffer});
     }
-
-    /**
-     * Sets state.projectIDs as an array of all projectIDs of projects which
-     * this user has access to.
-     */
-
 
 }

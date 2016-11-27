@@ -36,10 +36,10 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
+        console.log(this.state.role);
         if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
         } else {
-            console.log("GOing to Manage (PostAuth)");
             return this.goToManage();
         }
     }

@@ -3,16 +3,16 @@ import React    from 'react';
 import firebase from 'firebase';
 // Components
 import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
-import CurationHeader from '../headers/CurationHeader';
-import SearchManager  from './SearchManager';
+import CurationHeader       from '../headers/CurationHeader';
+import SearchManager        from './SearchManager';
 
 
 export default class SearchMain extends React.Component {
     state = {
         results       : [{title: "Mona Lisa", uid: "abc123", artist_uid:"deadbeef"}, {title: "Art", uid: "adc231", artist_uid:"decaf"}], // current list of search results
-        currentProject: [], // name of current project ["name", "ID"]
+        currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
-        command:""
+        command       : ""   // used for controlling artworks
     }
 
     constructor(props) {
