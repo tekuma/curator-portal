@@ -36,7 +36,7 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        console.log(this.state.role);
+        // console.log(this.state.role);
         if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
         } else {
@@ -47,7 +47,7 @@ export default class PostAuth extends React.Component {
     componentDidMount() {
         this.fetchProjects();
         console.log("++++++PostAuth");
-        window.addEventListener("resize", this.rerender);
+        window.addEventListener("resize",    this.rerender);
     }
 
     componentWillUnmount() {
@@ -88,6 +88,7 @@ export default class PostAuth extends React.Component {
                     navIsOpen={this.state.navIsOpen} />
                 <ManagerMain
                     role={this.state.role}
+                    createNewProject={this.props.createNewProject}
                     projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
@@ -159,13 +160,13 @@ export default class PostAuth extends React.Component {
      * this list to fetchProjectsNames on callback.
      */
     fetchProjects = () => {
-        let thisUID    = firebase.auth().currentUser.uid;
+        let thisUID      = firebase.auth().currentUser.uid;
         let projectsPath = `users/${thisUID}/projects`;
         firebase.database().ref(projectsPath).once('value',this.fetchProjectNames);
     }
 
     /**
-     * Uses data passed from fetchProjects  to fetch the names of each project, then updates
+     * Uses data passed from fetchProjects to fetch the names of each project, then updates
      * state.projects.
      */
     fetchProjectNames = (snapshot) => {

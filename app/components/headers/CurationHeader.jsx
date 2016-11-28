@@ -8,7 +8,7 @@ import Roles           from '../../constants/Roles';
 /**
  * CurationHeader is omnipresent in the portal once the user is authenticated.
  */
-export default class PostAuthHeader extends React.Component {
+export default class CurationHeader extends React.Component {
     state = {
     }
 
@@ -57,6 +57,7 @@ export default class PostAuthHeader extends React.Component {
                 	</div>
                   <div className="project-selector">
                       <ProjectSelector
+                          role={this.props.role}
                           currentProject={this.props.currentProject}
                           changeProject={this.props.changeProject}
                           projects={this.props.projects}
@@ -94,7 +95,7 @@ export default class PostAuthHeader extends React.Component {
     // ------------ METHODS -------------
 
     /**
-     * 
+     *
      * @return {[type]} [description]
      */
     handleProjectAdditionsOrDeletions = () => {

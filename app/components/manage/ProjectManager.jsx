@@ -159,6 +159,23 @@ export default class ProjectManager extends React.Component {
 // ============= Methods ===============
 
     /**
+     * Creates a new project, then sets the current project to it.
+     */
+    handleCreateNewProject = () => {
+        // create project
+        let projectID = this.props.createNewProject();
+        // give user access to project
+        firebase.database.ref().transaction((node)=>{
+            node.projects.push(projectID)
+            let proj = ["New Project", projectID]
+            // update current project to be the new project
+            this.props.changeProject(proj);
+            return node;
+        });
+    }
+
+
+    /**
      * TODO
      * @param  {[type]} item [description]
      * @return {[type]}      [description]

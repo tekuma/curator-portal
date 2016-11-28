@@ -44,6 +44,8 @@ export default class ManagerMain extends React.Component {
                 <ProjectManager
                     managerIsOpen={this.props.managerIsOpen}
                     toggleManager={this.props.toggleManager}
+                    createNewProject={this.props.createNewProject}
+                    changeProject={this.props.changeProject}
                     doQuery={this.doQuery}
                  />
                 <div
@@ -83,6 +85,13 @@ export default class ManagerMain extends React.Component {
     }
 
     /**
+     *
+     */
+    renameCurrentProject = (newName) => {
+        //TODO
+    }
+
+    /**
      * When called, will fetch all artworks from the Project
      * in the firebase database.
      */
@@ -110,16 +119,15 @@ export default class ManagerMain extends React.Component {
 
     /**
      * Updates the value of this.state.currentProject
-     * @param  {String} newName [name of new current project]
+     * @param  {Array} newName [name , id]
      */
     changeProject = (newName) => {
         if (newName === null) {
             this.setState({currentProject:""})
             console.log("updated project to None");
         } else {
-            let theProj = [newName.label, newName.id];
-            this.setState({currentProject:theProj});
-            setTimeout( ()=>{
+            this.setState({currentProject:newName});
+            setTimeout( ()=>{ // wait for state to update
                 this.fetchProjectArtworks();
             }, 50);
             console.log("Updated project to ->", theProj);
@@ -154,7 +162,7 @@ export default class ManagerMain extends React.Component {
             console.log(">>Project Updated successfully");
         });
     }
-    
+
 
     addArtworkToBuffer = (artwork) => {
         let buffer = this.state.artworkBuffer;

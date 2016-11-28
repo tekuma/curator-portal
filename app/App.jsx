@@ -37,7 +37,8 @@ import PostAuth from './components/auth/PostAuth';
 
 
 /**
- * Root of App
+ * Root of App.
+ * NOTE: default signifies that this is the only class exported from this file.
  */
 export default class App extends React.Component {
     state = {
@@ -60,7 +61,8 @@ export default class App extends React.Component {
     render() {
         if (this.state.loggedIn) {
             return(
-                <PostAuth/>
+                <PostAuth
+                    createNewProject={this.createNewProject}/>
             );
         } else {
             return(
@@ -99,7 +101,7 @@ export default class App extends React.Component {
         firebase.auth().signInWithEmailAndPassword(data.email, data.password)
         .then( (thisUser) => {
             console.log(">Password Auth successful for:", thisUser.displayName);
-            this.checkReturningUser(thisUser);
+            this.checkReturningUser(thisUser); // *
         }).catch( (error) => {
             console.error(error);
             this.setState({

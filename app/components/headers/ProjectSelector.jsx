@@ -1,7 +1,7 @@
 //Libs
 import React     from 'react';
 import Select    from 'react-select';
-import Creatable from 'react-select';
+import {Creatable} from 'react-select';
 
 /**
  * This component handles selecting which project to add artworks too.
@@ -28,7 +28,7 @@ export default class ProjectSelector extends React.Component {
         if (this.props.currentProject.length === 0) {
             display = "";
         } else {
-            display = this.props.currentProject[0]; // FIXME not working
+            display = this.props.currentProject[0];
         }
         // console.log(display);
 

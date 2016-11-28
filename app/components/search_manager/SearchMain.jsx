@@ -72,7 +72,7 @@ export default class SearchMain extends React.Component {
 
     /**
      * Updates the value of this.state.currentProject
-     * @param  {String} newName [name of new current project]
+     * @param  {Object} newName [obj.label , obj.id]
      */
     changeProject = (newName) => {
         console.log(newName);
