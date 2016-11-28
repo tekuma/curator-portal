@@ -4002,7 +4002,8 @@ label.age-confirm-label {
 	border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
-.search-tool.right-border {
+.search-tool.right-border,
+.manage-tool.right-border {
 	border-right: 1px solid rgba(255,255,255,0.12);
 }
 
@@ -4237,6 +4238,7 @@ label.age-confirm-label {
 	-moz-justify-content: center;
 	border-left: 1px solid #222222;
 	margin: 10px 0;
+	cursor: pointer;
 }
 
 .project-edit-button {

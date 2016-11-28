@@ -2,6 +2,7 @@
 import React     from 'react';
 import Select    from 'react-select';
 import Creatable from 'react-select';
+import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 
 /**
  * This component handles selecting which project to add artworks too.
@@ -40,14 +41,26 @@ export default class ProjectSelector extends React.Component {
             display: "inline-block"
         }
 
+        const addProjectTooltip = (
+            <Tooltip
+                id="add-project-tooltip"
+                className="tooltip">
+                Add Project
+            </Tooltip>
+        );
+
         return (
             <div>
                 <div
                     id="project-selector"
                     style={selectorContainerWidth}>
-                    <div className="add-project-button">
-                        <img src='assets/images/icons/plus-white.svg' />
-                    </div>
+                    <OverlayTrigger
+                        placement   ="bottom"
+                        overlay     ={addProjectTooltip}>
+                        <div className="add-project-button">
+                            <img src='assets/images/icons/plus-white.svg' />
+                        </div>
+                    </OverlayTrigger>
                     <Select
                         className="project-select"
                         style={selectorWidth}
