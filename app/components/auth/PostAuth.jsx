@@ -36,7 +36,6 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        // console.log(this.state.role);
         if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
         } else {
@@ -134,7 +133,6 @@ export default class PostAuth extends React.Component {
                 managerIsOpen: true,
                 role:role
             });
-            console.log("Changed ROLE: ", role);
         } else {
             this.setState({
                 managerIsOpen: true,
@@ -171,7 +169,6 @@ export default class PostAuth extends React.Component {
      * state.projects.
      */
     fetchProjectNames = (snapshot) => {
-        console.log("~~Callback from fetchProjectNames");
         if (snapshot.val()) {
             let projects = [];
             let projectIDs = snapshot.val()
@@ -185,16 +182,13 @@ export default class PostAuth extends React.Component {
                 // last iteration, to set the state.
                 if (i === leng-1) { // if in last loop, pass special callback
                     callback = (snapshot) => {
-                        console.log("!!!2", projects,i);
                         let data = snapshot.val()
                         let thisProj = [data.name,data.id]
                         projects.push(thisProj)
-                        console.log(projects);
                         this.setState({projects:projects});
                     }
                 } else {
                     callback = (snapshot) => {
-                        console.log("!!!1");
                         let data = snapshot.val()
                         let thisProj = [data.name,data.id]
                         projects.push(thisProj)

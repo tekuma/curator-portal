@@ -58,7 +58,6 @@ export default class Artwork extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        console.log("Command ==>",newProps);
         if (newProps.command === "deselect") {
             this.setState({selected: false})
         } else if (newProps.command === "select") {

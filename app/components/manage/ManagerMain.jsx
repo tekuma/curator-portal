@@ -202,9 +202,7 @@ export default class ManagerMain extends React.Component {
      * Duplicates are ignored, and order is un-important.
      */
     deleteArtworksFromProject = () => {
-        let updates = this.state.artworkBuffer;
-        console.log(">>adding artworks");
-
+        let updates    = this.state.artworkBuffer;
         let projectID  = this.state.currentProject[1]; // index 1 is the ID
         let projectRef = `projects/${projectID}`
 

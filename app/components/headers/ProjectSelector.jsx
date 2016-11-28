@@ -27,7 +27,6 @@ export default class ProjectSelector extends React.Component {
         let options = this.props.projects.map( (project)=>{
                 return {label: project[0], value: project[0], id:project[1]}
             });
-        console.log(options);
 
         let display;
 
@@ -35,7 +34,6 @@ export default class ProjectSelector extends React.Component {
             display = "";
         } else {
             display = this.props.currentProject[0];
-            console.log("display ->", display, this.props.currentProject);
         }
 
 
