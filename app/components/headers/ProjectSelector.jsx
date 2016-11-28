@@ -30,13 +30,27 @@ export default class ProjectSelector extends React.Component {
         } else {
             display = this.props.currentProject[0];
         }
-        // console.log(display);
+
+        const selectorContainerWidth = {
+            width: window.innerWidth * 0.2 + 36
+        }
+
+        const selectorWidth = {
+            width: window.innerWidth * 0.2 + "!important",
+            display: "inline-block"
+        }
 
         return (
             <div>
-                <div id="project-selector">
+                <div
+                    id="project-selector"
+                    style={selectorContainerWidth}>
+                    <div className="add-project-button">
+                        <img src='assets/images/icons/plus-white.svg' />
+                    </div>
                     <Select
-
+                        className="project-select"
+                        style={selectorWidth}
                         options={options}
                         name="project-select"
                         placeholder="Select a project..."

@@ -692,7 +692,7 @@ input::-webkit-search-cancel-button {
 .project-selector {
 	position: absolute;
 	top   : 12px;
-	right  : 70px;
+	right  : 105px;
 	width : 20%;
 	height: 60px;
 	z-index: 100;
@@ -3964,7 +3964,8 @@ label.age-confirm-label {
 	-ms-transition: all 0.3s;
 }
 
-.search-tools {
+.search-tools,
+.manage-tools {
 	position: absolute;
 	bottom: 60px;
 	right: 0px;
@@ -3977,7 +3978,12 @@ label.age-confirm-label {
 	-ms-transition: all 0.3s;
 }
 
-.search-tool {
+.manage-tools {
+	bottom: 0px;
+}
+
+.search-tool,
+.manage-tool {
 	display: inline-block;
 	width: 50%;
 	height: 60px;
@@ -4000,7 +4006,14 @@ label.age-confirm-label {
 	border-right: 1px solid rgba(255,255,255,0.12);
 }
 
-.search-tool:hover {
+.manage-tool.full {
+	background: #000000;
+	width: 100%;
+}
+
+
+.search-tool:hover,
+.manage-tool:hover {
 	background: #111111;
 	transition: all 0.3s;
 	-webkit-transition: all 0.3s;
@@ -4008,12 +4021,14 @@ label.age-confirm-label {
 	-ms-transition: all 0.3s;
 }
 
-.search-tool img {
+.search-tool img,
+.manage-tool img  {
 	margin-top: 10px;
 	height: 20px;
 }
 
-.search-tool-writing {
+.search-tool-writing,
+.manage-tool-writing {
 	color: #ffffff;
 	font-size: 0.9em;
 	height: 20px;
@@ -4152,8 +4167,28 @@ label.age-confirm-label {
 /*========================================== */
 
 /* Project Manager */
+.project-name-container {
+	width: 100%;
+	height: 60px;
+	background: #000000;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12),
+	0 1px 2px rgba(0,0,0,0.24);
+	padding: 0 20px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	z-index: 9;
+}
+
 .project-name-writing {
-	margin: 10px;
+	margin: 0px;
+	text-align: center;
 }
 
 .project-name {
@@ -4164,22 +4199,92 @@ label.age-confirm-label {
 .edit-project-name {
 	margin-top: 10px;
 	margin-bottom: 10px;
-	margin-left: 10px;
 	border-radius: 3px;
-  appearance: none;
+  	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	-ms-appearance: none;
-  padding: 0.75em .60em;
-  width: 80%;
+  	padding: 0.75em .60em;
+  	width: 80%;
 	height: 40px;
 	background-color: #f4f6f7;
-  border: 1.5px solid #d6d3ce;
-  color: #000000;
+  	border: 1.5px solid #d6d3ce;
+  	color: #000000;
 	font-weight: 500;
 	font-family: "Raleway" , "Helvetica Neue", Helvetica, "Gill Sans", Arial, sans-serif;
-  font-size: 1.3em;
-  line-height: normal;
+  	font-size: 1.3em;
+  	line-height: normal;
+	text-align: center;
+}
+
+.project-edit-button-container {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 40px;
+	width: 60px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	border-left: 1px solid #222222;
+	margin: 10px 0;
+}
+
+.project-edit-button {
+	width: 20px;
+	opacity: 0.7;
+}
+
+.project-edit-button:hover {
+	opacity: 0.9;
+}
+
+.add-project-button {
+	width: 36px;
+	height: 36px;
+	background: #bbbbbb;
+	cursor: pointer;
+	transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+	z-index: 9;
+	display: inline-flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	vertical-align: top;
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.add-project-button:hover {
+	background: #888888;
+}
+
+.add-project-button img {
+	width: 20px;
+	height: 20px;
+}
+
+.project-select {
+	display: inline-block;
+	width: 20vw !important;
 }
 
 /* Animations */
