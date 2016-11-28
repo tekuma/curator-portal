@@ -7,7 +7,7 @@ import update                       from 'react-addons-update';
 
 // Files
 import ManageAccordion              from './ManageAccordion';
-import ManageHints                  from './ManageHints';
+import ManageProjectName                  from './ManageProjectName';
 import ManageToggler                from './ManageToggler';
 
 /**
@@ -52,7 +52,7 @@ export default class ProjectManager extends React.Component {
             </Tooltip>
         );
 
-        let containerWidth = {
+        const containerWidth = {
             height: window.innerHeight - 60,
             width: window.innerWidth * 0.4 - 40,
             maxWidth: "400px"
@@ -73,27 +73,16 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="search-manager-container">
-                    <ManageHints />
-                    <div className="search-tools">
+                    <ManageProjectName />
+                    <div className="manage-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool right-border">
+                            className="manage-tool full">
                             <img src="assets/images/icons/open-accordion.svg" />
-                            <h4 className="search-tool-writing">
-                                Open
+                            <h4 className="manage-tool-writing">
+                                Select All
                             </h4>
                         </div>
-                        <div
-                            onClick={this.clearAllSearch}
-                            className="search-tool">
-                            <img src="assets/images/icons/cross.svg" />
-                            <h4 className="search-tool-writing">
-                                Clear
-                            </h4>
-                        </div>
-                    </div>
-                    <div className="search-button">
-                        <h3>SEARCH</h3>
                     </div>
                 </div>
             </section>
@@ -102,7 +91,7 @@ export default class ProjectManager extends React.Component {
 
     closedManager = () => {
 
-        let containerWidth = {
+        const containerWidth = {
             height: window.innerHeight - 60,
             width: window.innerWidth * 0.4 - 40,
             maxWidth: "400px"
@@ -129,22 +118,14 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="search-manager-container">
-                    <ManageHints  />
-                    <div className="search-tools">
+                    <ManageProjectName  />
+                    <div className="manage-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool right-border">
+                            className="manage-tool full">
                             <img src="assets/images/icons/open-accordion.svg" />
-                            <h4 className="search-tool-writing">
-                                Open
-                            </h4>
-                        </div>
-                        <div
-                            onClick={this.clearAllSearch}
-                            className="search-tool">
-                            <img src="assets/images/icons/cross.svg" />
-                            <h4 className="search-tool-writing">
-                                Clear
+                            <h4 className="manage-tool-writing">
+                                Select All
                             </h4>
                         </div>
                     </div>
