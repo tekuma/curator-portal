@@ -26,7 +26,7 @@ export default class CurationHeader extends React.Component {
             <Tooltip
                 id="add-artwork-tooltip"
                 className="tooltip">
-                Add Selected Artworks to Project..
+                Add Selected Artworks to Project
             </Tooltip>
         );
 
@@ -34,7 +34,7 @@ export default class CurationHeader extends React.Component {
             <Tooltip
                 id="remove-artwork-tooltip"
                 className="tooltip">
-                Remove Selected Artworks from Project..
+                Remove Selected Artworks from Project
             </Tooltip>
         );
 

@@ -5,7 +5,7 @@ import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 // Files
 
 /**
- * a
+ * ManageProjectName: 
  */
 export default class ManageProjectName extends React.Component {
     state = {
@@ -38,7 +38,8 @@ export default class ManageProjectName extends React.Component {
         );
 
         let styleProjectName = {
-            width   : window.innerWidth * 0.4 - 40 - 60 - 20 // 40px = toggler, 60px = edit button, 20px = padding
+            width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
+            maxWidth: "320px"
         };
 
         return(
@@ -49,9 +50,10 @@ export default class ManageProjectName extends React.Component {
                         className="edit-project-name"
                         style={styleProjectName}
                         ref={
-                            (e) => e ? e.selectionStart = 5 : null
+                            (e) => e ? e.selectionStart = 5 : null // Length of Project name
                         }
                         autoFocus={true}
+                        name="project-name-input"
                         defaultValue={"Bobby"}
                         onBlur={this.finishEdit}
                         onKeyPress={this.checkEnter}
@@ -64,8 +66,8 @@ export default class ManageProjectName extends React.Component {
                       <img
                           className   ="project-edit-button"
                           src         ='assets/images/icons/edit-white.svg'
-                          onClick     ={this.edit}
-                          onTouchTap  ={this.edit}
+                          onClick     ={this.finishEdit}
+                          onTouchTap  ={this.finishEdit}
                       />
                   </OverlayTrigger>
                 </div>
@@ -83,7 +85,8 @@ export default class ManageProjectName extends React.Component {
         );
 
         let styleProjectName = {
-            width   : window.innerWidth * 0.4 - 40 - 60 - 20 // 40px = toggler, 60px = edit button, 20px = padding
+            width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
+            maxWidth: "320px"
         };
 
         return(
@@ -93,7 +96,7 @@ export default class ManageProjectName extends React.Component {
                     className="project-name-writing"
                     style={styleProjectName}>
                     <h3 className="project-name">
-                        Bobby
+                        {"Bobby"}
                     </h3>
                 </div>
                 <div className="project-edit-button-container">
@@ -125,7 +128,7 @@ edit = (e) => {
 
         // Enter edit mode.
         this.setState({
-            editing: !this.state.editing
+            editing: true
         });
     };
 
@@ -136,15 +139,14 @@ checkEnter = (e) => {
     }
 };
 
-finishEdit = (e) => {
-    const value = e.target.value;
+finishEdit = () => {
+    let newName = document.getElementsByName("project-name-input")[0].value;
 
     if (this.props.onEdit) {
         // Exit edit mode.
         this.setState({
             editing: false
         });
-
         this.props.onEdit(value);
     }
 }

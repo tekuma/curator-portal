@@ -77,10 +77,16 @@ export default class ProjectManager extends React.Component {
                     <div className="manage-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="manage-tool full">
-                            <img src="assets/images/icons/open-accordion.svg" />
+                            className="manage-tool right-border">
                             <h4 className="manage-tool-writing">
                                 Select All
+                            </h4>
+                        </div>
+                        <div
+                            onClick={this.toggleAllAccordion}
+                            className="manage-tool">
+                            <h4 className="manage-tool-writing">
+                                Deselect All
                             </h4>
                         </div>
                     </div>
@@ -122,10 +128,16 @@ export default class ProjectManager extends React.Component {
                     <div className="manage-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="manage-tool full">
-                            <img src="assets/images/icons/open-accordion.svg" />
+                            className="manage-tool right-border">
                             <h4 className="manage-tool-writing">
                                 Select All
+                            </h4>
+                        </div>
+                        <div
+                            onClick={this.toggleAllAccordion}
+                            className="manage-tool">
+                            <h4 className="manage-tool-writing">
+                                Deselect All
                             </h4>
                         </div>
                     </div>
