@@ -96,6 +96,7 @@ export default class ManagerMain extends React.Component {
      * in the firebase database.
      */
     fetchProjectArtworks = () => {
+        console.log("fetching...");
         if (this.state.currentProject.length == 2) {
             console.log("not null");
             console.log(this.state.currentProject);
@@ -126,11 +127,11 @@ export default class ManagerMain extends React.Component {
             this.setState({currentProject:""})
             console.log("updated project to None");
         } else {
-            this.setState({currentProject:newName});
+            let theProj = [newName.label,newName.id]
+            this.setState({currentProject:theProj});
             setTimeout( ()=>{ // wait for state to update
                 this.fetchProjectArtworks();
             }, 50);
-            console.log("Updated project to ->", theProj);
         }
     }
 

@@ -10,6 +10,7 @@ import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
  */
 export default class ProjectSelector extends React.Component {
     state = {
+
     }
 
     constructor(props) {
@@ -19,7 +20,7 @@ export default class ProjectSelector extends React.Component {
     componentWillMount() {
         console.log("-----ProjectSelector");
     }
-    
+
     render() {
         let options = this.props.projects.map( (project)=>{
                 return {label: project[0], value: project[0], id:project[1]}
@@ -31,6 +32,7 @@ export default class ProjectSelector extends React.Component {
             display = "";
         } else {
             display = this.props.currentProject[0];
+            console.log("display ->", display, this.props.currentProject);
         }
 
         const selectorContainerWidth = {
