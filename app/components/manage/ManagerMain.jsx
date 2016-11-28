@@ -31,6 +31,7 @@ export default class ManagerMain extends React.Component {
                     role={this.props.role}
                     currentProject={this.state.currentProject}
                     changeProject={this.changeProject}
+                    addNewProject={this.addNewProject}
                     projects={this.props.projects}
                     deleteArtworksFromProject={this.deleteArtworksFromProject}
                 />
@@ -44,7 +45,6 @@ export default class ManagerMain extends React.Component {
                 <ProjectManager
                     managerIsOpen={this.props.managerIsOpen}
                     toggleManager={this.props.toggleManager}
-                    createNewProject={this.props.createNewProject}
                     changeProject={this.props.changeProject}
                     doQuery={this.doQuery}
                  />
@@ -92,6 +92,44 @@ export default class ManagerMain extends React.Component {
     }
 
     /**
+     * Creates a new project, then sets the current project to it.
+     */
+    addNewProject = () => {
+        // create project
+        // let projectID = this.props.createNewProject();
+        let projectID="-KXg6HnMtZIgrNV059mI";
+        // give user access to project
+        let path = `users/${firebase.auth().currentUser.uid}/projects`;
+        firebase.database().ref(path).transaction((node)=>{
+            // the refrenced 'node' of the nosql data tree
+            node.push(projectID);
+            let theProj = {label:"New Project", id:projectID};
+            // update current project to be the new project
+            this.changeProject(theProj);
+            return node;
+        });
+    }
+
+
+    /**
+     * Updates the value of this.state.currentProject
+     * @param  {Array} newName [name , id]
+     */
+    changeProject = (newName) => {
+        if (newName === null) {
+            this.setState({currentProject:""})
+            console.log("updated project to None");
+        } else {
+            let theProj = [newName.label,newName.id]
+            this.setState({currentProject:theProj});
+            setTimeout( ()=>{ // wait for state to update
+                this.fetchProjectArtworks();
+                console.log("Changing project..-->",theProj);
+            }, 50);
+        }
+    }
+
+    /**
      * When called, will fetch all artworks from the Project
      * in the firebase database.
      */
@@ -115,23 +153,6 @@ export default class ManagerMain extends React.Component {
                 }
                 this.setState({projectArtworks:art});
             });
-        }
-    }
-
-    /**
-     * Updates the value of this.state.currentProject
-     * @param  {Array} newName [name , id]
-     */
-    changeProject = (newName) => {
-        if (newName === null) {
-            this.setState({currentProject:""})
-            console.log("updated project to None");
-        } else {
-            let theProj = [newName.label,newName.id]
-            this.setState({currentProject:theProj});
-            setTimeout( ()=>{ // wait for state to update
-                this.fetchProjectArtworks();
-            }, 50);
         }
     }
 

@@ -57,6 +57,7 @@ export default class CurationHeader extends React.Component {
                 	</div>
                   <div className="project-selector">
                       <ProjectSelector
+                          addNewProject={this.props.addNewProject}
                           role={this.props.role}
                           currentProject={this.props.currentProject}
                           changeProject={this.props.changeProject}

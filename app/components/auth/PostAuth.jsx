@@ -162,7 +162,7 @@ export default class PostAuth extends React.Component {
     fetchProjects = () => {
         let thisUID      = firebase.auth().currentUser.uid;
         let projectsPath = `users/${thisUID}/projects`;
-        firebase.database().ref(projectsPath).once('value',this.fetchProjectNames);
+        firebase.database().ref(projectsPath).on('value', this.fetchProjectNames);
     }
 
     /**
@@ -179,16 +179,14 @@ export default class PostAuth extends React.Component {
             let projID = projectIDs[i];
 
             let callback;
+            // To use a async. for-loop, we pass a special callback to the
+            // last iteration, to set the state.
             if (i === leng-1) { // if in last loop, pass special callback
                 callback = (snapshot) => {
-                    console.log("!!!!!!!!!!!");
                     let data = snapshot.val()
                     let thisProj = [data.name,data.id]
                     projects.push(thisProj)
-                    // ids has all ids in order
-
                     this.setState({projects:projects});
-                    console.log(this.state.projects, "SUCCESS");
                 }
             } else {
                 callback = (snapshot) => {
@@ -198,7 +196,7 @@ export default class PostAuth extends React.Component {
                 }
             }
 
-            // make calls
+            // make calls 
             let path   = `projects/${projID}`;
             firebase.database().ref(path).once('value', callback,(err)=>{
                 console.log(err);
