@@ -19,7 +19,7 @@ export default class ProjectArtworkManager extends React.Component {
     }
 
     componentWillMount() {
-        console.log("-----ArtworkManager");
+        console.log("-----ProjectArtworkManager");
     }
 
     render() {
@@ -27,8 +27,8 @@ export default class ProjectArtworkManager extends React.Component {
     }
 
     componentDidMount() {
-        console.log("+++++ArtworkManager");
-        //TODO set state from props
+        console.log("+++++ProjectArtworkManager");
+
     }
 
     componentWillReceiveProps(nextProps) {

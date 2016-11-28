@@ -7,7 +7,7 @@ import update                       from 'react-addons-update';
 
 // Files
 import ManageAccordion              from './ManageAccordion';
-import ManageProjectName                  from './ManageProjectName';
+import ManageProjectName            from './ManageProjectName';
 import ManageToggler                from './ManageToggler';
 
 /**
@@ -73,18 +73,32 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="search-manager-container">
-                    <ManageProjectName />
+                    <ManageProjectName
+                        renameCurrentProject={this.props.renameCurrentProject}
+                        currentProject={this.props.currentProject}
+
+                        />
+                    <div
+                        onClick={this.props.deleteCurrentProject}
+                        onTouchTap={this.props.deleteCurrentProject}
+                        className="manage-tool right-border">
+                        <h4 className="manage-tool-writing">
+                            :Delete Project:
+                        </h4>
+                    </div>
                     <div className="manage-tools">
                         <div
-                            onClick={this.toggleAllAccordion}
+                            onClick={this.props.selectAllArt}
+                            onTouchTap={this.props.selectAllArt}
                             className="manage-tool right-border">
                             <h4 className="manage-tool-writing">
                                 Select All
                             </h4>
                         </div>
+
                         <div
-                            onClick={this.toggleAllAccordion}
-                            className="manage-tool">
+                            onClick={this.props.deselectAllArt}
+                            onTouchTap={this.props.deselectAllArt}                            className="manage-tool">
                             <h4 className="manage-tool-writing">
                                 Deselect All
                             </h4>
@@ -124,26 +138,6 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="search-manager-container">
-                    <ManageProjectName  />
-                    <div className="manage-tools">
-                        <div
-                            onClick={this.toggleAllAccordion}
-                            className="manage-tool right-border">
-                            <h4 className="manage-tool-writing">
-                                Select All
-                            </h4>
-                        </div>
-                        <div
-                            onClick={this.toggleAllAccordion}
-                            className="manage-tool">
-                            <h4 className="manage-tool-writing">
-                                Deselect All
-                            </h4>
-                        </div>
-                    </div>
-                    <div className="search-button">
-                        <h3>SEARCH</h3>
-                    </div>
                 </div>
             </section>
         );

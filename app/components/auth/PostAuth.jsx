@@ -89,6 +89,7 @@ export default class PostAuth extends React.Component {
                 <ManagerMain
                     role={this.state.role}
                     createNewProject={this.props.createNewProject}
+                    fetchProjects={this.fetchProjects}
                     projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
@@ -170,38 +171,45 @@ export default class PostAuth extends React.Component {
      * state.projects.
      */
     fetchProjectNames = (snapshot) => {
-        console.log("Fetching...");
-        let projects = [];
-        let projectIDs = snapshot.val()
-        let leng = projectIDs.length;
+        console.log("~~Callback from fetchProjectNames");
+        if (snapshot.val()) {
+            let projects = [];
+            let projectIDs = snapshot.val()
+            let leng = projectIDs.length;
 
-        for (var i = 0; i < leng ; i++) {
-            let projID = projectIDs[i];
+            for (var i = 0; i < leng ; i++) {
+                let projID = projectIDs[i];
 
-            let callback;
-            // To use a async. for-loop, we pass a special callback to the
-            // last iteration, to set the state.
-            if (i === leng-1) { // if in last loop, pass special callback
-                callback = (snapshot) => {
-                    let data = snapshot.val()
-                    let thisProj = [data.name,data.id]
-                    projects.push(thisProj)
-                    this.setState({projects:projects});
+                let callback;
+                // To use a async. for-loop, we pass a special callback to the
+                // last iteration, to set the state.
+                if (i === leng-1) { // if in last loop, pass special callback
+                    callback = (snapshot) => {
+                        console.log("!!!2", projects,i);
+                        let data = snapshot.val()
+                        let thisProj = [data.name,data.id]
+                        projects.push(thisProj)
+                        console.log(projects);
+                        this.setState({projects:projects});
+                    }
+                } else {
+                    callback = (snapshot) => {
+                        console.log("!!!1");
+                        let data = snapshot.val()
+                        let thisProj = [data.name,data.id]
+                        projects.push(thisProj)
+                    }
                 }
-            } else {
-                callback = (snapshot) => {
-                    let data = snapshot.val()
-                    let thisProj = [data.name,data.id]
-                    projects.push(thisProj)
-                }
+
+                // make calls
+                let path   = `projects/${projID}`;
+
+
+                firebase.database().ref(path).once('value', callback,(err)=>{
+                    console.log(err);
+                },this);
             }
-
-            // make calls 
-            let path   = `projects/${projID}`;
-            firebase.database().ref(path).once('value', callback,(err)=>{
-                console.log(err);
-            });
         }
     }
 
-}
+}//EOF
