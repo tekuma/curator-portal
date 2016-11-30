@@ -25,7 +25,7 @@ export default class Artwork extends React.Component {
         if (this.props.result.thumbnail_url){
             imageURL = this.props.result.thumbnail_url;
         } else {
-            imageURL = "https://pbs.twimg.com/profile_images/789881245631033345/HyA1_ENe.jpg";
+            imageURL = "assets/images/artwork-substitute-mini.png";
         }
         if (this.props.result.title) {
             imageName = this.props.result.title;
