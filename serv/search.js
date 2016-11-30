@@ -34,6 +34,7 @@ exports.connectdb = (dbconf, provider) => {
             dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
             dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
         }
+        dbconf.charset = 'utf8';
         db = mysql.createConnection(dbconf);
         db.connect();
         console.log('Connected to MySQL database.');
@@ -91,7 +92,16 @@ exports.cleardb = () => {
 
                 const initdb = fs.readFileSync('conf/initdb.sql',
                                                {encoding: 'utf-8'});
-                dropcreate += initdb.split('\n').join('; ') + ';';
+                let initdb_create_tables = initdb.split('\n');
+                for (let j = 0; j < initdb_create_tables.length; j++) {
+                    let cmd = initdb_create_tables[j].trim();
+                    if (cmd.length === 0)
+                        continue;
+                    if (cmd.startsWith('CREATE') || cmd.startsWith('create')) {
+                        cmd += ' ENGINE=InnoDB DEFAULT CHARSET=utf8';
+                    }
+                    dropcreate += cmd +';\n';
+                }
 
                 multi_db.query(dropcreate,
                                function (err) {
