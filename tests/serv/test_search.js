@@ -22,8 +22,10 @@ describe('search', function() {
             var db = search.connectdb(dbconf, 'sqlite');
         }
 
-        const initial_artworks = [{uid: 'deadbeef', title: '4 beef'},
-                                  {uid: 'f00fba54', title: 'frozzle'},
+        const initial_artworks = [{uid: 'deadbeef', title: '4 beef',
+                                   artist_uid: 'sth14sth'},
+                                  {uid: 'f00fba54', title: 'frozzle',
+                                   artist_uid: 'sth14sth'},
                                   {uid: 'abc123d4', title: 'Scott\'s entry',
                                    artist_uid: 'ubldh51l'}];
 
