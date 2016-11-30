@@ -305,7 +305,7 @@ exports.q = (query) => {
                                [ex],
                                function (err, artist_rows) {
                                    if (err) throw err;
-                                   resolve(artist_rows[0]);
+                                   resolve(artist_rows);
                                });
                     }
                 }));
