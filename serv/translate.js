@@ -26,7 +26,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
             continue;
         }
 
-        artworks = [];
+        let artworks = [];
         for (artwork in firebase_db[artist_uid].artworks) {
             if (firebase_db[artist_uid].artworks[artwork].id === undefined) {
                 console.log('WARNING: Skipping artwork with missing UID by artist ' + artist_uid);
