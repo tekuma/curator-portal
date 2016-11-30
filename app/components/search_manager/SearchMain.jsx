@@ -138,17 +138,27 @@ export default class SearchMain extends React.Component {
      * @param  {[type]} queryString [description]
      * @return {[type]}             [description]
      */
-    doQuery = (queryString) => {
-        if (queryString.length === 0) {
+    doQuery = (queryString, fields) => {
+        if (queryString.length === 0 && (!fields || fields === {})) {
             return;
         }
 
+        if (!fields)
+            fields = {};
+
+        var payload = {
+            q: queryString
+        }
+
+        if (fields.title) {
+            payload.q_title = fields.title;
+        }
+
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            console.log(">> Query String:", queryString);
+            payload.auth = idToken;
             $.ajax({
-                url: ('search?q='
-                      +queryString.replace('&', ' and ')
-                      +'&auth='+idToken.replace('&', ' and ')),
+                url: 'search',
+                data: payload,
                 dataType: 'json',
                 cache: false,
                 success: this.updateResults

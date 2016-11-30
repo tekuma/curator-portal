@@ -67,9 +67,15 @@ if (cmd_q_string != null) {
             res.send('access denied.');
             return;
         } else {
+            // Manually extract named search fields from query to
+            // resist injection-based attacks.
+            fields = {};
+            if (req.query.q_title) {
+                fields.title = req.query.q_title;
+            }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
-                search.q( req.query.q ).then(function(rows) {
+                search.q( req.query.q, fields ).then(function(rows) {
                     res.json({rows: rows});
                 });
             }).catch(function(error) {

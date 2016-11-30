@@ -204,89 +204,124 @@ exports.insert_artists = (artists) => {
 }
 
 
-exports.q = (query) => {
-    console.log('Received search query:', query);
-    if (query === '') {
+// USAGE: q( query, fields )
+//
+// `query` is a general search string
+//
+// `fields` (optional) is an object with keys that correspond to
+//  particular columns to search or functions thereof.
+exports.q = (query, fields) => {
+    if (query)
+        console.log('Received search query:', query);
+    if (fields)
+        console.log('Received search fields:', fields);
+    if (query === '' && !fields) {
 
         throw new Error('Empty search queries are not permitted.');
 
-    } else if (query) {
+    } else if (query || fields) {
+        if (!query)
+            query = '';
+        if (!fields)
+            fields = {};
 
-        artworks_direct = new Promise(function(resolve, reject) {
-            var ex = '%'+query+'%';
-            var sql_template = 'SELECT ' +
-                'uid, title, artist_uid, description, origin, thumbnail_url ' +
-                'FROM `artworks` ' +
-                'WHERE LOWER(`title`) LIKE ?';
+        var artworks_direct;
+        var artists_direct;
 
-            if (db_provider === 'mysql') {
-                db.query(sql_template,
-                         [ex],
-                         function (err, rows, fields) {
-                             if (err) throw err;
-                             resolve(rows);
-                         });
-            } else {
-                db.all(sql_template,
-                     [ex],
-                     function (err, rows, fields) {
-                         if (err) throw err;
-                         resolve(rows);
-                     });
-            }
-        });
-        artists_direct = (new Promise(function(resolve, reject) {
-            var ex = '%'+query+'%';
-            var sql_template = 'SELECT uid, artist ' +
-                'FROM artists ' +
-                'WHERE LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?';
+        if (query === '' && fields.title === undefined) {
+            artworks_direct = new Promise(function(resolve, reject) { resolve([]); });
+        } else {
+            artworks_direct = new Promise(function(resolve, reject) {
+                var qelems = ['%'+query+'%'];
+                var sql_template = 'SELECT ' +
+                    'uid, title, artist_uid, description, origin, thumbnail_url ' +
+                    'FROM `artworks` ' +
+                    'WHERE LOWER(`title`) LIKE ?';
+                if (fields.title) {
+                    sql_template += ' AND LOWER(`title`) LIKE ?';
+                    qelems[qelems.length] = '%'+fields.title+'%';
+                }
 
-            if (db_provider === 'mysql') {
-                db.query(sql_template,
-                         [ex, ex],
-                         function (err, rows, fields) {
-                             if (err) throw err;
-                             resolve(rows);
-                         });
-            } else {
-                db.all(sql_template,
-                       [ex, ex],
-                       function (err, rows, fields) {
-                           if (err) throw err;
-                           resolve(rows);
-                       });
-            }
-        })).then(function (rows) {
-            if (rows.length === 0) {
-                return (new Promise( function (resolve, reject) {
-                    resolve(rows);
-                }));
-            }
-
-            var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
-
-            var ex = '%'+query+'%';
-            var sql_template = 'SELECT ' +
-                'uid, title, artist_uid, description, origin, thumbnail_url ' +
-                'FROM `artworks` ' +
-                'WHERE ' + uid_exprs.join(' OR ')
-
-            return (new Promise(function (resolve, reject) {
                 if (db_provider === 'mysql') {
                     db.query(sql_template,
+                             qelems,
                              function (err, rows, fields) {
                                  if (err) throw err;
                                  resolve(rows);
                              });
                 } else {
                     db.all(sql_template,
+                           qelems,
                            function (err, rows, fields) {
                                if (err) throw err;
                                resolve(rows);
                            });
                 }
-            }));
-        });
+            });
+        }
+
+        if (query === '' && fields.artist === undefined) {
+            artists_direct = new Promise(function(resolve, reject) { resolve([]); });
+        } else {
+            artists_direct = (new Promise(function(resolve, reject) {
+                var ex = '%'+query+'%';
+                var sql_template = 'SELECT uid, artist ' +
+                    'FROM artists ' +
+                    'WHERE LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?';
+
+                if (db_provider === 'mysql') {
+                    db.query(sql_template,
+                             [ex, ex],
+                             function (err, rows, fields) {
+                                 if (err) throw err;
+                                 resolve(rows);
+                             });
+                } else {
+                    db.all(sql_template,
+                           [ex, ex],
+                           function (err, rows, fields) {
+                               if (err) throw err;
+                               resolve(rows);
+                           });
+                }
+            })).then(function (rows) {
+                if (rows.length === 0) {
+                    return (new Promise( function (resolve, reject) {
+                        resolve(rows);
+                    }));
+                }
+
+                var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
+
+                var qelems = [];
+                var sql_template = 'SELECT ' +
+                    'uid, title, artist_uid, description, origin, thumbnail_url ' +
+                    'FROM `artworks` ' +
+                    'WHERE (' + uid_exprs.join(' OR ') + ')';
+                if (fields.title) {
+                    sql_template += ' AND LOWER(`title`) LIKE ?';
+                    qelems[qelems.length] = '%'+fields.title+'%';
+                }
+
+                return (new Promise(function (resolve, reject) {
+                    if (db_provider === 'mysql') {
+                        db.query(sql_template,
+                                 qelems,
+                                 function (err, rows, fields) {
+                                     if (err) throw err;
+                                     resolve(rows);
+                                 });
+                    } else {
+                        db.all(sql_template,
+                               qelems,
+                               function (err, rows, fields) {
+                                   if (err) throw err;
+                                   resolve(rows);
+                               });
+                    }
+                }));
+            });
+        }
 
         return Promise.all([artworks_direct, artists_direct]).then(function (qrows) {
             var rows = qrows[0];
