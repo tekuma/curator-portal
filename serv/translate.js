@@ -40,7 +40,14 @@ exports.translate_from_tekuma_firebase = (filename) => {
                 thumbnail_url: firebase_db[artist_uid].artworks[artwork].fullsize_url || 'nil',
             };
         }
-        promises[promises.length] = search.insert_artworks(artworks);
+        if (artworks.length > 0) {
+            promises[promises.length] = search.insert_artist(
+                {
+                    uid: artist_uid,
+                    artist: firebase_db[artist_uid].display_name || ''
+                });
+            promises[promises.length] = search.insert_artworks(artworks);
+        }
     }
 
     Promise.all(promises).then( function () {
