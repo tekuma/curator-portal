@@ -1163,7 +1163,8 @@ export default class SearchManager extends React.Component {
                             </h4>
                         </div>
                     </div>
-                    <div className="search-button">
+                    <div className="search-button"
+                         onClick={this.megaSearch}>
                         <h3>SEARCH</h3>
                     </div>
                 </div>
@@ -1475,5 +1476,15 @@ export default class SearchManager extends React.Component {
         this.setState({
             searchColors: searchColors
         });
+    }
+
+    megaSearch = () => {
+        let general = document.getElementById("search-general");
+        let q = general.value;
+
+        if (q.length === 0)
+            return;
+        console.log('Mega search: ', q)
+        this.props.doQuery(q);
     }
 }
