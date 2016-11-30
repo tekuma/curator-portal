@@ -9,7 +9,7 @@ import SearchManager        from './SearchManager';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [{title: "Mona Lisa", uid: "abc123", artist_uid:"deadbeef"}, {title: "Art", uid: "adc231", artist_uid:"decaf"}], // current list of search results
+        results       : [], // current list of search results
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : ""   // used for controlling artworks
