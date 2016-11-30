@@ -27,6 +27,8 @@ describe('search', function() {
                                   {uid: 'f00fba54', title: 'frozzle',
                                    artist_uid: 'sth14sth'},
                                   {uid: 'abc123d4', title: 'Scott\'s entry',
+                                   artist_uid: 'ubldh51l'},
+                                  {uid: 'cafe1337', title: 'craş',
                                    artist_uid: 'ubldh51l'}];
 
         const initial_artists = [{uid: 'ii1j1srh', artist: 'Diane', human_name: 'Diane'},
@@ -70,6 +72,14 @@ describe('search', function() {
         it('should not find any rows from "some_random_text_aksrarhxschal" query', function() {
             return search.q('some_random_text_aksrarhxschal').then(function(rows) {
                 assert( rows.length === 0 );
+            });
+        });
+    });
+
+    describe('#q', function() {
+        it('should find at least one row from "ş" query (testing UTF-8)', function() {
+            return search.q('ş').then(function(rows) {
+                assert( rows.length > 0 );
             });
         });
     });
