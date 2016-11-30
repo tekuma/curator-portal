@@ -18,7 +18,8 @@ exports.translate_from_tekuma_firebase = (filename) => {
 
     var promises = [];
 
-    firebase_db = JSON.parse(fs.readFileSync(filename));
+    var raw_db = fs.readFileSync(filename, 'utf8').replace(/\\u/g, '\\\\u').replace(/\\x/g, '\\\\x');
+    var firebase_db = JSON.parse(raw_db);
     for (artist_uid in firebase_db) {
         if (firebase_db[artist_uid].artworks === undefined
             || firebase_db[artist_uid].display_name === undefined) {
