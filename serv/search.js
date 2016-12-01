@@ -335,6 +335,23 @@ exports.q = (query, fields) => {
 
         return Promise.all([artworks_direct, artists_direct]).then(function (qrows) {
             var rows = qrows[0];
+
+            // If used search field that constrains which artist names are
+            // matches, then prune other lists to only those artist matches.
+            if (fields.artist) {
+                let req_artist_uids = qrows[1].map(row => row.artist_uid);
+                let current_index = 0;
+                while (current_index < rows.length) {
+
+                    if (!req_artist_uids.includes(rows[current_index].artist_uid)) {
+                        rows.splice(current_index, 1);
+                        continue;
+                    }
+
+                    current_index++;
+                }
+            }
+
             var row_uids = rows.map(row => row.uid);
             for (let i = 0; i < qrows[1].length; i++) {
                 if (!row_uids.includes(qrows[1][i].uid)) {
