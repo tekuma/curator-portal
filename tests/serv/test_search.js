@@ -84,4 +84,14 @@ describe('search', function() {
         });
     });
 
+    describe('#q', function() {
+        it('should find at least one row from "Ricardo" query, '
+           +'which is artist name but not in any artwork titles',
+           function() {
+            return search.q('Ricardo').then(function(rows) {
+                assert( rows.length > 0 );
+            });
+        });
+    });
+
 });
