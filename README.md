@@ -102,4 +102,4 @@ From the instance, stop nginx if it is running, `sudo nginx -s stop`, then
 
     cd ~/curator-portal
     sudo nginx -c `pwd`/conf/nginx.conf
-    screen -d -m auto-restart.sh
+    screen -d -m ./auto-restart.sh
