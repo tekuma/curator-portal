@@ -1,4 +1,4 @@
-// tests for search routines
+// small tests for calling q() to search with general strings.
 //
 // Copyright 2016 Tekuma Inc.
 // All rights reserved.
