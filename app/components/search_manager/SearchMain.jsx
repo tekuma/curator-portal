@@ -153,6 +153,9 @@ export default class SearchMain extends React.Component {
         if (fields.title) {
             payload.q_title = fields.title;
         }
+        if (fields.artist) {
+            payload.q_artist = fields.artist;
+        }
 
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
             payload.auth = idToken;

@@ -73,6 +73,9 @@ if (cmd_q_string != null) {
             if (req.query.q_title) {
                 fields.title = req.query.q_title;
             }
+            if (req.query.q_artist) {
+                fields.artist = req.query.q_artist;
+            }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
                 search.q( req.query.q, fields ).then(function(rows) {

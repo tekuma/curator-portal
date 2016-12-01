@@ -264,21 +264,31 @@ exports.q = (query, fields) => {
             artists_direct = new Promise(function(resolve, reject) { resolve([]); });
         } else {
             artists_direct = (new Promise(function(resolve, reject) {
-                var ex = '%'+query+'%';
+                var qelems = ['%'+query+'%', '%'+query+'%'];
                 var sql_template = 'SELECT uid, artist ' +
                     'FROM artists ' +
-                    'WHERE LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?';
+                    'WHERE (LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                if (fields.artist) {
+                    if (query === '') {
+                        sql_template += ' AND '
+                    } else {
+                        sql_template += ' OR ';
+                    }
+                    sql_template += '(LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
+                }
 
                 if (db_provider === 'mysql') {
                     db.query(sql_template,
-                             [ex, ex],
+                             qelems,
                              function (err, rows, fields) {
                                  if (err) throw err;
                                  resolve(rows);
                              });
                 } else {
                     db.all(sql_template,
-                           [ex, ex],
+                           qelems,
                            function (err, rows, fields) {
                                if (err) throw err;
                                resolve(rows);

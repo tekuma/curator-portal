@@ -1481,10 +1481,13 @@ export default class SearchManager extends React.Component {
     megaSearch = () => {
         const general = String(document.getElementById("search-general").value || '').trim();
         const title = String(document.getElementById("search-title").value || '').trim();
+        const artist = String(this.state.artist || '').trim();
 
         let fields = {};
         if (title.length > 0)
             fields.title = title;
+        if (artist.length > 0)
+            fields.artist = artist;
 
         if (general.length === 0 && fields === {})
             return;

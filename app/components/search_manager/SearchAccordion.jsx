@@ -76,6 +76,7 @@ export default class SearchAccordion extends React.Component {
                         className={this.props.accordion.artist ? "accordion-content open" : "accordion-content"}>
                         <Select
                             ref="searchArtist"
+                            inputProps={{id: 'search-artist'}}
                             autofocus
                             options={options}
                             simpleValue
