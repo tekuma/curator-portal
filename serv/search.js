@@ -8,6 +8,13 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/search',
+    level: 'warn'
+});
+
+
 var db_provider
 var db;
 var db_config;
@@ -23,7 +30,7 @@ exports.connectdb = (dbconf, provider) => {
 
         var sqlite3 = require('sqlite3');
         db = new sqlite3.Database(':memory:');
-        console.log('Connected to SQLite in-memory database.');
+        logger.info('Connected to SQLite in-memory database.');
 
     } else if (provider.toLowerCase() === 'mysql') {
         provider = 'mysql';  // Normalize provider name
@@ -37,7 +44,7 @@ exports.connectdb = (dbconf, provider) => {
         dbconf.charset = 'utf8';
         db = mysql.createConnection(dbconf);
         db.connect();
-        console.log('Connected to MySQL database.');
+        logger.info('Connected to MySQL database.');
 
     } else {
         throw new Error('Unrecognized database provider: "'+String(provider)+'"');
@@ -212,9 +219,9 @@ exports.insert_artists = (artists) => {
 //  particular columns to search or functions thereof.
 exports.q = (query, fields) => {
     if (query)
-        console.log('Received search query:', query);
+        logger.debug('Received search query:', query);
     if (fields)
-        console.log('Received search fields:', fields);
+        logger.debug('Received search fields:', fields);
     if (query === '' && !fields) {
 
         throw new Error('Empty search queries are not permitted.');

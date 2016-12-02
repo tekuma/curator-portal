@@ -8,6 +8,12 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/translate',
+    level: 'warn'
+});
+
 
 exports.translate_from_tekuma_firebase = (filename) => {
 
@@ -29,7 +35,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
         let artworks = [];
         for (artwork in firebase_db[artist_uid].artworks) {
             if (firebase_db[artist_uid].artworks[artwork].id === undefined) {
-                console.log('WARNING: Skipping artwork with missing UID by artist ' + artist_uid);
+                logger.warn('Skipping artwork with missing UID by artist ' + artist_uid);
                 continue;
             }
 
@@ -66,7 +72,7 @@ for (let i = 1; i < process.argv.length; i++) {
                 'Insufficiently parameters. Try `-h`.' );
         i += 1;
 
-        console.log('Importing from Tekuma Firebase database of artworks...');
+        logger.info('Importing from Tekuma Firebase database of artworks...');
         exports.translate_from_tekuma_firebase(process.argv[i]);
 
     }
