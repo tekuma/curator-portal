@@ -15,13 +15,6 @@ import EditArtworkForm      from './EditArtworkForm';
  */
 export default class EditArtworkDialog extends React.Component {
     state =  {
-        artworkInfo: {
-            description: "Much art. Very nice.",
-            title: "Best art ever",
-            artist: "Stephen White",
-            album: "best of",
-            year: 2020
-        },   // Used to store the artwork informationto be edited
         errorType: {},     // Used to keep track of the type of error encountered to highlight relevant input field
         errors: [],        // Used to store Auth errors from Registration errors
         currentError: ""   // Used to store the current error to be displayed in the snackbar
@@ -59,7 +52,7 @@ export default class EditArtworkDialog extends React.Component {
                         bodyClassName               ="edit-artwork-body"
                         contentClassName            ="edit-artwork-content" >
                         <EditArtworkForm
-                            value           ={this.state.artworkInfo}
+                            value           ={this.props.artworkInfo}
                              />
                     </Dialog>
                 </MuiThemeProvider>

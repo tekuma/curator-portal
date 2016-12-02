@@ -1,13 +1,12 @@
 // Libs
 import React from 'react';
 import uuid from 'node-uuid';
-import { WithOutContext as ReactTags } from 'react-tag-input';
+import { WithContext as ReactTags } from 'react-tag-input';
 
 /**
  * TODO
  */
 export default class EditArtworkForm extends React.Component {
-
     state = {
         tags: [],
         suggestions: []
@@ -23,7 +22,11 @@ export default class EditArtworkForm extends React.Component {
 
     render() {
         let oldArtwork  = this.props.value;
-        let tags        = this.state.tags;
+        let tags        = [];
+        for (var i = 0; i < this.props.value.tags.length; i++) {
+            let tag = this.props.value.tags[i];
+            tags.push({id:i, text:tag});
+        }
         let suggestions = this.state.suggestions;
 
 
@@ -32,17 +35,11 @@ export default class EditArtworkForm extends React.Component {
         };
 
         let colors = [];
-
-        if (this.props.value.colors) {
-            for (let i = 0; i < Object.keys(this.props.value.colors).length; i++) {
-                let color = this.props.value.colors[i].hex;
-                colors.push({
-                    background: color
-                });
-            }
+        for (let colr of this.props.value.colors) {
+            colors.push({background:colr});
         }
 
-        let image = "";
+        let image = this.props.value.thumbnail_url;
 
         let previewImage = {
             backgroundImage: 'url(' + image + ')'
@@ -120,7 +117,10 @@ export default class EditArtworkForm extends React.Component {
                                     <ReactTags
                                         tags={tags}
                                         readOnly={true}
-                                        suggestions={suggestions}/>
+                                        suggestions={suggestions}
+                                        handleAddition={this.handleTags}
+                                        handleDelete={this.handleTags}
+                                        />
                                 </li>
                                 <li>
                                     <label
@@ -190,6 +190,9 @@ export default class EditArtworkForm extends React.Component {
 
 // ============= Methods ===============
 
+handleTags = (data) => {
+    //pass
+}
 
 
 }

@@ -93,6 +93,7 @@ export default class ArtworkManager extends React.Component {
                 {this.props.results.map(result => {
                     return (
                         <Artwork
+                            updateInfoArtwork={this.updateInfoArtwork}
                             toggleMoreInfo={this.props.toggleMoreInfo}
                             command={this.props.command}
                             addArtworkToBuffer={this.props.addArtworkToBuffer}

@@ -10,12 +10,23 @@ import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [], // current list of search results
+        // results       : [],  // current list of search results
+        results:[{artist_uid:"artist_uid",}],
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
-        moreInfoIsOpen: false,
-        infoArtwork   : null
+        moreInfoIsOpen: false, // whether popup is open or not
+        infoArtwork   : null,  // uid of displayed artworkInfo
+        artworkInfo   : {  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "Best art ever",
+            artist       : "Stephen White",
+            album        : "best of",
+            year         : 2020,
+            tags         : ["#art", "Picasso", "#stuff"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+        }
     }
 
     constructor(props) {
@@ -37,6 +48,7 @@ export default class SearchMain extends React.Component {
                     addArtworksToProject={this.addArtworksToProject}
                 />
                 <SearchArtworkManager
+                    updateInfoArtwork={this.updateInfoArtwork}
                     toggleMoreInfo={this.toggleMoreInfo}
                     command={this.state.command}
                     results = {this.state.results}
@@ -52,6 +64,8 @@ export default class SearchMain extends React.Component {
                 <EditArtworkDialog
                     toggleMoreInfo={this.toggleMoreInfo}
                     moreInfoIsOpen={this.state.moreInfoIsOpen}
+
+                    artworkInfo={this.state.artworkInfo}
                  />
                 <div
                     onClick     ={this.toggleNav}
@@ -71,8 +85,12 @@ export default class SearchMain extends React.Component {
     // =============== Methods =====================
     //
 
-    updateInfoArtwork = (uid) => {
 
+    updateInfoArtwork = (uid) => {
+        // TODO:  (1) set state infoArtwork => uid
+        // TODO:  (2) do AJAX request for data to populate
+        //            this.state.artworkInfo
+        //            
     }
 
     toggleMoreInfo = () => {

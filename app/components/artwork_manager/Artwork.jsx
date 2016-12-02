@@ -67,6 +67,12 @@ export default class Artwork extends React.Component {
         }
     }
     // ========= Methods ===========
+    //
+
+    handleMoreInfo = () => {
+        this.props.updateInfoArtwork(this.props.result.uid);
+        this.props.toggleMoreInfo();
+    }
 
 
 
