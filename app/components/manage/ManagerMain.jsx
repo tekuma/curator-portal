@@ -7,7 +7,6 @@ import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
 
 
-
 export default class ManagerMain extends React.Component {
     state = {
         projectArtworks: [],
@@ -59,7 +58,6 @@ export default class ManagerMain extends React.Component {
                     className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
             </div>
         );
-
     }
 
     componentDidMount() {
@@ -74,9 +72,9 @@ export default class ManagerMain extends React.Component {
     // =============== Methods =====================
 
     /**
-     * This method sets the state.command to be "select",
-     * just for an instant. This is then sent down the tree to
-     * Artwork.jsx, where it can mutate the state of artwork.
+    * This method sets the state.command to be "select",
+    * just for an instant. This is then sent down the tree to
+    * Artwork.jsx, where it can mutate the state of artwork.
      */
     selectAllArt = () => {
         let buffer = this.state.projectArtworks;
@@ -142,10 +140,10 @@ export default class ManagerMain extends React.Component {
         if (newName === null) {
             this.setState({
                 currentProject:"",
-                projectarwoks :[]
+                projectArtworks  :[]
             });
         } else {
-            let theProj = [newName.label,newName.id]
+            let theProj = [newName.label,newName.id];
             this.setState({currentProject:theProj});
             setTimeout( ()=>{ // wait for state to update
                 this.fetchProjectArtworks();
@@ -181,11 +179,12 @@ export default class ManagerMain extends React.Component {
         if (this.state.currentProject.length == 2) { // not null
 
             let projectID = this.state.currentProject[1];
-            let path = `projects/${projectID}`
+            let path = `projects/${projectID}`;
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
 
+                console.log(node);
                 for (var key in node.artworks) { // obj -> array
                     if (node.artworks.hasOwnProperty(key)) {
                         art.push(node.artworks[key]);

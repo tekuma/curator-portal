@@ -89,7 +89,7 @@ export default class SearchMain extends React.Component {
      * Duplicates are ignored, and order is un-important.
      */
     addArtworksToProject = () => {
-        firebase.database().ref();
+        firebase.database().ref(); // NOTE: initial request error
         let updates = this.state.artworkBuffer;
 
         let projectID  = this.state.currentProject[1]; // index 1 is the ID
@@ -99,9 +99,9 @@ export default class SearchMain extends React.Component {
                 node.artworks = {};
             }
             for (var i = 0; i < updates.length; i++) {
-                let update = updates[i]
-                let id = update.uid
-                node.artworks[id] = update
+                let update = updates[i];
+                let id = update.uid;
+                node.artworks[id] = update;
             }
             return node;
         },()=>{
