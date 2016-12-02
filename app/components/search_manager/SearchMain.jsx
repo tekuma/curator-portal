@@ -10,13 +10,30 @@ import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 
 export default class SearchMain extends React.Component {
     state = {
-        // results       : [],  // current list of search results
-        results:[{artist_uid:"artist_uid",}],
+        results       : [],  // current list of search results
+        // results:[{artist_uid:"artist_uid",}],
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
         moreInfoIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
+        /*
+        ## SCHEMA SKETCH
+        {
+        artist: String
+        title: String
+        description: String
+        album: String
+        date: String of the form YYYY-MM-DD  // date of uploading
+        creation_year: Integer
+        thumbnail_url: String
+        tags: Array of Objects
+            {
+                rgb_colors: Array of Integer triples
+                labels: Array of Strings
+            }
+        }
+         */
         artworkInfo   : {  // TODO: remove placeholder info
             description  : "Much art. Very nice.",
             title        : "Best art ever",
@@ -90,7 +107,7 @@ export default class SearchMain extends React.Component {
         // TODO:  (1) set state infoArtwork => uid
         // TODO:  (2) do AJAX request for data to populate
         //            this.state.artworkInfo
-        //            
+        //
     }
 
     toggleMoreInfo = () => {
