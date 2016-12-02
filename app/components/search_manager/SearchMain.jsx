@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
 import CurationHeader       from '../headers/CurationHeader';
 import SearchManager        from './SearchManager';
+import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 
 
 export default class SearchMain extends React.Component {
@@ -12,7 +13,9 @@ export default class SearchMain extends React.Component {
         results       : [], // current list of search results
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
-        command       : ""   // used for controlling artworks
+        command       : "",  // used for controlling artworks
+        moreInfoIsOpen: false,
+        infoArtwork   : null
     }
 
     constructor(props) {
@@ -34,6 +37,7 @@ export default class SearchMain extends React.Component {
                     addArtworksToProject={this.addArtworksToProject}
                 />
                 <SearchArtworkManager
+                    toggleMoreInfo={this.toggleMoreInfo}
                     command={this.state.command}
                     results = {this.state.results}
                     managerIsOpen={this.props.managerIsOpen}
@@ -44,6 +48,10 @@ export default class SearchMain extends React.Component {
                     managerIsOpen={this.props.managerIsOpen}
                     toggleManager={this.props.toggleManager}
                     doQuery={this.doQuery}
+                 />
+                <EditArtworkDialog
+                    toggleMoreInfo={this.toggleMoreInfo}
+                    moreInfoIsOpen={this.state.moreInfoIsOpen}
                  />
                 <div
                     onClick     ={this.toggleNav}
@@ -61,7 +69,18 @@ export default class SearchMain extends React.Component {
     }
 
     // =============== Methods =====================
+    //
 
+    updateInfoArtwork = (uid) => {
+
+    }
+
+    toggleMoreInfo = () => {
+        console.log("togglin");
+        this.setState({
+            moreInfoIsOpen: !this.state.moreInfoIsOpen
+        })
+    }
 
     /**
      * updates the this.state.results to be data.rows

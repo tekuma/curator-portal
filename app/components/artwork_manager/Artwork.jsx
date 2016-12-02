@@ -44,10 +44,12 @@ export default class Artwork extends React.Component {
                     className="artwork-image search">
                     <img src={imageURL} />
                 </div>
-                <div className="artwork-info review">
-                <h3 className="artwork-name review"> {imageName} </h3>
-                <h3 className="artwork-name review"> artwork UID: {imageUID} </h3>
-                <h3 className="artwork-name review"> artist UID: {artistUID} </h3>
+                <div
+                    onClick={this.props.toggleMoreInfo}
+                    className="artwork-info review">
+                    <h3 className="artwork-name review"> {imageName} </h3>
+                    <h3 className="artwork-name review"> artwork UID: {imageUID} </h3>
+                    <h3 className="artwork-name review"> artist UID: {artistUID} </h3>
                 </div>
             </article>
         );
