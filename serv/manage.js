@@ -13,6 +13,12 @@
 
 const assert = require('assert');
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/translate',
+    level: (process.env.NODE_ENV === 'production' ? 'warn' : 'debug')
+});
+
 
 var cmd_index = null;
 
@@ -44,7 +50,9 @@ if (process.argv[cmd_index] === 'clear') {
                 '    info        Print summary of backend configuration.\n');
 
 } else if (process.argv[cmd_index] === 'info') {
-    const servconf = require('./server-config.json');
+    const pathname = './server-config.json';
+    logger.debug('Reading server configuration from: ', pathname);
+    const servconf = require(pathname);
     const dbconf = require(servconf.artworkdb);
     const full_config = {
 
