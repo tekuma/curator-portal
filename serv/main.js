@@ -7,7 +7,7 @@
 const bunyan = require('bunyan');
 var logger = bunyan.createLogger({
     name: 'serv/main',
-    level: 'warn'
+    level: (process.env.NODE_ENV === 'production' ? 'warn' : 'debug')
 });
 
 
