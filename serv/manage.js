@@ -54,10 +54,6 @@ if (process.argv[cmd_index] === 'clear') {
     logger.debug('Reading server configuration from: ', pathname);
     const servconf = require(pathname);
     const dbconf = require(servconf.artworkdb);
-    const full_config = {
-
-
-    };
     console.log(JSON.stringify(
         {
             servconf: servconf,
