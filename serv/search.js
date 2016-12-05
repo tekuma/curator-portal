@@ -8,6 +8,13 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/search',
+    level: (process.env.NODE_ENV === 'production' ? 'warn' : 'debug')
+});
+
+
 var db_provider
 var db;
 var db_config;
@@ -23,13 +30,16 @@ exports.connectdb = (dbconf, provider) => {
 
         var sqlite3 = require('sqlite3');
         db = new sqlite3.Database(':memory:');
-        console.log('Connected to SQLite in-memory database.');
+        logger.info('Connected to SQLite in-memory database.');
 
     } else if (provider.toLowerCase() === 'mysql') {
         provider = 'mysql';  // Normalize provider name
 
         const mysql = require('mysql');
         if (dbconf.ssl) {
+            logger.debug('Found pointers to SSL credentials from database configuration.')
+            logger.debug('Attempting to read from /cert/{'
+                         +dbconf.ssl.ca+','+dbconf.ssl.cert+','+dbconf.ssl.key+'}');
             dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
             dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
             dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
@@ -37,7 +47,7 @@ exports.connectdb = (dbconf, provider) => {
         dbconf.charset = 'utf8';
         db = mysql.createConnection(dbconf);
         db.connect();
-        console.log('Connected to MySQL database.');
+        logger.info('Connected to MySQL database at', dbconf.host);
 
     } else {
         throw new Error('Unrecognized database provider: "'+String(provider)+'"');
@@ -212,9 +222,9 @@ exports.insert_artists = (artists) => {
 //  particular columns to search or functions thereof.
 exports.q = (query, fields) => {
     if (query)
-        console.log('Received search query:', query);
+        logger.debug('Received search query:', query);
     if (fields)
-        console.log('Received search fields:', fields);
+        logger.debug('Received search fields:', fields);
     if (query === '' && !fields) {
 
         throw new Error('Empty search queries are not permitted.');

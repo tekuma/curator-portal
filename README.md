@@ -8,6 +8,16 @@ This project is in development. Clone, and run `npm install`.
 
 ## Development
 
+Note that logging behavior and (eventually) some other aspects of operation are
+affected by whether the environment variable `NODE_ENV` equals `'production'`.
+For development, you should use
+
+    export NODE_ENV=debug
+
+e.g., which provides verbose logging. If you use `./dev-spin.sh` during
+development and `./auto-restart.sh` (both of which are described elsewhere in
+this document), then manually changing `NODE_ENV` should not be necessary.
+
 To start the development Web server, use
 
     ./dev-spin.sh

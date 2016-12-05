@@ -4,6 +4,13 @@
 // All rights reserved.
 // created by Scott C. Livingston
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/main',
+    level: (process.env.NODE_ENV === 'production' ? 'warn' : 'debug')
+});
+
+
 var cmd_q_string = null;
 var verbose = false;
 var use_mockup_firebase = false;
@@ -82,7 +89,7 @@ if (cmd_q_string != null) {
                     res.json({rows: rows});
                 });
             }).catch(function(error) {
-                console.log('firebase auth failed with error: ', error);
+                logger.error('firebase auth failed with error: ', error);
                 res.send('access denied.');
             });
 

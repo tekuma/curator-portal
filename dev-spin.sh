@@ -7,6 +7,8 @@
 # Spin up components for local testing. Note that nginx
 # (http://nginx.org/en/docs/) must be installed locally.
 
+export NODE_ENV=debug
+
 if pgrep nginx > /dev/null; then
     echo Found running nginx. Stopping it...
     sudo nginx -s stop

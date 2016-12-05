@@ -8,6 +8,12 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const bunyan = require('bunyan');
+var logger = bunyan.createLogger({
+    name: 'serv/translate',
+    level: (process.env.NODE_ENV === 'production' ? 'warn' : 'debug')
+});
+
 
 exports.translate_from_tekuma_firebase = (filename) => {
 
@@ -21,15 +27,20 @@ exports.translate_from_tekuma_firebase = (filename) => {
     var raw_db = fs.readFileSync(filename, 'utf8').replace(/\\u/g, '\\\\u').replace(/\\x/g, '\\\\x');
     var firebase_db = JSON.parse(raw_db);
     for (artist_uid in firebase_db) {
+        logger.debug('Importing entry for artist UID: ', artist_uid);
+
         if (firebase_db[artist_uid].artworks === undefined
             || firebase_db[artist_uid].display_name === undefined) {
+            logger.debug('Entry for artist UID',
+                         artist_uid,
+                         'does not have `artworks` or `displayname` fields');
             continue;
         }
 
         let artworks = [];
         for (artwork in firebase_db[artist_uid].artworks) {
             if (firebase_db[artist_uid].artworks[artwork].id === undefined) {
-                console.log('WARNING: Skipping artwork with missing UID by artist ' + artist_uid);
+                logger.warn('Skipping artwork with missing UID by artist ' + artist_uid);
                 continue;
             }
 
@@ -39,13 +50,15 @@ exports.translate_from_tekuma_firebase = (filename) => {
                 artist_uid: artist_uid,
                 thumbnail_url: firebase_db[artist_uid].artworks[artwork].fullsize_url || 'nil',
             };
+            logger.debug('Pushing artwork:', artworks[artworks.length-1]);
         }
         if (artworks.length > 0) {
-            promises[promises.length] = search.insert_artist(
-                {
-                    uid: artist_uid,
-                    artist: firebase_db[artist_uid].display_name || ''
-                });
+            let artist_row = {
+                uid: artist_uid,
+                artist: firebase_db[artist_uid].display_name || ''
+            };
+            promises[promises.length] = search.insert_artist(artist_row);
+            logger.debug('Pushing artist:', artist_row);
             promises[promises.length] = search.insert_artworks(artworks);
         }
     }
@@ -66,7 +79,7 @@ for (let i = 1; i < process.argv.length; i++) {
                 'Insufficiently parameters. Try `-h`.' );
         i += 1;
 
-        console.log('Importing from Tekuma Firebase database of artworks...');
+        logger.info('Importing from Tekuma Firebase database of artworks...');
         exports.translate_from_tekuma_firebase(process.argv[i]);
 
     }
