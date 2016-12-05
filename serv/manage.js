@@ -52,6 +52,7 @@ if (process.argv[cmd_index] === 'clear') {
 } else if (process.argv[cmd_index] === 'info') {
     const pathname = './server-config.json';
     logger.debug('Reading server configuration from: ', pathname);
+
     const servconf = require(pathname);
     const dbconf = require(servconf.artworkdb);
     console.log(JSON.stringify(
