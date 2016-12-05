@@ -100,6 +100,18 @@ configuration:
 ```
 
 
+## Code style
+
+Some of the details of the preferred code style of Tekuma remain to be fixed.
+Meanwhile, certain aspects of style are fixed, such as that indentation is in
+units of 4 spaces, no tab characters.
+
+Though their usage is not required, there are linting configurations available
+for ESLint <http://eslint.org/> that you can run using
+
+    npm run lint
+
+
 ## Deployment
 
 Change to have `"artworkdb": "./remote-dbconf.json"`, and then, build the
