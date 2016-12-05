@@ -8,7 +8,7 @@
     "testserv": "mocha tests/serv",
     "build": "webpack",
     "start": "webpack-dev-server --https --port 8000 --cert tests/cert/selfsigned.crt --cacert tests/cert/selfsigned.csr --key tests/cert/selfsigned.key",
-    "lint": "jscs"
+    "lint": "jscs serv"
   },
   "keywords": [
     "tekuma",
