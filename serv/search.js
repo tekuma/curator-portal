@@ -37,6 +37,9 @@ exports.connectdb = (dbconf, provider) => {
 
         const mysql = require('mysql');
         if (dbconf.ssl) {
+            logger.debug('Found pointers to SSL credentials from database configuration.')
+            logger.debug('Attempting to read from /cert/{'
+                         +dbconf.ssl.ca+','+dbconf.ssl.cert+','+dbconf.ssl.key+'}');
             dbconf.ssl.ca = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.ca);
             dbconf.ssl.cert = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.cert);
             dbconf.ssl.key = fs.readFileSync(__dirname + '/cert/' + dbconf.ssl.key);
