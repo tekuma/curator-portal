@@ -31,6 +31,8 @@ assert(cmd_index,
 
 
 if (process.argv[cmd_index] === 'clear') {
+    const pathname = './server-config.json';
+    logger.debug('Reading server configuration from: ', pathname);
 
     const servconf = require('./server-config.json');
     const search = require('./search.js');
