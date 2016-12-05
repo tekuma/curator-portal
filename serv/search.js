@@ -47,7 +47,7 @@ exports.connectdb = (dbconf, provider) => {
         dbconf.charset = 'utf8';
         db = mysql.createConnection(dbconf);
         db.connect();
-        logger.info('Connected to MySQL database.');
+        logger.info('Connected to MySQL database at', dbconf.host);
 
     } else {
         throw new Error('Unrecognized database provider: "'+String(provider)+'"');
