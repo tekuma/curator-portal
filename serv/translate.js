@@ -48,7 +48,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
                 uid: firebase_db[artist_uid].artworks[artwork].id,
                 title: firebase_db[artist_uid].artworks[artwork].title || '',
                 artist_uid: artist_uid,
-                thumbnail_url: firebase_db[artist_uid].artworks[artwork].fullsize_url || 'nil',
+                thumbnail_url: 'https://storage.googleapis.com/art-uploads/portal/'+artist_uid+'/thumb128/'+firebase_db[artist_uid].artworks[artwork].id
             };
             logger.debug('Pushing artwork:', artworks[artworks.length-1]);
         }
