@@ -2,10 +2,6 @@
 --------------------------
 The curators interface for accessing the Tekuma Art Database
 
-## Preparations
-
-This project is in development. Clone, and run `npm install`.
-
 ## Development
 
 Note that logging behavior and (eventually) some other aspects of operation are
