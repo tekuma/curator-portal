@@ -1,6 +1,6 @@
 {
   "name": "tekuma-curation",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "A curation portal, written as a Node.js application with use of ReactJS for front-end services. The application uses ES6 syntax.",
   "main": "server.js",
   "scripts": {
