@@ -2,6 +2,15 @@
 --------------------------
 The curators interface for accessing the Tekuma Art Database
 
+## Workflow and versioning
+
+Instructions for deploying are given near the end of this document. Deployment
+corresponds to the tip of `master` branch. As such, development should occur on
+branches other `master`. The version number is kept in package.json. Currently,
+there is no practice of tagging commits because merges into `master` branch
+represent releases.
+
+
 ## Development
 
 Note that logging behavior and (eventually) some other aspects of operation are
@@ -110,8 +119,11 @@ for ESLint <http://eslint.org/> that you can run using
 
 ## Deployment
 
-Change to have `"artworkdb": "./remote-dbconf.json"`, and then, build the
-client-side bundle, and rsync relevant data to the GCE instance:
+`master` branch is supposed to match the site as it is deployed. As such, before
+following the instructions below, increment the version number in package.json,
+and merge all changes into `master` branch.  Change server-config.json to have
+`"artworkdb": "./remote-dbconf.json"`, and then, build the client-side bundle,
+and rsync relevant data to the GCE instance:
 
     npm run build
     ./deploy.sh
