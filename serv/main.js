@@ -12,12 +12,13 @@ var logger = bunyan.createLogger({
 
 
 var cmd_q_string = null;
+var cmd_uid_request = null;
 var verbose = false;
 var use_mockup_firebase = false;
 for (let i = 1; i < process.argv.length; i++) {
     if (process.argv[i] === '-h'
         || process.argv[i] === '--help') {
-        console.log('Usage: serv/main.js [-h] [--firebase-mockup] [-q SEARCH...]');
+        console.log('Usage: serv/main.js [-h] [--firebase-mockup] [--uid ARTWORK_UID] [-q SEARCH...]');
         process.exit();
     } else if (process.argv[i] === '-v') {
         verbose = true;
@@ -27,6 +28,12 @@ for (let i = 1; i < process.argv.length; i++) {
             process.exit(1);
         }
         cmd_q_string = process.argv.slice(i+1).join(' ');
+    } else if (process.argv[i] === '--uid') {
+        if (process.argv.length - i < 2) {
+            console.log('ERROR: Missing query string. Try `serv/main.js -h`.');
+            process.exit(1);
+        }
+        cmd_uid_request = process.argv.slice(i+1, i+2)[0];
     } else if (process.argv[i] === '--firebase-mockup') {
         use_mockup_firebase = true;
     }
@@ -64,6 +71,13 @@ if (cmd_q_string != null) {
         console.log(rows.map(row => {
             return row.uid + ': "' + String(row.title) + '" by ' + String(row.artist);
         }));
+        search.disconnectdb();
+    });
+
+} else if (cmd_uid_request != null) {
+
+    search.get_detail(cmd_uid_request).then(function(detail) {
+        console.log(detail);
         search.disconnectdb();
     });
 

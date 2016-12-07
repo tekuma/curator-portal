@@ -227,6 +227,62 @@ exports.insert_artists = (artists) => {
 }
 
 
+exports.get_detail = (artwork_uid) => {
+    if (artwork_uid) {
+
+        logger.debug('Received request for detail of artwork:', artwork_uid);
+
+        return new Promise(function (resolve, reject) {
+
+            var sql_template = 'SELECT ' +
+                'uid, title, artist_uid, description, thumbnail_url ' +
+                'FROM `artworks` ' +
+                'WHERE uid = ?';
+
+            if (db_provider === 'mysql') {
+                db.query(sql_template,
+                         [artwork_uid],
+                         function (err, rows) {
+                             assert.ifError(err);
+                             resolve(rows);
+                         });
+            } else {  // SQLite
+                db.all(sql_template,
+                       [artwork_uid],
+                       function (err, rows) {
+                           assert.ifError(err);
+                           resolve(rows);
+                       });
+            }
+
+        }).then(function (rows) {
+
+            // Return a separate promise to allow for further data
+            // processing before the caller receives it.
+            return new Promise(function (resolve, reject) {
+
+                if (rows.length === 0) {
+                    resolve( {uid: artwork_uid, found: false} );
+                }
+
+                let row = rows[0];
+                resolve({
+                    uid: row.uid,
+                    title: row.title,
+                    description: row.description,
+                    thumbnail_url: row.thumbnail_url
+                });
+
+            });
+
+        });
+
+    } else {
+        return null;
+    }
+}
+
+
 // USAGE: q( query, fields )
 //
 // `query` is a general search string
