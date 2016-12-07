@@ -39,8 +39,9 @@ if (process.argv[cmd_index] === 'clear') {
     const dbconf = require(servconf.artworkdb);
     search.connectdb(dbconf);
     console.log('Resetting database...');
-    search.cleardb();
-    search.disconnectdb();
+    search.cleardb().then(function () {
+        search.disconnectdb();
+    });
 
 } else if (process.argv[cmd_index] === '-h'
            || process.argv[cmd_index] === '--help'

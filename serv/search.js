@@ -82,23 +82,38 @@ exports.cleardb = () => {
 
         }));
     } else {  // === 'mysql'
-        return (new Promise(function(resolve, reject) {
 
-            const mysql = require('mysql');
+        var drop_tabs = [];
 
-            var multi_db_config = Object.create(db_config);
-            multi_db_config.multipleStatements = true;
-
-            const multi_db = mysql.createConnection(multi_db_config);
-            multi_db.connect();
-
-            multi_db.query('SHOW TABLES', function (err, rows) {
+        return (new Promise(function (resolve, reject) {
+            db.query('SHOW TABLES', function (err, rows) {
                 assert.ifError(err);
-                var dropcreate = '';
+
+                logger.debug(rows);
                 for (let i = 0; i < rows.length; i++) {
-                    dropcreate += ('DROP TABLE '
-                                   + rows[i].Tables_in_Tekuma_artworkdb + ';');
+                    drop_tabs[drop_tabs.length] = ('DROP TABLE '
+                                                   + rows[i].Tables_in_Tekuma_artworkdb);
+                    logger.debug('Found table:', rows[i].Tables_in_Tekuma_artworkdb);
                 }
+
+                resolve();
+            });
+        })).then(function () {
+
+            var promises_of_deletion = [];
+            for (let k = 0; k < drop_tabs.length; k++) {
+                logger.debug(drop_tabs[k]);
+                promises_of_deletion[promises_of_deletion.length] = (new Promise(function (resolve, reject) {
+                    db.query(drop_tabs[k],
+                             function (err) {
+                                 assert.ifError(err);
+                                 resolve();
+                             });
+                }));
+            }
+            return Promise.all(promises_of_deletion).then(function () {
+
+                var promises_of_creation = [];
 
                 const initdb = fs.readFileSync('conf/initdb.sql',
                                                {encoding: 'utf-8'});
@@ -110,20 +125,18 @@ exports.cleardb = () => {
                     if (cmd.startsWith('CREATE') || cmd.startsWith('create')) {
                         cmd += ' ENGINE=InnoDB DEFAULT CHARSET=utf8';
                     }
-                    dropcreate += cmd +';\n';
+                    logger.debug(cmd);
+                    promises_of_creation[promises_of_creation.length] = (new Promise(function (resolve, reject) {
+                        db.query(cmd,
+                                 function (err) {
+                                     assert.ifError(err);
+                                     resolve();
+                                 });
+                    }));
                 }
-
-                multi_db.query(dropcreate,
-                               function (err) {
-                                   assert.ifError(err);
-                                   multi_db.end(function (err) {
-                                       assert.ifError(err);
-                                       resolve();
-                                   });
-                               });
+                return Promise.all(promises_of_creation);
             });
-
-        }));
+        });
     }
 }
 
