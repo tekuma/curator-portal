@@ -90,17 +90,19 @@ export default class ArtworkManager extends React.Component {
                     updateOnEachImageLoad={false}
                >
 
-                {this.props.results.map(result => {
-                    return (
-                        <Artwork
-                            updateInfoArtwork={this.updateInfoArtwork}
-                            toggleMoreInfo={this.props.toggleMoreInfo}
-                            command={this.props.command}
-                            addArtworkToBuffer={this.props.addArtworkToBuffer}
-                            removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
-                            result={result} />
-                    );
-                })}
+                {this.props.results.length > 0 ?
+                     this.props.results.map(result => {
+                         return (
+                             <Artwork
+                                 updateInfoArtwork={this.updateInfoArtwork}
+                                 toggleMoreInfo={this.props.toggleMoreInfo}
+                                 command={this.props.command}
+                                 addArtworkToBuffer={this.props.addArtworkToBuffer}
+                                 removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
+                                 result={result} />
+                         );
+                     })
+                     : "No artworks matched your search query."}
                 </Masonry>
             </div>
 
