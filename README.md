@@ -6,9 +6,9 @@ The curators interface for accessing the Tekuma Art Database
 
 Instructions for deploying are given near the end of this document. Deployment
 corresponds to the tip of `master` branch. As such, development should occur on
-branches other `master`. The version number is kept in package.json. Currently,
-there is no practice of tagging commits because merges into `master` branch
-represent releases.
+branches other than `master`. The version number is kept in package.json.
+Currently, there is no practice of tagging commits because merges into `master`
+branch represent releases.
 
 
 ## Development
