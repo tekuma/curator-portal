@@ -149,14 +149,16 @@ exports.disconnectdb = () => {
 }
 
 exports.insert_artwork = (artwork) => {
+    var sql_template = 'INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)';
+    var qelems = [artwork.uid,
+                  artwork.title,
+                  artwork.artist_uid || null,
+                  artwork.thumbnail_url || null];
+
     if (db_provider === 'mysql') {
 
         return (new Promise(function(resolve, reject) {
-            db.query('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
-                     [artwork.uid,
-                      artwork.title,
-                      artwork.artist_uid || null,
-                      artwork.thumbnail_url || null],
+            db.query(sql_template, qelems,
                      function (err) {
                          if (err) throw err;
                          resolve();
@@ -166,15 +168,11 @@ exports.insert_artwork = (artwork) => {
     } else {  // === 'sqlite'
 
         return (new Promise(function(resolve, reject) {
-            db.run('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
-                     [artwork.uid,
-                      artwork.title,
-                      artwork.artist_uid || null,
-                      artwork.thumbnail_url || null],
-                     function (err) {
-                         if (err) throw err;
-                         resolve();
-                     });
+            db.run(sql_template, qelems,
+                   function (err) {
+                       if (err) throw err;
+                       resolve();
+                   });
         }));
 
     }
@@ -189,13 +187,15 @@ exports.insert_artworks = (artworks) => {
 }
 
 exports.insert_artist = (artist) => {
+    var sql_template = 'INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)';
+    var qelems = [artist.uid,
+                  artist.artist,
+                  artist.human_name];
+
     if (db_provider === 'mysql') {
 
         return (new Promise(function(resolve, reject) {
-            db.query('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
-                     [artist.uid,
-                      artist.artist,
-                      artist.human_name],
+            db.query(sql_template, qelems,
                      function (err) {
                          if (err) throw err;
                          resolve();
@@ -205,10 +205,7 @@ exports.insert_artist = (artist) => {
     } else {  // === 'sqlite'
 
         return (new Promise(function(resolve, reject) {
-            db.run('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
-                   [artist.uid,
-                    artist.artist,
-                    artist.human_name],
+            db.run(sql_template, qelems,
                    function (err) {
                        if (err) throw err;
                        resolve();
@@ -238,17 +235,16 @@ exports.get_detail = (artwork_uid) => {
                 'uid, title, artist_uid, description, thumbnail_url ' +
                 'FROM `artworks` ' +
                 'WHERE uid = ?';
+            var qelems = [artwork_uid];
 
             if (db_provider === 'mysql') {
-                db.query(sql_template,
-                         [artwork_uid],
+                db.query(sql_template, qelems,
                          function (err, rows) {
                              assert.ifError(err);
                              resolve(rows);
                          });
             } else {  // SQLite
-                db.all(sql_template,
-                       [artwork_uid],
+                db.all(sql_template, qelems,
                        function (err, rows) {
                            assert.ifError(err);
                            resolve(rows);
@@ -359,15 +355,13 @@ exports.q = (query, fields) => {
                 }
 
                 if (db_provider === 'mysql') {
-                    db.query(sql_template,
-                             qelems,
+                    db.query(sql_template, qelems,
                              function (err, rows, fields) {
                                  if (err) throw err;
                                  resolve(rows);
                              });
                 } else {
-                    db.all(sql_template,
-                           qelems,
+                    db.all(sql_template, qelems,
                            function (err, rows, fields) {
                                if (err) throw err;
                                resolve(rows);
@@ -394,15 +388,13 @@ exports.q = (query, fields) => {
 
                 return (new Promise(function (resolve, reject) {
                     if (db_provider === 'mysql') {
-                        db.query(sql_template,
-                                 qelems,
+                        db.query(sql_template, qelems,
                                  function (err, rows, fields) {
                                      if (err) throw err;
                                      resolve(rows);
                                  });
                     } else {
-                        db.all(sql_template,
-                               qelems,
+                        db.all(sql_template, qelems,
                                function (err, rows, fields) {
                                    if (err) throw err;
                                    resolve(rows);
@@ -445,15 +437,13 @@ exports.q = (query, fields) => {
                     var sql_template = 'SELECT uid, artist ' +
                         'FROM artists WHERE uid = ?';
                     if (db_provider === 'mysql') {
-                    db.query(sql_template,
-                             [ex],
+                    db.query(sql_template, [ex],
                              function (err, artist_rows) {
                                  if (err) throw err;
                                  resolve(artist_rows[0]);
                              });
                     } else {
-                        db.all(sql_template,
-                               [ex],
+                        db.all(sql_template, [ex],
                                function (err, artist_rows) {
                                    if (err) throw err;
                                    resolve(artist_rows);
