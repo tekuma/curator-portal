@@ -1379,7 +1379,7 @@ main, .artworks {
 
 .artwork-image {
 	display: block;
-	width: 100%;
+	width: 128px;
 	height: auto;
 }
 
@@ -1388,7 +1388,7 @@ main, .artworks {
 }
 
 .artwork-image img {
-	width: 100%;
+       width: 128px;
 }
 
 .artwork-info {
