@@ -40,7 +40,7 @@ for (let i = 1; i < process.argv.length; i++) {
 }
 
 if (use_mockup_firebase) {
-    var firebase_path = '../tests/mock/firebase';
+    var firebase_path = 'mock-firebase';
 } else {
     var firebase_path = 'firebase';
 }
