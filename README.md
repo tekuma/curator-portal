@@ -56,6 +56,21 @@ testing.  During testing, it is critical not to use the production database
 because insertions, deletions, and other table modifications. Each possibility
 for MySQL servers that is currently supported during testing is described below.
 
+For both client and server-side testing, there is a mock of the `firebase`
+NodeJS package. The Tekuma repository of it can be found at
+https://github.com/tekuma/mock-firebase
+To install it locally, clone the repository and then use a command of the form
+
+    npm install /path/to/mock-firebase
+
+For it to be used client-side, replace all imports from `firebase` to
+`mock-firebase`, e.g., by
+
+    sed -i "s/from 'firebase'/from 'mock-firebase'/g" app/**/*.jsx
+
+It should be possible to automate this as part of testing, e.g., using
+`webpack`. (low priority, unassigned task)
+
 ### Using an existing remote database
 
 There is a CloudSQL database named "test-artworkdb" on the Google Cloud project
