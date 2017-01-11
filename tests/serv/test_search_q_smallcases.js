@@ -6,7 +6,6 @@
 
 
 const assert = require('assert');
-const readline = require('readline');
 
 const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
