@@ -47,4 +47,14 @@ describe('getting details about artworks', function() {
                });
            });
     });
+
+    describe('#get_detail', function() {
+        it('should return `uid` that matches given artwork UID',
+           function() {
+               return search.get_detail('deadbeef').then(function(detail) {
+                   assert( detail.found === true );
+                   assert( detail.uid === 'deadbeef' );
+               });
+           });
+    });
 });
