@@ -110,6 +110,23 @@ if (cmd_q_string != null) {
         }
     });
 
+    app.get('/detail', function (req, res) {
+        if (!req.query.auth) {
+            res.send('access denied.');
+            return;
+        } else {
+            firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
+                search.get_detail( req.query.uid ).then(function(detail) {
+                    res.json(detail);
+                });
+            }).catch(function(error) {
+                logger.error('firebase auth failed with error: ', error);
+                res.send('access denied.');
+            });
+
+        }
+    });
+
 
     https.createServer({ciphers:'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256',
                         honorCipherOrder: true,
