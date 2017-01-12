@@ -210,6 +210,9 @@ export default class SearchMain extends React.Component {
         if (fields.artist) {
             payload.q_artist = fields.artist;
         }
+        if (fields.color_list) {
+            payload.q_color_list = fields.color_list;
+        }
 
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
             payload.auth = idToken;

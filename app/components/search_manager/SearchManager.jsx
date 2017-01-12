@@ -1484,10 +1484,15 @@ export default class SearchManager extends React.Component {
         const artist = String(this.state.artist || '').trim();
 
         let fields = {};
-        if (title.length > 0)
+        if (this.state.searchCategories.title && title.length > 0)
             fields.title = title;
-        if (artist.length > 0)
+        if (this.state.searchCategories.artist && artist.length > 0)
             fields.artist = artist;
+        if (this.state.searchCategories.color) {
+            fields.color_list = [this.state.searchColors.one.hex,
+                                 this.state.searchColors.two.hex,
+                                 this.state.searchColors.three.hex];
+        }
 
         if (general.length === 0 && fields === {})
             return;
