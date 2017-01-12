@@ -11,9 +11,9 @@ const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
 
 
-describe('search with fields', function() {
+describe('search with fields', function () {
 
-    before('Opening database connection', function(done) {
+    before('Opening database connection', function (done) {
         console.log('TEKUMA_TEST_DB: '+process.env.TEKUMA_TEST_DB);
         if (typeof process.env.TEKUMA_TEST_DB !== 'undefined') {
             var db = search.connectdb(dbconf, process.env.TEKUMA_TEST_DB);
@@ -35,23 +35,23 @@ describe('search with fields', function() {
             ]).then( function () { done(); } );
         });
     });
-    after('Closing database connection', function() {
+    after('Closing database connection', function () {
         search.disconnectdb();
     });
 
-    describe('#q', function() {
+    describe('#q', function () {
         it('should find at least one row from {q:"", title:"beef"} query',
-           function() {
-               return search.q('', {title: 'beef'}).then(function(rows) {
+           function () {
+               return search.q('', {title: 'beef'}).then(function (rows) {
                    assert( rows.length > 0 );
                });
            });
     });
 
-    describe('#q', function() {
+    describe('#q', function () {
         it('should find zero rows from {q:"beef", artist:"Scott"} query',
-           function() {
-               return search.q('beef', {artist: 'beef'}).then(function(rows) {
+           function () {
+               return search.q('beef', {artist: 'beef'}).then(function (rows) {
                    assert( rows.length === 0 );
                });
            });

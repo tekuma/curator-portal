@@ -11,9 +11,9 @@ const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
 
 
-describe('getting details about artworks', function() {
+describe('getting details about artworks', function () {
 
-    before('Opening database connection', function(done) {
+    before('Opening database connection', function (done) {
         console.log('TEKUMA_TEST_DB: '+process.env.TEKUMA_TEST_DB);
         if (typeof process.env.TEKUMA_TEST_DB !== 'undefined') {
             var db = search.connectdb(dbconf, process.env.TEKUMA_TEST_DB);
@@ -35,32 +35,32 @@ describe('getting details about artworks', function() {
             ]).then( function () { done(); } );
         });
     });
-    after('Closing database connection', function() {
+    after('Closing database connection', function () {
         search.disconnectdb();
     });
 
-    describe('#get_detail', function() {
+    describe('#get_detail', function () {
         it('should fail to find artwork with given UID',
-           function() {
-               return search.get_detail('1337f00f').then(function(detail) {
+           function () {
+               return search.get_detail('1337f00f').then(function (detail) {
                    assert( detail.found === false );
                });
            });
     });
 
-    describe('#get_detail', function() {
+    describe('#get_detail', function () {
         it('should return `uid` that matches given artwork UID',
-           function() {
-               return search.get_detail('deadbeef').then(function(detail) {
+           function () {
+               return search.get_detail('deadbeef').then(function (detail) {
                    assert( detail.found === true );
                    assert( detail.uid === 'deadbeef' );
                });
            });
     });
 
-    describe('#get_othersize', function() {
+    describe('#get_othersize', function () {
         it('should return `null` because given string is malformed',
-           function() {
+           function () {
                assert( search.get_othersize('xxx', 512) === null );
            });
     });

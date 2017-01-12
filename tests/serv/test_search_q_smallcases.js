@@ -11,9 +11,9 @@ const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
 
 
-describe('search', function() {
+describe('search', function () {
 
-    before('Opening database connection', function(done) {
+    before('Opening database connection', function (done) {
         console.log('TEKUMA_TEST_DB: '+process.env.TEKUMA_TEST_DB);
         if (typeof process.env.TEKUMA_TEST_DB !== 'undefined') {
             var db = search.connectdb(dbconf, process.env.TEKUMA_TEST_DB);
@@ -47,47 +47,47 @@ describe('search', function() {
             ]).then( function () { done(); } );
         });
     });
-    after('Closing database connection', function() {
+    after('Closing database connection', function () {
         search.disconnectdb();
     });
 
-    describe('#q', function() {
-        it('should find at least one row from "beef" query', function() {
-            return search.q('beef').then(function(rows) {
+    describe('#q', function () {
+        it('should find at least one row from "beef" query', function () {
+            return search.q('beef').then(function (rows) {
                 assert( rows.length > 0 );
             });
         });
     });
 
-    describe('#q', function() {
-        it('should find at least one row from "BEEF" query because case insensitivity', function() {
-            return search.q('BEEF').then(function(rows) {
+    describe('#q', function () {
+        it('should find at least one row from "BEEF" query because case insensitivity', function () {
+            return search.q('BEEF').then(function (rows) {
                 assert( rows.length > 0 );
             });
         });
     });
 
-    describe('#q', function() {
-        it('should not find any rows from "some_random_text_aksrarhxschal" query', function() {
-            return search.q('some_random_text_aksrarhxschal').then(function(rows) {
+    describe('#q', function () {
+        it('should not find any rows from "some_random_text_aksrarhxschal" query', function () {
+            return search.q('some_random_text_aksrarhxschal').then(function (rows) {
                 assert( rows.length === 0 );
             });
         });
     });
 
-    describe('#q', function() {
-        it('should find at least one row from "ş" query (testing UTF-8)', function() {
-            return search.q('ş').then(function(rows) {
+    describe('#q', function () {
+        it('should find at least one row from "ş" query (testing UTF-8)', function () {
+            return search.q('ş').then(function (rows) {
                 assert( rows.length > 0 );
             });
         });
     });
 
-    describe('#q', function() {
+    describe('#q', function () {
         it('should find at least one row from "Ricardo" query, '
            +'which is artist name but not in any artwork titles',
-           function() {
-            return search.q('Ricardo').then(function(rows) {
+           function () {
+            return search.q('Ricardo').then(function (rows) {
                 assert( rows.length > 0 );
             });
         });
