@@ -258,7 +258,7 @@ exports.get_detail = (artwork_uid) => {
                     uid: row.uid,
                     title: row.title,
                     description: row.description,
-                    thumbnail_url: row.thumbnail_url
+                    thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
                 });
 
             });
