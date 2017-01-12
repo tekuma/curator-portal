@@ -57,11 +57,11 @@ exports.get_othersize = (url, size) => {
     }
 
     if (size === 512 || size === 128) {
-
+        return url.replace(/\/thumb128\//, '/thumb'+String(size)+'/');
     } else if (size === 0) {
-
+        return url.replace(/\/thumb128\//, '/uploads/');
     } else {
-
+        return null;
     }
 
     return new_url;
