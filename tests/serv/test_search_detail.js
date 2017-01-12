@@ -59,9 +59,37 @@ describe('getting details about artworks', function () {
     });
 
     describe('#get_othersize', function () {
-        it('should return `null` because given string is malformed',
+        it('should return `null` because given string that is not valid URL',
            function () {
                assert( search.get_othersize('xxx', 512) === null );
+           });
+    });
+
+    describe('#get_othersize', function () {
+        it('should return `null` because given string is malformed',
+           function () {
+               assert( search.get_othersize('https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb-KPCTx19sL8L97eqfnnZ', 512) === null );
+           });
+    });
+
+    describe('#get_othersize', function () {
+        it('maps https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ to thumbnail 512 px width variant',
+           function () {
+               assert( search.get_othersize('https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ', 512) === 'https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb512/-KPCTx19sL8L97eqfnnZ' );
+           });
+    });
+
+    describe('#get_othersize', function () {
+        it('maps https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ to full size ("raw") variant',
+           function () {
+               assert( search.get_othersize('https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ', 0) === 'https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/uploads/-KPCTx19sL8L97eqfnnZ' );
+           });
+    });
+
+    describe('#get_othersize', function () {
+        it('maps https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ to thumbnail 128 px width variant',
+           function () {
+               assert( search.get_othersize('https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ', 128) === 'https://storage.googleapis.com/art-uploads/portal/40qcVX8wk7MvfRCnh86VJKd6Ev22/thumb128/-KPCTx19sL8L97eqfnnZ' );
            });
     });
 });
