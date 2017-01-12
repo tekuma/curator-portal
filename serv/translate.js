@@ -24,7 +24,9 @@ exports.translate_from_tekuma_firebase = (filename) => {
 
     var promises = [];
 
-    var raw_db = fs.readFileSync(filename, 'utf8').replace(/\\u/g, '\\\\u').replace(/\\x/g, '\\\\x');
+    var raw_db = (fs.readFileSync(filename, 'utf8')
+                  .replace(/\\u/g, '\\\\u')
+                  .replace(/\\x/g, '\\\\x'));
     var firebase_db = JSON.parse(raw_db);
     for (artist_uid in firebase_db) {
         logger.debug('Importing entry for artist UID: ', artist_uid);
@@ -48,7 +50,9 @@ exports.translate_from_tekuma_firebase = (filename) => {
                 uid: firebase_db[artist_uid].artworks[artwork].id,
                 title: firebase_db[artist_uid].artworks[artwork].title || '',
                 artist_uid: artist_uid,
-                thumbnail_url: 'https://storage.googleapis.com/art-uploads/portal/'+artist_uid+'/thumb128/'+firebase_db[artist_uid].artworks[artwork].id
+                thumbnail_url: ('https://storage.googleapis.com/art-uploads/portal/'
+                                +artist_uid+'/thumb128/'
+                                +firebase_db[artist_uid].artworks[artwork].id)
             };
             logger.debug('Pushing artwork:', artworks[artworks.length-1]);
         }
