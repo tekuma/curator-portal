@@ -22,7 +22,8 @@ describe('getting details about artworks', function () {
         }
 
         const initial_artworks = [{uid: 'deadbeef', title: '4 beef',
-                                   artist_uid: 'sth14sth'},
+                                   artist_uid: 'sth14sth',
+                                   thumbnail_url: 'https://storage.googleapis.com/art-uploads/portal/sth14sth/thumb128/deadbeef' },
                                   {uid: 'f00fba54', title: 'frozzle',
                                    artist_uid: 'sth14sth'}];
 
@@ -54,6 +55,16 @@ describe('getting details about artworks', function () {
                return search.get_detail('deadbeef').then(function (detail) {
                    assert( detail.found === true );
                    assert( detail.uid === 'deadbeef' );
+               });
+           });
+    });
+
+    describe('#get_detail', function () {
+        it('should return thumbnail URL that contains "thumb512"',
+           function () {
+               return search.get_detail('deadbeef').then(function (detail) {
+                   assert( detail.found === true );
+                   assert( detail.thumbnail512_url === 'https://storage.googleapis.com/art-uploads/portal/sth14sth/thumb512/deadbeef' );
                });
            });
     });
