@@ -57,4 +57,11 @@ describe('getting details about artworks', function() {
                });
            });
     });
+
+    describe('#get_othersize', function() {
+        it('should return `null` because given string is malformed',
+           function() {
+               assert( search.get_othersize('xxx', 512) === null );
+           });
+    });
 });

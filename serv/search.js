@@ -42,6 +42,32 @@ function dbq(sql_template, qelems, resolve_rows) {
 }
 
 
+// USAGE: get_othersize( url, size )
+//
+// `url` is the reference thumbnail URL
+//
+// `size` (integer) width in pixels (128 or 512), or 0 to get full
+// size (a.k.a. "raw" image).
+//
+// Return the new URL or null if error occurred during parsing.
+exports.get_othersize = (url, size) => {
+    var new_url;
+    if (url.indexOf('/thumb128/') === -1) {
+        return null;
+    }
+
+    if (size === 512 || size === 128) {
+
+    } else if (size === 0) {
+
+    } else {
+
+    }
+
+    return new_url;
+}
+
+
 exports.connectdb = (dbconf, provider) => {
     if (typeof provider === 'undefined') {
         provider = 'mysql';
@@ -228,6 +254,7 @@ exports.get_detail = (artwork_uid) => {
 
                 let row = rows[0];
                 resolve({
+                    found: true,
                     uid: row.uid,
                     title: row.title,
                     description: row.description,
