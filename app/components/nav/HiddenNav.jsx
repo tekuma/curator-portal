@@ -7,7 +7,6 @@ import DisplayNameTag from './DisplayNameTag';
 import LogoutButton   from './LogoutButton';
 import NavItems       from './NavItems';
 import Roles          from '../../constants/Roles';
-// import Views          from '../../constants/Views';
 
 
 export default class HiddenNav extends React.Component {
@@ -25,6 +24,13 @@ export default class HiddenNav extends React.Component {
             icon : 'assets/images/icons/manage.svg',
             href : Roles.MANAGE,
             title: 'Manage Projects'
+        },
+        {
+            id   : uuid.v4(),
+            item : 'Review',
+            icon : 'assets/images/icons/manage.svg',
+            href : Roles.REVIEW,
+            title: 'Review Artist Submissions'
         }
     ];
 
@@ -34,7 +40,6 @@ export default class HiddenNav extends React.Component {
 
     componentWillMount() {
         console.log("-----HiddenNav");
-        console.log(this.navItems);
     }
 
     render() {

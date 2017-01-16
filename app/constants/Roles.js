@@ -1,4 +1,5 @@
 export default {
     SEARCH: 'Search',
-    MANAGE: 'Manage'
+    MANAGE: 'Manage',
+    REVIEW: 'Review'
 };

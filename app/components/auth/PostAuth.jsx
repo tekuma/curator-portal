@@ -38,8 +38,10 @@ export default class PostAuth extends React.Component {
     render() {
         if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
-        } else {
+        } else if (this.state.roles == Roles.MANAGE) {
             return this.goToManage();
+        } else if (this.state.roles == Roles.REVIEW) {
+            return this.goToReview();
         }
     }
 
@@ -93,6 +95,23 @@ export default class PostAuth extends React.Component {
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
                     toggleManager={this.toggleManager}  />
+            </div>
+        );
+    }
+
+    goToReview = () => {
+        return(
+            <div>
+                <HiddenNav
+                    role={this.state.role}
+                    navIsOpen={this.state.navIsOpen}
+                    changeAppLayout={this.changeAppLayout} />
+                <HamburgerIcon
+                    toggleNav={this.toggleNav}
+                    navIsOpen={this.state.navIsOpen} />
+                <ReviewManager
+
+                     />
             </div>
         );
     }
