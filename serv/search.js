@@ -8,6 +8,8 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const uuid = require('node-uuid');
+
 const bunyan = require('bunyan');
 var logger = bunyan.createLogger({
     name: 'serv/search',
@@ -195,6 +197,116 @@ exports.disconnectdb = () => {
     } else {  // === 'sqlite'
         db.close();
     }
+}
+
+// If `uid` of `label` is given, use it.
+// Else, generate one.
+//
+// If try_use_existing is true, then use an existing label if one is
+// found that matches the given `val`, `labeltype`, and `origin`.
+// `uid`, if given, is ignored if a match is found and
+// try_use_existing is true.
+//
+// If try_use_existing is true but no match is found, then a new label
+// is created.
+//
+// This function does not check for an existing association that is
+// essentially similar to the given label. But it should, to avoid
+// superfluous associations, i.e., multiple rows in the associations
+// table that match the same object and label.
+exports.apply_label = (artwork_uid, label, try_use_existing) => {
+    var label_uid = label.uid || null;
+    var label_origin = label.origin || null;
+
+    return new Promise(function (resolve, reject) {
+        var add_assoc = (function (err) {
+            var sql_template = 'INSERT INTO associations ' +
+                '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
+            var qelems = [label_uid,
+                          artwork_uid];
+            db.query(sql_template, qelems, function (err) {
+                assert.ifError(err);
+                db.commit(function (err) {
+                    assert.ifError(err);
+                    resolve();
+                });
+            });
+        });
+        db.beginTransaction(function (err) {
+            assert.ifError(err);
+            var insert_label = (function (err) {
+                logger.debug('Inserting new label:', [label_uid, label.val, label.type, label_origin]);
+                db.query('INSERT INTO labels ' +
+                         '(uid, val, labeltype, origin) ' +
+                         'VALUES (?, ?, ?, ?)',
+                         [label_uid,
+                          label.val,
+                          label.type,
+                          label_origin],
+                         add_assoc);
+            });
+
+            if (try_use_existing) {
+                logger.debug('Checking for matching label of ',
+                             {val: label.val, labeltype: label.type, origin: label_origin});
+                db.query('SELECT uid, val, labeltype, origin ' +
+                         'FROM labels ' +
+                         'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
+                         [label.val, label.type, label_origin],
+                         function (err, rows) {
+                             if (rows.length === 0) {
+                                 if (label_uid === null) {
+                                     label_uid = uuid.v4();
+                                 }
+                                 insert_label();
+                             } else {
+                                 logger.debug('Found existing label match:', rows[0]);
+                                 label_uid = rows[0].uid;
+                                 add_assoc();
+                             }
+                         });
+            } else {
+                if (label_uid === null) {
+                    label_uid = uuid.v4();
+                }
+                insert_label();
+            }
+        });
+    });
+}
+
+// `label` has similar form as argument `label` of apply_label().
+// However, `uid` is ignored here because it is not relevant.
+exports.consolidate_label = (label) => {
+    var label_origin = label.origin || null;
+    return dbq('SELECT uid FROM labels ' +
+               'WHERE val = ? AND labeltype = ? AND origin = ?',
+               [label.val, label.type, label_origin],
+               true).then(function (rows) {
+                   var re_assoc = [dbq('DELETE FROM labels WHERE uid != ?',
+                                       [rows[0].uid],
+                                       false)];
+                   re_assoc = re_assoc.concat(rows.slice(1).map(row => {
+                       return dbq('UPDATE associations SET label_uid = ? WHERE label_uid = ?',
+                                  [rows[0].uid, row.uid],
+                                  false);
+                   }));
+                   return Promise.all(re_assoc);
+               });
+}
+
+exports.consolidate_all_labels = () => {
+    return dbq('SELECT DISTINCT val, labeltype, origin FROM labels', [], true).then(
+        function (rows) {
+            return Promise.all(rows.map(row => {
+                return exports.consolidate_label({
+                    val: row.val,
+                    type: row.labeltype,
+                    origin: row.origin
+                });
+            }));
+        }
+    );
 }
 
 exports.insert_artwork = (artwork) => {
