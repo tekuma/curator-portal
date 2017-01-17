@@ -358,27 +358,34 @@ exports.get_detail = (artwork_uid) => {
             'WHERE uid = ?';
         var qelems = [artwork_uid];
 
-        return dbq(sql_template, qelems).then(function (rows) {
-
-            // Return a separate promise to allow for further data
-            // processing before the caller receives it.
-            return new Promise(function (resolve, reject) {
-
+        return new Promise(function (resolve, reject) {
+            dbq(sql_template, qelems).then(function (rows) {
                 if (rows.length === 0) {
-                    resolve( {uid: artwork_uid, found: false} );
+                    resolve({uid: artwork_uid, found: false});
+                } else {
+                    let row = rows[0];
+                    var details = {
+                        found: true,
+                        uid: row.uid,
+                        title: row.title,
+                        description: row.description,
+                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
+                    };
+                    dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
+                        [details.uid]).then(function (rows) {
+                            var label_ps = rows.map(row => {
+                                return dbq('SELECT val FROM labels WHERE (labeltype = "clarifai-text-tag") AND (uid = ?)',
+                                           [row.label_uid]);
+                            });
+                            return Promise.all(label_ps).then(function (labels_rows) {
+                                return labels_rows.map(labelr => labelr[0].val);
+                            });
+                        }).then(function (labels) {
+                            details.tags = labels;
+                            resolve(details);
+                        });
                 }
-
-                let row = rows[0];
-                resolve({
-                    found: true,
-                    uid: row.uid,
-                    title: row.title,
-                    description: row.description,
-                    thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
-                });
-
             });
-
         });
 
     } else {
