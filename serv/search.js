@@ -36,7 +36,8 @@ function dbq(sql_template, qelems, resolve_rows) {
             }
         });
         if (db_provider === 'mysql') {
-            db.query(sql_template, qelems, handle_resp);
+            var q = db.query(sql_template, qelems, handle_resp);
+            logger.debug(q.sql);
         } else {  // === 'sqlite'
             db.all(sql_template, qelems, handle_resp);
         }
@@ -279,12 +280,15 @@ exports.apply_label = (artwork_uid, label, try_use_existing) => {
 // However, `uid` is ignored here because it is not relevant.
 exports.consolidate_label = (label) => {
     var label_origin = label.origin || null;
-    return dbq('SELECT uid FROM labels ' +
-               'WHERE val = ? AND labeltype = ? AND origin = ?',
+    logger.debug('Consolidating label:',
+                 {val: label.val, labeltype: label.type, origin: label_origin});
+    return dbq('SELECT uid, val, labeltype, origin FROM labels ' +
+               'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
                [label.val, label.type, label_origin],
                true).then(function (rows) {
-                   var re_assoc = [dbq('DELETE FROM labels WHERE uid != ?',
-                                       [rows[0].uid],
+                   var re_assoc = [dbq('DELETE FROM labels WHERE (uid != ?) ' +
+                                       'AND (val = ?) AND (labeltype = ?) AND (origin = ?)',
+                                       [rows[0].uid, label.val, label.type, label_origin],
                                        false)];
                    re_assoc = re_assoc.concat(rows.slice(1).map(row => {
                        return dbq('UPDATE associations SET label_uid = ? WHERE label_uid = ?',
