@@ -32,18 +32,8 @@ export default class SearchManager extends React.Component {
             color   : false
         },
         allAccordion : false,
-        artistNames: [
-            "Afika Nyati",
-            "Stephen White",
-            "Kun Qian",
-            "Naomi Hérbert",
-            "Marwan Aboudib",
-            "Li Qin",
-            "Jia Rao",
-            "Ge Linda Wang",
-            "Clio Berta"
-        ],
-        clearable: true,
+        artistNames  : [],
+        clearable    : true,
         general: "",
         artist: "",
         title: "",
@@ -1359,6 +1349,11 @@ export default class SearchManager extends React.Component {
 
     }
 
+    /**
+     * [toggleSearchCategory description]
+     * @param  {[type]} category [description]
+     * @param  {[type]} bool     [description]
+     */
     toggleSearchCategory = (category, bool) => {
         let searchCategories = this.state.searchCategories;
         searchCategories[category] = bool;
@@ -1370,6 +1365,11 @@ export default class SearchManager extends React.Component {
         console.log("Set it in State searchManager");;
     }
 
+    /**
+     * [generalChange description]
+     * @param  {[type]} general [description]
+     * @param  {[type]} e       [description]
+     */
     generalChange = (general, e) => {
         console.log(e);
 
@@ -1390,6 +1390,10 @@ export default class SearchManager extends React.Component {
         }
     }
 
+    /**
+     * [artistChange description]
+     * @param  {[type]} artist [description]
+     */
     artistChange = (artist) => {
         console.log("Entered artistChange");
         this.setState({
@@ -1404,6 +1408,10 @@ export default class SearchManager extends React.Component {
         }
     }
 
+    /**
+     * [titleChange description]
+     * @param  {String} title [description]
+     */
     titleChange = (title) => {
         this.setState({
             title: title
@@ -1472,12 +1480,16 @@ export default class SearchManager extends React.Component {
         });
     }
 
+
     setSearchColors = (searchColors) => {
         this.setState({
             searchColors: searchColors
         });
     }
 
+    /**
+     * [TODO megaSearch description]
+     */
     megaSearch = () => {
         const general = String(document.getElementById("search-general").value || '').trim();
         const title = String(document.getElementById("search-title").value || '').trim();

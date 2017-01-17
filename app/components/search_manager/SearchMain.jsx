@@ -11,7 +11,6 @@ import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 export default class SearchMain extends React.Component {
     state = {
         results       : [],  // current list of search results
-        // results:[{artist_uid:"artist_uid",}],
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
@@ -68,7 +67,7 @@ export default class SearchMain extends React.Component {
                     updateInfoArtwork={this.updateInfoArtwork}
                     toggleMoreInfo={this.toggleMoreInfo}
                     command={this.state.command}
-                    results = {this.state.results}
+                    results={this.state.results}
                     managerIsOpen={this.props.managerIsOpen}
                     addArtworkToBuffer={this.addArtworkToBuffer}
                     removeArtworkFromBuffer={this.removeArtworkFromBuffer}
@@ -111,17 +110,21 @@ export default class SearchMain extends React.Component {
     }
 
     toggleMoreInfo = () => {
-        console.log("togglin");
         this.setState({
             moreInfoIsOpen: !this.state.moreInfoIsOpen
         })
     }
 
     /**
-     * updates the this.state.results to be data.rows
+     * updates the this.state.results to be data.rows.
+     * To prevent interleving of results, the state is
+     * first cleared, then updated 25ms later.
      */
     updateResults = (data) => {
-        this.setState({results: data.rows});
+        this.setState({ results:[] });
+        setTimeout( ()=>{
+            this.setState({results: data.rows});
+        }, 25);
     }
 
     /**
