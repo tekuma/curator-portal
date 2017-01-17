@@ -374,14 +374,37 @@ exports.get_detail = (artwork_uid) => {
                     dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
                         [details.uid]).then(function (rows) {
                             var label_ps = rows.map(row => {
-                                return dbq('SELECT val FROM labels WHERE (labeltype = "clarifai-text-tag") AND (uid = ?)',
+                                return dbq('SELECT labeltype, val FROM labels WHERE (labeltype = "clarifai-text-tag" OR labeltype = "clarifai-w3c-color-density") AND (uid = ?)',
                                            [row.label_uid]);
                             });
                             return Promise.all(label_ps).then(function (labels_rows) {
-                                return labels_rows.map(labelr => labelr[0].val);
+                                var labels = [];
+                                for (let j = 0; j < labels_rows.length; j++) {
+                                    if (labels_rows[j].length > 0) {
+                                        labels[labels.length] = [labels_rows[j][0].labeltype, labels_rows[j][0].val];
+                                    }
+                                }
+                                return labels;
                             });
                         }).then(function (labels) {
-                            details.tags = {labels: labels};
+                            details.tags = {labels: [], rgb_colors: []};
+                            for (let j = 0; j < labels.length; j++) {
+                                if (labels[j][0] === 'clarifai-text-tag') {
+                                    details.tags.labels[details.tags.labels.length] = labels[j][1];
+                                } else {  // labels[j][0] === 'clarifai-w3c-color-density'
+                                    var rgb_offset = 0;
+                                    if (labels[j][1][0] === '#') {
+                                        rgb_offset = 1;
+                                    } else if (labels[j][1][0] === '0' && labels[j][1][1] === 'x') {
+                                        rgb_offset = 2;
+                                    }
+                                    details.tags.rgb_colors[details.tags.rgb_colors.length] = [
+                                        Number('0x'+labels[j][1].slice(rgb_offset, rgb_offset+2)),
+                                        Number('0x'+labels[j][1].slice(rgb_offset+2, rgb_offset+4)),
+                                        Number('0x'+labels[j][1].slice(rgb_offset+4, rgb_offset+6))
+                                    ];
+                                }
+                            }
                             resolve(details);
                         });
                 }
