@@ -11,6 +11,7 @@ import ReviewItem from './ReviewItem';
         submitted  :"2016-11-26T20:33:35.393Z",
         status     :"Unseen",
         artist_name:"Pablo Picasso",
+        memo: ""
 
     }
  */
