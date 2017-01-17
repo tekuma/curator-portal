@@ -381,7 +381,7 @@ exports.get_detail = (artwork_uid) => {
                                 return labels_rows.map(labelr => labelr[0].val);
                             });
                         }).then(function (labels) {
-                            details.tags = labels;
+                            details.tags = {labels: labels};
                             resolve(details);
                         });
                 }
