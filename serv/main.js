@@ -78,6 +78,9 @@ if (cmd_q_string != null) {
 
     search.get_detail(cmd_uid_request).then(function(detail) {
         console.log(detail);
+        if (detail.found) {
+            console.log('rgb_colors:', detail.tags.rgb_colors);
+        }
         search.disconnectdb();
     });
 
