@@ -75,10 +75,11 @@ exports.translate_from_tekuma_firebase = (filename) => {
                     let label = {
                         type: 'clarifai-color-density',
                         origin: 'Clarif.ai',
-                        val: (firebase_db[artist_uid].artworks[artwork_ref].colors[j].hex
-                              +' '
-                              +String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density))
+                        val: firebase_db[artist_uid].artworks[artwork_ref].colors[j].hex
                     };
+                    if (firebase_db[artist_uid].artworks[artwork_ref].colors[j].density != undefined) {
+                        label.val += ' '+String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density);
+                    }
                     logger.debug('Pushing label:', label);
                     label_promises[label_promises.length] = search.apply_label(artwork.uid, label, true);
 
@@ -86,10 +87,11 @@ exports.translate_from_tekuma_firebase = (filename) => {
                         let w3c_label = {
                             type: 'clarifai-w3c-color-density',
                             origin: 'Clarif.ai',
-                            val: (firebase_db[artist_uid].artworks[artwork_ref].colors[j].w3c.hex
-                                  +' '
-                                  +String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density))
+                            val: firebase_db[artist_uid].artworks[artwork_ref].colors[j].w3c.hex
                         };
+                        if (firebase_db[artist_uid].artworks[artwork_ref].colors[j].density != undefined) {
+                            w3c_label.val += ' '+String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density);
+                        }
                         logger.debug('Pushing label:', w3c_label);
                         label_promises[label_promises.length] = search.apply_label(artwork.uid, w3c_label, true);
                     }
