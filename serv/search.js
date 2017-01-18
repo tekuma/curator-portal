@@ -45,6 +45,34 @@ function dbq(sql_template, qelems, resolve_rows) {
 }
 
 
+// Input is string following the schema for several types of labels
+// about colors, as described in databases.md in the documentation repo.
+// E.g., "#9aa0a9 0.3855" or "#9aa0a9"
+//
+// Return pair [RGB, density], where RGB is a triple of integers each
+// in the interval 0..255, and where density is floating point
+// density value if one is found; otherwise, null. Return null if error.
+exports.parse_color_label = (color_label_string) => {
+    var rgb_offset = 0;
+    if (color_label_string[0] === '#') {
+        rgb_offset = 1;
+    } else if (color_label_string[0] === '0' && color_label_string[1] === 'x') {
+        rgb_offset = 2;
+    }
+    var rgb = [
+        Number('0x'+color_label_string.slice(rgb_offset, rgb_offset+2)),
+        Number('0x'+color_label_string.slice(rgb_offset+2, rgb_offset+4)),
+        Number('0x'+color_label_string.slice(rgb_offset+4, rgb_offset+6))
+    ];
+    if (color_label_string.length > rgb_offset+6) {
+        var density = Number(color_label_string.slice(rgb_offset+6));
+    } else {
+        var density = null;
+    }
+    return [rgb, density];
+}
+
+
 // USAGE: get_othersize( url, size )
 //
 // `url` is the reference thumbnail URL
@@ -392,17 +420,8 @@ exports.get_detail = (artwork_uid) => {
                                 if (labels[j][0] === 'clarifai-text-tag') {
                                     details.tags.labels[details.tags.labels.length] = labels[j][1];
                                 } else {  // labels[j][0] === 'clarifai-w3c-color-density'
-                                    var rgb_offset = 0;
-                                    if (labels[j][1][0] === '#') {
-                                        rgb_offset = 1;
-                                    } else if (labels[j][1][0] === '0' && labels[j][1][1] === 'x') {
-                                        rgb_offset = 2;
-                                    }
-                                    details.tags.w3c_rgb_colors[details.tags.w3c_rgb_colors.length] = [
-                                        Number('0x'+labels[j][1].slice(rgb_offset, rgb_offset+2)),
-                                        Number('0x'+labels[j][1].slice(rgb_offset+2, rgb_offset+4)),
-                                        Number('0x'+labels[j][1].slice(rgb_offset+4, rgb_offset+6))
-                                    ];
+                                    details.tags.w3c_rgb_colors[details.tags.w3c_rgb_colors.length] =
+                                        exports.parse_color_label(labels[j][1])[0];
                                 }
                             }
                             resolve(details);
