@@ -387,7 +387,7 @@ exports.get_detail = (artwork_uid) => {
                                 return labels;
                             });
                         }).then(function (labels) {
-                            details.tags = {labels: [], rgb_colors: []};
+                            details.tags = {labels: [], w3c_rgb_colors: []};
                             for (let j = 0; j < labels.length; j++) {
                                 if (labels[j][0] === 'clarifai-text-tag') {
                                     details.tags.labels[details.tags.labels.length] = labels[j][1];
@@ -398,7 +398,7 @@ exports.get_detail = (artwork_uid) => {
                                     } else if (labels[j][1][0] === '0' && labels[j][1][1] === 'x') {
                                         rgb_offset = 2;
                                     }
-                                    details.tags.rgb_colors[details.tags.rgb_colors.length] = [
+                                    details.tags.w3c_rgb_colors[details.tags.w3c_rgb_colors.length] = [
                                         Number('0x'+labels[j][1].slice(rgb_offset, rgb_offset+2)),
                                         Number('0x'+labels[j][1].slice(rgb_offset+2, rgb_offset+4)),
                                         Number('0x'+labels[j][1].slice(rgb_offset+4, rgb_offset+6))
