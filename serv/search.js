@@ -341,35 +341,83 @@ exports.consolidate_all_labels = () => {
     );
 }
 
-exports.insert_artwork = (artwork) => {
-    var sql_template = 'INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)';
-    var qelems = [artwork.uid,
-                  artwork.title,
-                  artwork.artist_uid || null,
-                  artwork.thumbnail_url || null];
-    return dbq(sql_template, qelems, false);
+// If update is false (default), then INSERT the given artwork entry
+// without checking for existing conflicting uid.  If update is true,
+// check whether there is row with given uid, and then, UPDATE or
+// INSERT accordingly.
+exports.insert_artwork = (artwork, update) => {
+    update = update || false;
+    var new_insert = (function () {
+        return dbq('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
+                   [artwork.uid,
+                    artwork.title,
+                    artwork.artist_uid || null,
+                    artwork.thumbnail_url || null], false);
+    });
+    if (update) {
+        return new Promise(function (resolve, reject) {
+            dbq('SELECT uid FROM artworks WHERE uid = ?', [artwork.uid]).then(
+                function (rows) {
+                    if (rows.length === 0) {
+                        return new_insert();
+                    } else {
+                        return dbq('UPDATE artworks SET title = ?, artist_uid = ?, thumbnail_url = ? WHERE uid = ?',
+                                   [artwork.title,
+                                    artwork.artist_uid || null,
+                                    artwork.thumbnail_url || null,
+                                    artwork.uid], false).then(resolve);
+                    }
+                });
+        });
+    } else {
+        return new_insert();
+    }
 }
 
-exports.insert_artworks = (artworks) => {
+// `update` parameter here has same interpretation as that of insert_artwork()
+// except that it is applied to all artworks.
+exports.insert_artworks = (artworks, update) => {
     var promises = [];
     for (let i = 0; i < artworks.length; i++) {
-        promises[i] = exports.insert_artwork(artworks[i]);
+        promises[i] = exports.insert_artwork(artworks[i], update);
     }
     return Promise.all(promises);
 }
 
-exports.insert_artist = (artist) => {
-    var sql_template = 'INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)';
-    var qelems = [artist.uid,
-                  artist.artist,
-                  artist.human_name];
-    return dbq(sql_template, qelems, false);
+// `update` parameter here has same interpretation as that of insert_artwork()
+exports.insert_artist = (artist, update) => {
+    update = update || false;
+    var new_insert = (function () {
+        return dbq('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
+                   [artist.uid,
+                    artist.artist,
+                    artist.human_name], false);
+    });
+    if (update) {
+        return new Promise(function (resolve, reject) {
+            dbq('SELECT uid FROM artists WHERE uid = ?', [artist.uid]).then(
+                function (rows) {
+                    if (rows.length === 0) {
+                        return new_insert();
+                    } else {
+                        return dbq('UPDATE artists SET artist = ?, human_name = ? WHERE uid = ?',
+                                   [artist.artist,
+                                    artist.human_name,
+                                    artist.uid], false).then(resolve);
+                    }
+                });
+        });
+    } else {
+        return new_insert();
+    }
 }
 
-exports.insert_artists = (artists) => {
+// `update` parameter here has same interpretation as that of insert_artwork()
+// except that it is applied to all artists.
+exports.insert_artists = (artists, update) => {
     var promises = [];
     for (let i = 0; i < artists.length; i++) {
-        promises[i] = exports.insert_artist(artists[i]);
+        promises[i] = exports.insert_artist(artists[i], update);
     }
     return Promise.all(promises);
 }
