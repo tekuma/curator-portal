@@ -22,12 +22,11 @@ exports.translate_from_tekuma_firebase = (filename) => {
     const dbconf = require(servconf.artworkdb);
     search.connectdb(dbconf);
 
-    var promises = [];
-
     var raw_db = (fs.readFileSync(filename, 'utf8')
                   .replace(/\\u/g, '\\\\u')
                   .replace(/\\x/g, '\\\\x'));
     var firebase_db = JSON.parse(raw_db);
+    var insertion_promise = new Promise(function (resolve, reject) { resolve(); });
     for (artist_uid in firebase_db) {
         logger.debug('Importing entry for artist UID: ', artist_uid);
 
@@ -39,35 +38,82 @@ exports.translate_from_tekuma_firebase = (filename) => {
             continue;
         }
 
-        let artworks = [];
-        for (artwork in firebase_db[artist_uid].artworks) {
-            if (firebase_db[artist_uid].artworks[artwork].id === undefined) {
+        let at_least_one_artwork = false;
+        for (artwork_ref in firebase_db[artist_uid].artworks) {
+            if (firebase_db[artist_uid].artworks[artwork_ref].id === undefined) {
                 logger.warn('Skipping artwork with missing UID by artist ' + artist_uid);
                 continue;
             }
+            at_least_one_artwork = true;
 
-            artworks[artworks.length] = {
-                uid: firebase_db[artist_uid].artworks[artwork].id,
-                title: firebase_db[artist_uid].artworks[artwork].title || '',
+            let artwork = {
+                uid: firebase_db[artist_uid].artworks[artwork_ref].id,
+                title: firebase_db[artist_uid].artworks[artwork_ref].title || '',
                 artist_uid: artist_uid,
                 thumbnail_url: ('https://storage.googleapis.com/art-uploads/portal/'
                                 +artist_uid+'/thumb128/'
-                                +firebase_db[artist_uid].artworks[artwork].id)
+                                +firebase_db[artist_uid].artworks[artwork_ref].id)
             };
-            logger.debug('Pushing artwork:', artworks[artworks.length-1]);
+            logger.debug('Pushing artwork:', artwork);
+            let label_promises = [search.insert_artwork(artwork)];
+
+            if (firebase_db[artist_uid].artworks[artwork_ref].tags) {
+                for (let j = 0; j < firebase_db[artist_uid].artworks[artwork_ref].tags.length; j++) {
+                    if (firebase_db[artist_uid].artworks[artwork_ref].tags[j].text.length === 0)
+                        continue;
+                    let label = {
+                        type: 'clarifai-text-tag',
+                        origin: 'Clarif.ai',
+                        val: firebase_db[artist_uid].artworks[artwork_ref].tags[j].text
+                    };
+                    logger.debug('Pushing label:', label);
+                    label_promises[label_promises.length] = search.apply_label(artwork.uid, label, true);
+                }
+            }
+            if (firebase_db[artist_uid].artworks[artwork_ref].colors) {
+                for (let j = 0; j < firebase_db[artist_uid].artworks[artwork_ref].colors.length; j++) {
+                    let label = {
+                        type: 'clarifai-color-density',
+                        origin: 'Clarif.ai',
+                        val: firebase_db[artist_uid].artworks[artwork_ref].colors[j].hex
+                    };
+                    if (firebase_db[artist_uid].artworks[artwork_ref].colors[j].density != undefined) {
+                        label.val += ' '+String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density);
+                    }
+                    logger.debug('Pushing label:', label);
+                    label_promises[label_promises.length] = search.apply_label(artwork.uid, label, true);
+
+                    if (firebase_db[artist_uid].artworks[artwork_ref].colors[j].w3c) {
+                        let w3c_label = {
+                            type: 'clarifai-w3c-color-density',
+                            origin: 'Clarif.ai',
+                            val: firebase_db[artist_uid].artworks[artwork_ref].colors[j].w3c.hex
+                        };
+                        if (firebase_db[artist_uid].artworks[artwork_ref].colors[j].density != undefined) {
+                            w3c_label.val += ' '+String(firebase_db[artist_uid].artworks[artwork_ref].colors[j].density);
+                        }
+                        logger.debug('Pushing label:', w3c_label);
+                        label_promises[label_promises.length] = search.apply_label(artwork.uid, w3c_label, true);
+                    }
+                }
+            }
+            insertion_promise = insertion_promise.then(function () {
+                return Promise.all(label_promises);
+            });
         }
-        if (artworks.length > 0) {
+        if (at_least_one_artwork) {
             let artist_row = {
                 uid: artist_uid,
                 artist: firebase_db[artist_uid].display_name || ''
             };
-            promises[promises.length] = search.insert_artist(artist_row);
             logger.debug('Pushing artist:', artist_row);
-            promises[promises.length] = search.insert_artworks(artworks);
+            insertion_promise = insertion_promise.then(function () { return search.insert_artist(artist_row); });
         }
     }
 
-    Promise.all(promises).then( function () {
+    insertion_promise.then(function () {
+        return search.consolidate_all_labels();
+    }).then(function () {
         search.disconnectdb();
     });
 

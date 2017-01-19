@@ -78,6 +78,9 @@ if (cmd_q_string != null) {
 
     search.get_detail(cmd_uid_request).then(function(detail) {
         console.log(detail);
+        if (detail.found) {
+            console.log('w3c_rgb_colors:', detail.tags.w3c_rgb_colors);
+        }
         search.disconnectdb();
     });
 
@@ -97,9 +100,9 @@ if (cmd_q_string != null) {
             if (req.query.q_artist) {
                 fields.artist = req.query.q_artist;
             }
-            if (req.query.q_color_list) {
-                console.log('color list:', req.query.q_color_list);
-                fields.color_list = req.query.q_color_list;
+            if (req.query.q_w3c_color_list) {
+                console.log('color list:', req.query.q_w3c_color_list);
+                fields.w3c_color_list = req.query.q_w3c_color_list;
             }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {

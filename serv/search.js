@@ -8,6 +8,8 @@
 const assert = require('assert');
 const fs = require('fs');
 
+const uuid = require('node-uuid');
+
 const bunyan = require('bunyan');
 var logger = bunyan.createLogger({
     name: 'serv/search',
@@ -34,11 +36,40 @@ function dbq(sql_template, qelems, resolve_rows) {
             }
         });
         if (db_provider === 'mysql') {
-            db.query(sql_template, qelems, handle_resp);
+            var q = db.query(sql_template, qelems, handle_resp);
+            logger.debug(q.sql);
         } else {  // === 'sqlite'
             db.all(sql_template, qelems, handle_resp);
         }
     });
+}
+
+
+// Input is string following the schema for several types of labels
+// about colors, as described in databases.md in the documentation repo.
+// E.g., "#9aa0a9 0.3855" or "#9aa0a9"
+//
+// Return pair [RGB, density], where RGB is a triple of integers each
+// in the interval 0..255, and where density is floating point
+// density value if one is found; otherwise, null. Return null if error.
+exports.parse_color_label = (color_label_string) => {
+    var rgb_offset = 0;
+    if (color_label_string[0] === '#') {
+        rgb_offset = 1;
+    } else if (color_label_string[0] === '0' && color_label_string[1] === 'x') {
+        rgb_offset = 2;
+    }
+    var rgb = [
+        Number('0x'+color_label_string.slice(rgb_offset, rgb_offset+2)),
+        Number('0x'+color_label_string.slice(rgb_offset+2, rgb_offset+4)),
+        Number('0x'+color_label_string.slice(rgb_offset+4, rgb_offset+6))
+    ];
+    if (color_label_string.length > rgb_offset+6) {
+        var density = Number(color_label_string.slice(rgb_offset+6));
+    } else {
+        var density = null;
+    }
+    return [rgb, density];
 }
 
 
@@ -197,6 +228,119 @@ exports.disconnectdb = () => {
     }
 }
 
+// If `uid` of `label` is given, use it.
+// Else, generate one.
+//
+// If try_use_existing is true, then use an existing label if one is
+// found that matches the given `val`, `labeltype`, and `origin`.
+// `uid`, if given, is ignored if a match is found and
+// try_use_existing is true.
+//
+// If try_use_existing is true but no match is found, then a new label
+// is created.
+//
+// This function does not check for an existing association that is
+// essentially similar to the given label. But it should, to avoid
+// superfluous associations, i.e., multiple rows in the associations
+// table that match the same object and label.
+exports.apply_label = (artwork_uid, label, try_use_existing) => {
+    var label_uid = label.uid || null;
+    var label_origin = label.origin || null;
+
+    return new Promise(function (resolve, reject) {
+        var add_assoc = (function (err) {
+            var sql_template = 'INSERT INTO associations ' +
+                '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
+            var qelems = [label_uid,
+                          artwork_uid];
+            db.query(sql_template, qelems, function (err) {
+                assert.ifError(err);
+                db.commit(function (err) {
+                    assert.ifError(err);
+                    resolve();
+                });
+            });
+        });
+        db.beginTransaction(function (err) {
+            assert.ifError(err);
+            var insert_label = (function (err) {
+                logger.debug('Inserting new label:', [label_uid, label.val, label.type, label_origin]);
+                db.query('INSERT INTO labels ' +
+                         '(uid, val, labeltype, origin) ' +
+                         'VALUES (?, ?, ?, ?)',
+                         [label_uid,
+                          label.val,
+                          label.type,
+                          label_origin],
+                         add_assoc);
+            });
+
+            if (try_use_existing) {
+                logger.debug('Checking for matching label of ',
+                             {val: label.val, labeltype: label.type, origin: label_origin});
+                db.query('SELECT uid, val, labeltype, origin ' +
+                         'FROM labels ' +
+                         'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
+                         [label.val, label.type, label_origin],
+                         function (err, rows) {
+                             if (rows.length === 0) {
+                                 if (label_uid === null) {
+                                     label_uid = uuid.v4();
+                                 }
+                                 insert_label();
+                             } else {
+                                 logger.debug('Found existing label match:', rows[0]);
+                                 label_uid = rows[0].uid;
+                                 add_assoc();
+                             }
+                         });
+            } else {
+                if (label_uid === null) {
+                    label_uid = uuid.v4();
+                }
+                insert_label();
+            }
+        });
+    });
+}
+
+// `label` has similar form as argument `label` of apply_label().
+// However, `uid` is ignored here because it is not relevant.
+exports.consolidate_label = (label) => {
+    var label_origin = label.origin || null;
+    logger.debug('Consolidating label:',
+                 {val: label.val, labeltype: label.type, origin: label_origin});
+    return dbq('SELECT uid, val, labeltype, origin FROM labels ' +
+               'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
+               [label.val, label.type, label_origin],
+               true).then(function (rows) {
+                   var re_assoc = [dbq('DELETE FROM labels WHERE (uid != ?) ' +
+                                       'AND (val = ?) AND (labeltype = ?) AND (origin = ?)',
+                                       [rows[0].uid, label.val, label.type, label_origin],
+                                       false)];
+                   re_assoc = re_assoc.concat(rows.slice(1).map(row => {
+                       return dbq('UPDATE associations SET label_uid = ? WHERE label_uid = ?',
+                                  [rows[0].uid, row.uid],
+                                  false);
+                   }));
+                   return Promise.all(re_assoc);
+               });
+}
+
+exports.consolidate_all_labels = () => {
+    return dbq('SELECT DISTINCT val, labeltype, origin FROM labels', [], true).then(
+        function (rows) {
+            return Promise.all(rows.map(row => {
+                return exports.consolidate_label({
+                    val: row.val,
+                    type: row.labeltype,
+                    origin: row.origin
+                });
+            }));
+        }
+    );
+}
+
 exports.insert_artwork = (artwork) => {
     var sql_template = 'INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)';
     var qelems = [artwork.uid,
@@ -242,27 +386,48 @@ exports.get_detail = (artwork_uid) => {
             'WHERE uid = ?';
         var qelems = [artwork_uid];
 
-        return dbq(sql_template, qelems).then(function (rows) {
-
-            // Return a separate promise to allow for further data
-            // processing before the caller receives it.
-            return new Promise(function (resolve, reject) {
-
+        return new Promise(function (resolve, reject) {
+            dbq(sql_template, qelems).then(function (rows) {
                 if (rows.length === 0) {
-                    resolve( {uid: artwork_uid, found: false} );
+                    resolve({uid: artwork_uid, found: false});
+                } else {
+                    let row = rows[0];
+                    var details = {
+                        found: true,
+                        uid: row.uid,
+                        title: row.title,
+                        description: row.description,
+                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
+                    };
+                    dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
+                        [details.uid]).then(function (rows) {
+                            var label_ps = rows.map(row => {
+                                return dbq('SELECT labeltype, val FROM labels WHERE (labeltype = "clarifai-text-tag" OR labeltype = "clarifai-w3c-color-density") AND (uid = ?)',
+                                           [row.label_uid]);
+                            });
+                            return Promise.all(label_ps).then(function (labels_rows) {
+                                var labels = [];
+                                for (let j = 0; j < labels_rows.length; j++) {
+                                    if (labels_rows[j].length > 0) {
+                                        labels[labels.length] = [labels_rows[j][0].labeltype, labels_rows[j][0].val];
+                                    }
+                                }
+                                return labels;
+                            });
+                        }).then(function (labels) {
+                            details.tags = {labels: [], w3c_rgb_colors: []};
+                            for (let j = 0; j < labels.length; j++) {
+                                if (labels[j][0] === 'clarifai-text-tag') {
+                                    details.tags.labels[details.tags.labels.length] = labels[j][1];
+                                } else {  // labels[j][0] === 'clarifai-w3c-color-density'
+                                    details.tags.w3c_rgb_colors[details.tags.w3c_rgb_colors.length] =
+                                        exports.parse_color_label(labels[j][1])[0];
+                                }
+                            }
+                            resolve(details);
+                        });
                 }
-
-                let row = rows[0];
-                resolve({
-                    found: true,
-                    uid: row.uid,
-                    title: row.title,
-                    description: row.description,
-                    thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
-                });
-
             });
-
         });
 
     } else {
