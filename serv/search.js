@@ -222,7 +222,7 @@ exports.cleardb = () => {
 
 exports.disconnectdb = () => {
     if (db_provider === 'mysql') {
-        db.end();
+        db.end(function (err) { assert.ifError(err); });
     } else {  // === 'sqlite'
         db.close();
     }
