@@ -42,13 +42,15 @@ export default class PostAuth extends React.Component {
             return this.goToManage();
         } else if (this.state.roles == Roles.REVIEW) {
             return this.goToReview();
+        } else {
+            console.log("ROLE ERROR");
         }
     }
 
     componentDidMount() {
         this.fetchProjects();
         console.log("++++++PostAuth");
-        window.addEventListener("resize",    this.rerender);
+        window.addEventListener("resize",this.rerender);
     }
 
     componentWillUnmount() {

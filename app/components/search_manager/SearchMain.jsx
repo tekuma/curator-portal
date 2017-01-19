@@ -10,7 +10,25 @@ import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [],  // current list of search results
+        results       : [{  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "Best art ever",
+            artist       : "Stephen White",
+            album        : "best of",
+            year         : 2020,
+            tags         : ["#art", "Picasso", "#stuff"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+        },{  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "other art",
+            artist       : "Stephen White",
+            album        : "best of",
+            year         : 2001,
+            tags         : ["#art", "Picasso", "#stuff"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+        }],  // current list of search results
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
@@ -36,7 +54,7 @@ export default class SearchMain extends React.Component {
         artworkInfo   : {  // TODO: remove placeholder info
             description  : "Much art. Very nice.",
             title        : "Best art ever",
-            artist       : "Stephen White",
+            artist       : "XXX",
             album        : "best of",
             year         : 2020,
             tags         : ["#art", "Picasso", "#stuff"],
@@ -64,7 +82,7 @@ export default class SearchMain extends React.Component {
                     addArtworksToProject={this.addArtworksToProject}
                 />
                 <SearchArtworkManager
-                    updateInfoArtwork={this.updateInfoArtwork}
+                    detailArtwork={this.detailArtwork}
                     toggleMoreInfo={this.toggleMoreInfo}
                     command={this.state.command}
                     results={this.state.results}
@@ -80,7 +98,6 @@ export default class SearchMain extends React.Component {
                 <EditArtworkDialog
                     toggleMoreInfo={this.toggleMoreInfo}
                     moreInfoIsOpen={this.state.moreInfoIsOpen}
-
                     artworkInfo={this.state.artworkInfo}
                  />
                 <div
@@ -92,21 +109,31 @@ export default class SearchMain extends React.Component {
 
     }
 
-
     componentDidMount() {
         console.log("+++++SearchMain");
 
     }
 
     // =============== Methods =====================
-    //
 
+    detailArtwork = (uid) => {
+        firebase.auth().currentUser.getToken(true).then( (idToken)=>{
+            payload.auth = idToken;
+            $.ajax({
+                url: 'detail',
+                data: payload,
+                dataType: 'json',
+                cache: false,
+                success: this.updateInfoArtwork
+            });
+        });
+    }
 
-    updateInfoArtwork = (uid) => {
-        // TODO:  (1) set state infoArtwork => uid
-        // TODO:  (2) do AJAX request for data to populate
-        //            this.state.artworkInfo
-        //
+    updateInfoArtwork = (data) => {
+        this.setState({ infoArtwork:{} });
+        setTimeout( ()=>{
+            this.setState({results: data.rows});
+        }, 25);
     }
 
     toggleMoreInfo = () => {

@@ -6,17 +6,11 @@ import Firebase   from 'firebase';
 
 /*  this.props.item  looks like
 
-    -jd7Jd21ka: {
-        artwork_uid:"-jd7Jd21ka",
-        artist_uid :"sakUdjf2118SusQLXa",
-        submitted  :"2016-11-26T20:33:35.393Z",
-        status     :"Unseen",
-        artist_name:"Pablo Picasso",
-    }
+
 
  */
 
-export default class ReviewManager extends React.Component {
+export default class ReviewItem extends React.Component {
     state = {
     };
 

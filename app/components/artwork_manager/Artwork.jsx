@@ -45,7 +45,7 @@ export default class Artwork extends React.Component {
                     <img src={imageURL} />
                 </div>
                 <div
-                    onClick={this.props.toggleMoreInfo}
+                    onClick={this.handleMoreInfo}
                     className="artwork-info review">
                     <h3 className="artwork-name review"> {imageName} </h3>
                 </div>
@@ -68,7 +68,8 @@ export default class Artwork extends React.Component {
     //
 
     handleMoreInfo = () => {
-        this.props.updateInfoArtwork(this.props.result.uid);
+        console.log(this.props);
+        this.props.detailArtwork(this.props.result.uid);
         this.props.toggleMoreInfo();
     }
 

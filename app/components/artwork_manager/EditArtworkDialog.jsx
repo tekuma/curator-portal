@@ -34,7 +34,14 @@ export default class EditArtworkDialog extends React.Component {
                   className   ={"edit-artwork-no"}
                   onClick     ={this.props.toggleMoreInfo}>
                   <h2>
-                      {"action"}
+                      {"Cancel"}
+                  </h2>
+              </button>,
+              <button
+                  className   ={"edit-artwork-no"}
+                  onClick     ={this.props.toggleMoreInfo}>
+                  <h2>
+                      {"Save"}
                   </h2>
               </button>
         ];
