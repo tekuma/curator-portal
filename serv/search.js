@@ -476,42 +476,45 @@ exports.q = (query, fields) => {
         }
 
         if (query === '' && fields.artist === undefined) {
-            artists_direct = new Promise(function(resolve, reject) { resolve([]); });
+            artists_direct = new Promise(function (resolve, reject) { resolve([]); });
         } else {
-            let qelems = ['%'+query+'%', '%'+query+'%'];
-            let sql_template = 'SELECT uid, artist ' +
-                'FROM artists ' +
-                'WHERE (LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
-            if (fields.artist) {
-                if (query === '') {
-                    sql_template += ' AND '
-                } else {
-                    sql_template += ' OR ';
+            artists_direct = new Promise(function (resolve, reject) {
+                var qelems = ['%'+query+'%', '%'+query+'%'];
+                var sql_template = 'SELECT uid, artist ' +
+                    'FROM artists ' +
+                    'WHERE (LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                if (fields.artist) {
+                    if (query === '') {
+                        sql_template += ' AND ';
+                    } else {
+                        sql_template += ' OR ';
+                    }
+                    sql_template += '(LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
                 }
-                sql_template += '(LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
-                qelems[qelems.length] = '%'+fields.artist+'%';
-                qelems[qelems.length] = '%'+fields.artist+'%';
-            }
-            artists_direct = dbq(sql_template, qelems).then(function (rows) {
-                if (rows.length === 0) {
-                    return (new Promise( function (resolve, reject) {
+                dbq(sql_template, qelems).then(function (rows) {
+                    if (rows.length === 0) {
+                        resolve([]);
+                        return;
+                    }
+
+                    var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
+
+                    var qelems = [];
+                    var sql_template = 'SELECT ' +
+                        'uid, title, artist_uid, description, origin, thumbnail_url ' +
+                        'FROM `artworks` ' +
+                        'WHERE (' + uid_exprs.join(' OR ') + ')';
+                    if (fields.title) {
+                        sql_template += ' AND LOWER(`title`) LIKE ?';
+                        qelems[qelems.length] = '%'+fields.title+'%';
+                    }
+
+                    dbq(sql_template, qelems).then(function (rows) {
                         resolve(rows);
-                    }));
-                }
-
-                var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
-
-                var qelems = [];
-                var sql_template = 'SELECT ' +
-                    'uid, title, artist_uid, description, origin, thumbnail_url ' +
-                    'FROM `artworks` ' +
-                    'WHERE (' + uid_exprs.join(' OR ') + ')';
-                if (fields.title) {
-                    sql_template += ' AND LOWER(`title`) LIKE ?';
-                    qelems[qelems.length] = '%'+fields.title+'%';
-                }
-
-                return dbq(sql_template, qelems)
+                    });
+                });
             });
         }
 
@@ -548,11 +551,17 @@ exports.q = (query, fields) => {
                     var sql_template = 'SELECT uid, artist ' +
                         'FROM artists WHERE uid = ?';
                     if (db_provider === 'mysql') {
-                    db.query(sql_template, [ex],
-                             function (err, artist_rows) {
-                                 if (err) throw err;
-                                 resolve(artist_rows[0]);
-                             });
+                        db.query(sql_template, [ex],
+                                 function (err, artist_rows) {
+                                     if (err) throw err;
+                                     if (artist_rows.length > 0) {
+                                         resolve(artist_rows[0]);
+                                     } else {
+                                         // This case should only occur when there are inconsistencies among
+                                         // tables, which should be handled somewhere else.
+                                         resolve([]);
+                                     }
+                                 });
                     } else {
                         db.all(sql_template, [ex],
                                function (err, artist_rows) {
