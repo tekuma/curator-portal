@@ -33,7 +33,6 @@ export default class SearchMain extends React.Component {
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
         moreInfoIsOpen: false, // whether popup is open or not
-        infoArtwork   : null,  // uid of displayed artworkInfo
         /*
         ## SCHEMA SKETCH
         {
