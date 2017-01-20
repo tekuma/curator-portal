@@ -445,7 +445,8 @@ exports.get_detail = (artwork_uid) => {
                         uid: row.uid,
                         title: row.title,
                         description: row.description,
-                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
+                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512),
+                        tags: {w3c_rgb_colors: [], labels: []}
                     };
                     dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
                         [details.uid]).then(function (rows) {
