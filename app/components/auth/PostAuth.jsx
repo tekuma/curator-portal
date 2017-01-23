@@ -23,7 +23,7 @@ export default class PostAuth extends React.Component {
         managerIsOpen: true,
         navIsOpen    : false,
         user         : {},
-        role         : Roles.SEARCH,
+        role         : Roles.MANAGE,
         projects     : []
     };
 
@@ -38,9 +38,9 @@ export default class PostAuth extends React.Component {
     render() {
         if (this.state.role == Roles.SEARCH) {
             return this.goToSearch();
-        } else if (this.state.roles == Roles.MANAGE) {
+        } else if (this.state.role == Roles.MANAGE) {
             return this.goToManage();
-        } else if (this.state.roles == Roles.REVIEW) {
+        } else if (this.state.role == Roles.REVIEW) {
             return this.goToReview();
         } else {
             console.log("ROLE ERROR");
@@ -96,7 +96,8 @@ export default class PostAuth extends React.Component {
                     projects={this.state.projects}
                     navIsOpen={this.state.navIsOpen}
                     managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager}  />
+                    toggleManager={this.toggleManager}
+                    toggleNav={this.toggleNav}  />
             </div>
         );
     }

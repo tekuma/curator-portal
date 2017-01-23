@@ -53,8 +53,8 @@ export default class ManagerMain extends React.Component {
                     doQuery={this.doQuery}
                  />
                 <div
-                    onClick     ={this.toggleNav}
-                    onTouchTap  ={this.toggleNav}
+                    onClick     ={this.props.toggleNav}
+                    onTouchTap  ={this.props.toggleNav}
                     className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
             </div>
         );
@@ -62,11 +62,22 @@ export default class ManagerMain extends React.Component {
 
     componentDidMount() {
         console.log("+++++ManagerMain");
-        this.fetchProjectArtworks();
+
+
     }
 
-    componentWillReceiveProps(updates){
-        //pass
+    componentWillReceiveProps(nextProps){
+        // If there is at least one project, automatically select it
+        if (nextProps.projects.length >= 1) {
+            let newName = {
+                label: nextProps.projects[0][0],
+                id: nextProps.projects[0][1]
+            };
+            this.changeProject(newName);
+            console.log("Set new project.");
+        } else {
+            console.log("No projects.");
+        }
     }
 
     // =============== Methods =====================
@@ -102,7 +113,7 @@ export default class ManagerMain extends React.Component {
         },(err,wasSuccessful,snapshot)=>{
             this.props.fetchProjects();
             this.setState({
-                currentProject:[newName:projectID],
+                currentProject:[newName,projectID]
             })
         });
     }
