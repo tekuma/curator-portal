@@ -238,28 +238,32 @@ exports.disconnectdb = () => {
 //
 // If try_use_existing is true but no match is found, then a new label
 // is created.
-//
-// This function does not check for an existing association that is
-// essentially similar to the given label. But it should, to avoid
-// superfluous associations, i.e., multiple rows in the associations
-// table that match the same object and label.
 exports.apply_label = (artwork_uid, label, try_use_existing) => {
     var label_uid = label.uid || null;
     var label_origin = label.origin || null;
 
     return new Promise(function (resolve, reject) {
         var add_assoc = (function (err) {
-            var sql_template = 'INSERT INTO associations ' +
-                '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
-            var qelems = [label_uid,
-                          artwork_uid];
-            db.query(sql_template, qelems, function (err) {
-                assert.ifError(err);
-                db.commit(function (err) {
-                    assert.ifError(err);
-                    resolve();
-                });
-            });
+            dbq('SELECT label_uid FROM associations WHERE (label_uid = ?) AND (object_uid = ?) AND (object_table = ?)',
+                [label_uid,
+                 artwork_uid,
+                 "artworks"]).then(function (rows) {
+                     if (rows.length > 0) {
+                         resolve();
+                     } else {
+                         var sql_template = 'INSERT INTO associations ' +
+                             '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
+                         var qelems = [label_uid,
+                                       artwork_uid];
+                         db.query(sql_template, qelems, function (err) {
+                             assert.ifError(err);
+                             db.commit(function (err) {
+                                 assert.ifError(err);
+                                 resolve();
+                             });
+                         });
+                     }
+                 });
         });
         db.beginTransaction(function (err) {
             assert.ifError(err);
