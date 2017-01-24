@@ -78,6 +78,7 @@ export default class PostAuth extends React.Component {
                         projects={this.state.projects}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        changeAppLayout={this.changeAppLayout}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -114,6 +115,7 @@ export default class PostAuth extends React.Component {
                         projects={this.state.projects}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        changeAppLayout={this.changeAppLayout}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
