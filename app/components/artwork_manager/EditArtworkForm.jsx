@@ -21,14 +21,22 @@ export default class EditArtworkForm extends React.Component {
     }
 
     render() {
-        let oldArtwork  = this.props.value;
-        console.log(this.props.value);
-        if (!this.props.value.found) {
-            return null;
+        if (this.props.value.found) {
+            var artwork_details = this.props.value;
+        } else {
+            var artwork_details = {
+                found: false,
+                artist: null,
+                title: null,
+                album: null,
+                year: null,
+                tags: { labels: [], w3c_rgb_colors: [] },
+                thumbnail512_url: ""
+            };
         }
         let tags        = [];
-        for (var i = 0; i < this.props.value.tags.labels.length; i++) {
-            let tag = this.props.value.tags.labels[i];
+        for (var i = 0; i < artwork_details.tags.labels.length; i++) {
+            let tag = artwork_details.tags.labels[i];
             tags.push({id:i, text:tag});
         }
         let suggestions = this.state.suggestions;
@@ -39,7 +47,7 @@ export default class EditArtworkForm extends React.Component {
         };
 
         let colors = [];
-        for (let colr of this.props.value.tags.w3c_rgb_colors) {
+        for (let colr of artwork_details.tags.w3c_rgb_colors) {
             let color_string = '#';
             for (let j = 0; j < 3; j++) {
                 let cbyte = Number(colr[j]).toString(16);
@@ -51,7 +59,7 @@ export default class EditArtworkForm extends React.Component {
             colors.push({background: color_string});
         }
 
-        let image = this.props.value.thumbnail512_url;
+        let image = artwork_details.thumbnail512_url;
 
         let previewImage = {
             backgroundImage: 'url(' + image + ')'
@@ -92,7 +100,7 @@ export default class EditArtworkForm extends React.Component {
                                         Title <span className="pink">*</span>
                                     </label>
                                     <label>
-                                        {this.props.value.title}
+                                        {artwork_details.title}
                                     </label>
 
                                 </li>
@@ -101,7 +109,7 @@ export default class EditArtworkForm extends React.Component {
                                         Artist <span className="pink">*</span>
                                     </label>
                                     <label>
-                                        {this.props.value.artist}
+                                        {artwork_details.artist}
                                     </label>
                                 </li>
                                 <li
@@ -111,7 +119,7 @@ export default class EditArtworkForm extends React.Component {
                                         Album
                                     </label>
                                     <label>
-                                        {this.props.value.album}
+                                        {artwork_details.album}
                                     </label>
                                 </li>
                                 <li>
@@ -119,7 +127,7 @@ export default class EditArtworkForm extends React.Component {
                                         Year <span className="pink">*</span>
                                     </label>
                                     <label>
-                                        {this.props.value.year}
+                                        {artwork_details.year}
                                     </label>
                                 </li>
                                 <li>
@@ -142,7 +150,7 @@ export default class EditArtworkForm extends React.Component {
                                     <textarea
                                         id          ="artwork-description"
                                         placeholder ="Give this artwork a short description..."
-                                        value       = {this.props.value.description || ""}
+                                        value       = {artwork_details.description || ""}
                                         maxLength   ="1500"/>
                                 </li>
 
@@ -159,8 +167,16 @@ export default class EditArtworkForm extends React.Component {
         console.log("+++++EditArtworkForm");
 
         // Get Tags
-        if (this.props.value.tags.labels) {
-            let allTags  = this.props.value.tags.labels;
+        if (this.props.value.found) {
+            var artwork_details = this.props.value;
+        } else {
+            var artwork_details = {
+                found: false,
+                tags: { labels: [], w3c_rgb_colors: [] }
+            };
+        }
+        if (artwork_details.tags.labels) {
+            let allTags  = artwork_details.tags.labels;
             let tagKeys  = Object.keys(allTags);
             let tags = [];
 

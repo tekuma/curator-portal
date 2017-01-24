@@ -10,25 +10,7 @@ import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [{  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            title        : "Best art ever",
-            artist       : "Stephen White",
-            album        : "best of",
-            year         : 2020,
-            tags         : ["#art", "Picasso", "#stuff"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
-        },{  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            title        : "other art",
-            artist       : "Stephen White",
-            album        : "best of",
-            year         : 2001,
-            tags         : ["#art", "Picasso", "#stuff"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
-        }],  // current list of search results
+        results       : [],  // current list of search results
         currentProject: [],  // name of current project ["name", "ID"]
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
