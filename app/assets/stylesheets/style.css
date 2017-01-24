@@ -522,7 +522,7 @@ header.black {
 	right: 0;
 	padding: 0;
 	margin: 0;
-	width: 215px;
+	width: 200px;
 	height: 60px;
 	transition: width 0.5s;
 	-webkit-transition: width 0.5s;
@@ -576,6 +576,10 @@ header.black {
 
 .header-icon img {
 	height: 30px;
+}
+
+.header-icon.curator.manage {
+	border-left: 1px solid #222222;
 }
 
 .header-icon.curator.manage img {
@@ -708,7 +712,7 @@ input::-webkit-search-cancel-button {
 .project-selector {
 	position: absolute;
 	top   : 12px;
-	right  : 255px;
+	right  : 235px;
 	width : 20%;
 	height: 60px;
 	z-index: 100;
@@ -3883,7 +3887,8 @@ label.age-confirm-label {
 
 /* Search Hints */
 
-.search-manager-container {
+.search-manager-container,
+.project-manager-container {
 	position: absolute;
 	right: 0px;
 	overflow: hidden;
@@ -4185,11 +4190,12 @@ label.age-confirm-label {
 
 /* Project Manager */
 .project-name-container {
+	position: relative;
 	width: 100%;
 	height: 60px;
 	background: #111111;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.12),
-	0 1px 2px rgba(0,0,0,0.24);
+	box-shadow: 0 3px 5px rgba(0,0,0,0.12),
+	0 3px 3px rgba(0,0,0,0.24);
 	padding: 0 20px;
 	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
 	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
@@ -4285,7 +4291,7 @@ label.age-confirm-label {
 	-ms-justify-content: center;
 	-moz-justify-content: center;
 	vertical-align: top;
-	transition: all 0.3s 0.3s;
+	transition: all 0.3s;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
@@ -4304,6 +4310,197 @@ label.age-confirm-label {
 	display: inline-block;
 	width: 20vw !important;
 }
+
+/*========================================== */
+
+/* Manager Functions */
+
+.manager-function-wrapper {
+	width: 100%;
+	background: #dddddc;
+	margin: 0;
+	padding: 50px;
+	padding-top: 0px;
+	overflow: scroll;
+	z-index: 8;
+}
+
+.manager-function {
+	display: inline-block;
+	float: left;
+	width: 100%;
+	padding: 10px;
+}
+
+.manager-heading {
+	font-size: 1.3em;
+	color: rgba(0,0,0,0.87);
+	text-align: center;
+}
+
+.manager-function-box {
+	background: #ffffff;
+	padding: 15px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12),
+	0 1px 2px rgba(0,0,0,0.24);
+	cursor: pointer;
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	z-index: 1;
+}
+
+.manager-function-box.download {
+	margin: 10px;
+}
+
+.manager-function-box:hover {
+	box-shadow: 0 5px 9px rgba(0,0,0,0.12),
+	0 5px 7px rgba(0,0,0,0.24);
+	cursor: pointer;
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.manager-function-box.center {
+	text-align: center;
+}
+
+.manager-function-box.delete {
+	background: #e73827;
+}
+
+.manager-function-box p {
+	font-weight: 500;
+	margin: 0;
+	color: rgba(0,0,0,0.54);
+}
+
+.manager-function-box.delete p {
+	color: #ffffff;
+}
+
+.function-seperator {
+	width: 100%;
+	height: 2px;
+	background: rgba(0,0,0,0.12);
+	margin: 30px 0 20px 0;
+}
+
+.collaborator-box {
+	width: 100%;
+	border: 2px solid  rgba(0,0,0,0.12);
+	margin-bottom: 30px;
+	padding: 10px;
+	padding-top: 0px;
+}
+
+.collaborator-thumb {
+	position: relative;
+	background: #000000;
+	width: 100%;
+	padding: 10px;
+	margin-top: 10px;
+}
+
+.collaborator-image {
+	height: 40px;
+}
+
+.manager-function-box .collaborator-name {
+	color: #ffffff;
+}
+
+.delete-collaborator {
+	position: absolute;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	top: -8px;
+	right: -8px;
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	background: #e73827;
+	box-shadow: 0 -2px 4px rgba(0,0,0,0.12),
+	2px 0 4px rgba(0,0,0,0.24);
+	cursor: pointer;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.delete-collaborator:hover {
+	box-shadow: 0 -6px 9px rgba(0,0,0,0.12),
+	4px 0 7px rgba(0,0,0,0.24);
+}
+
+.delete-collaborator img {
+	width: 12px;
+}
+
+.add-collaborator-selector {
+	margin-top: 10px;
+}
+
+.collaborator-add-button {
+	background: #000000;
+	width: 100%;
+	height: 40px;
+	margin-top: 10px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.collaborator-add-button:hover {
+	background: #e73827;
+	background: -moz-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, #e73827), color-stop(100%, #ec167e));
+	background: -webkit-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -o-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -ms-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: linear-gradient(to bottom, #e73827 0%, #ec167e 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e73827', endColorstr='#ec167e', GradientType=0 );
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.collaborator-add-button p {
+	color: #ffffff;
+	font-size: 1.5em;
+	font-weight: 500;
+}
+
+/*========================================== */
 
 /* Animations */
 
@@ -4891,6 +5088,25 @@ font-weight: 100;
 }
 .Select-placeholder,
 .Select--single > .Select-control .Select-value {
+  	bottom: 0;
+  	font-size: 0.9em;
+  	color: #aaaaaa;
+  	left: 0;
+  	line-height: 34px;
+  	padding-left: 10px;
+  	padding-right: 10px;
+  	position: absolute;
+  	right: 0;
+  	top: 0;
+  	max-width: 100%;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+  	white-space: nowrap;
+	cursor: context-menu;
+}
+
+.project-selector .Select-placeholder,
+.project-selector .Select--single > .Select-control .Select-value {
   	bottom: 0;
   	font-size: 0.9em;
   	color: #aaaaaa;

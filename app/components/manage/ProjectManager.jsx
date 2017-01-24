@@ -9,6 +9,7 @@ import update                       from 'react-addons-update';
 import ManageAccordion              from './ManageAccordion';
 import ManageProjectName            from './ManageProjectName';
 import ManageToggler                from './ManageToggler';
+import Select                       from 'react-select';
 
 /**
  * TODO
@@ -44,6 +45,8 @@ export default class ProjectManager extends React.Component {
 // ============= Flow Control ===============
 
     openedManager = () => {
+
+        // Tooltips
         const addAlbumTooltip = (
             <Tooltip
                 id="add-album-tooltip"
@@ -52,11 +55,18 @@ export default class ProjectManager extends React.Component {
             </Tooltip>
         );
 
+        // Dynamic CSS
         const containerWidth = {
-            height: window.innerHeight - 60,
+            height: window.innerHeight - 60, // Minus 60px for Header
             width: window.innerWidth * 0.4 - 40,
             maxWidth: "400px"
         }
+
+        const managerFunctionHeight = {
+            height: window.innerHeight - 60 - 60 - 60 // Minus 60px for Header, Project Name, and SelectButtons
+        }
+
+        let options = [{label: "Bob", value: "Bob"}];
 
         return (
             <section
@@ -72,19 +82,101 @@ export default class ProjectManager extends React.Component {
                     toggleManager   ={this.props.toggleManager}/>
                 <div
                     style={containerWidth}
-                    className="search-manager-container">
+                    className="project-manager-container">
                     <ManageProjectName
                         renameCurrentProject={this.props.renameCurrentProject}
                         currentProject={this.props.currentProject}
 
                         />
                     <div
-                        onClick={this.props.deleteCurrentProject}
-                        onTouchTap={this.props.deleteCurrentProject}
-                        className="manage-tool right-border">
-                        <h4 className="manage-tool-writing">
-                            :Delete Project:
-                        </h4>
+                        style={managerFunctionHeight}
+                        className="manager-function-wrapper">
+                        <div className="manager-function">
+                            <h3 className="manager-heading">
+                                Download
+                            </h3>
+                            <div className="manager-function-box download center">
+                                <p>CSV</p>
+                            </div>
+                            <div className="manager-function-box download center">
+                                <p>Raw Images</p>
+                            </div>
+                            <div className="manager-function-box download center">
+                                <p>Print Files</p>
+                            </div>
+                        </div>
+                        <div className="manager-function">
+                            <h3 className="manager-heading">
+                                Collaborators
+                            </h3>
+                            <div className="manager-function-box center">
+                                <div className="collaborator-box">
+                                    <article
+                                        key={uuid.v4()}
+                                        className="collaborator-thumb">
+                                        <p className="collaborator-name">
+                                            Afika Nyati
+                                        </p>
+                                        <div className="delete-collaborator">
+                                            <img src="assets/images/icons/delete-white.svg" />
+                                        </div>
+                                    </article>
+                                    <article
+                                        key={uuid.v4()}
+                                        className="collaborator-thumb">
+                                        <p className="collaborator-name">
+                                            Stephen White
+                                        </p>
+                                        <div className="delete-collaborator">
+                                            <img src="assets/images/icons/delete-white.svg" />
+                                        </div>
+                                    </article>
+                                    <article
+                                        key={uuid.v4()}
+                                        className="collaborator-thumb">
+                                        <p className="collaborator-name">
+                                            Scott Livingston
+                                        </p>
+                                        <div className="delete-collaborator">
+                                            <img src="assets/images/icons/delete-white.svg" />
+                                        </div>
+                                    </article>
+                                </div>
+                                <p>Add Collaborator</p>
+                                <Select
+                                    className="add-collaborator-selector"
+                                    ref="searchArtist"
+                                    inputProps={{id: 'search-artist'}}
+                                    autofocus
+                                    options={options}
+                                    simpleValue
+                                    clearable={false}
+                                    name="artist-search"
+                                    value={"Hello"}
+                                    placeholder="Name..."
+                                    />
+                                <div className="collaborator-add-button">
+                                    <p>+</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="manager-function">
+                            <h3 className="manager-heading">
+                                Notes
+                            </h3>
+                            <div className="manager-function-box center">
+                            <p>View Notes</p>
+                            </div>
+                        </div>
+                        <div className="manager-function">
+                            <div className="function-seperator"></div>
+                            <div
+                                className="manager-function-box delete center"
+                                onClick={this.props.deleteCurrentProject}
+                                onTouchTap={this.props.deleteCurrentProject}>
+                                <p>Delete Project</p>
+                            </div>
+                        </div>
                     </div>
                     <div className="manage-tools">
                         <div

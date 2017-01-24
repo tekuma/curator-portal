@@ -92,7 +92,7 @@ export default class CurationHeader extends React.Component {
                     <div className="header-icons">
                         <OverlayTrigger placement="bottom" overlay={this.props.role == Roles.SEARCH ? addArtworkTooltip : removeArtworkTooltip}>
                              <div
-                                 className="header-icon"
+                                 className="header-icon curator add-remove"
                                  onClick={this.handleProjectAdditionsOrDeletions}
                                  onTouchTap={this.handleProjectAdditionsOrDeletions}
                                 >
