@@ -33,16 +33,7 @@ export default class SearchMain extends React.Component {
         artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
         moreInfoIsOpen: false, // whether popup is open or not
-        artworkInfo   : {  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            title        : "Best art ever",
-            artist       : "XXX",
-            album        : "best of",
-            year         : 2020,
-            tags         : ["#art", "Picasso", "#stuff"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
-        }
+        artworkInfo   : {uid: null, found: false}
     }
 
     constructor(props) {
@@ -100,7 +91,10 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            payload.auth = idToken;
+            var payload = {
+                auth: idToken,
+                uid: uid
+            };
             $.ajax({
                 url: 'detail',
                 data: payload,
@@ -112,10 +106,7 @@ export default class SearchMain extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        this.setState({ infoArtwork:{} });
-        setTimeout( ()=>{
-            this.setState({results: data.rows});
-        }, 25);
+        this.setState({ artworkInfo: data });
     }
 
     toggleMoreInfo = () => {
