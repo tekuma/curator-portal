@@ -4322,7 +4322,6 @@ label.age-confirm-label {
 	padding: 50px;
 	padding-top: 0px;
 	overflow: scroll;
-	z-index: 8;
 }
 
 .manager-function {
@@ -4404,6 +4403,10 @@ label.age-confirm-label {
 	width: 100%;
 	padding: 10px;
 	margin-top: 10px;
+}
+
+.collaborator-thumb.self {
+	border: 5px solid #ec167e;
 }
 
 .collaborator-image {

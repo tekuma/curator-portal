@@ -113,7 +113,7 @@ export default class ProjectManager extends React.Component {
                                 <div className="collaborator-box">
                                     <article
                                         key={uuid.v4()}
-                                        className="collaborator-thumb">
+                                        className="collaborator-thumb self">
                                         <p className="collaborator-name">
                                             Afika Nyati
                                         </p>
@@ -155,7 +155,9 @@ export default class ProjectManager extends React.Component {
                                     value={"Hello"}
                                     placeholder="Name..."
                                     />
-                                <div className="collaborator-add-button">
+                                <div
+                                    className="collaborator-add-button"
+                                    title="Add Collaborator">
                                     <p>+</p>
                                 </div>
                             </div>

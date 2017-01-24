@@ -80,15 +80,16 @@ export default class ManageProjectName extends React.Component {
                         onKeyPress={this.checkEnter}
                         placeholder="Enter Project Name..." />
                 </div>
-                <div className="project-edit-button-container">
+                <div
+                    className="project-edit-button-container"
+                    onClick     ={this.finishEdit}
+                    onTouchTap  ={this.finishEdit}>
                   <OverlayTrigger
                       placement   ="bottom"
                       overlay     ={editTooltip}>
                       <img
                           className   ="project-edit-button"
                           src         ='assets/images/icons/edit-white.svg'
-                          onClick     ={this.finishEdit}
-                          onTouchTap  ={this.finishEdit}
                       />
                   </OverlayTrigger>
                 </div>
@@ -120,15 +121,17 @@ export default class ManageProjectName extends React.Component {
                         {this.state.currentProject}
                     </h3>
                 </div>
-                <div className="project-edit-button-container">
+                <div
+                    className="project-edit-button-container"
+                    onClick     ={this.edit}
+                    onTouchTap  ={this.edit}
+                    >
                   <OverlayTrigger
                       placement   ="bottom"
                       overlay     ={editTooltip}>
                       <img
                           className   ="project-edit-button"
                           src         ='assets/images/icons/edit-white.svg'
-                          onClick     ={this.edit}
-                          onTouchTap  ={this.edit}
                       />
                   </OverlayTrigger>
                 </div>
@@ -159,9 +162,9 @@ export default class ManageProjectName extends React.Component {
 
         let newName = document.getElementsByName("project-name-input")[0].value;
 
-        if (newName != this.state.currentProject) {
+
             this.props.renameCurrentProject(newName);
-        }
+        
 
         this.setState({
             editing: false

@@ -249,10 +249,16 @@ export default class PostAuth extends React.Component {
                         let data = snapshot.val()
                         let thisProj = [data.name,data.id]
                         projects.push(thisProj)
-                        this.setState({
-                            projects:projects,
-                            currentProject:projects[0]
-                        });
+                        if (this.state.currentProject.length == 0) {
+                            this.setState({
+                                projects:projects,
+                                currentProject:projects[0]
+                            });
+                        } else {
+                            this.setState({
+                                projects:projects
+                            });
+                        }
                         this.fetchProjectArtworks();
                     }
                 } else {
@@ -352,7 +358,13 @@ export default class PostAuth extends React.Component {
 
         let projectRef = `projects/${projectID}`;
         firebase.database().ref(projectRef).remove();
-        this.changeProject(null);
+
+        if(this.state.projects.length > 0) {
+            let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
+            this.changeProject(project);
+        } else {
+            this.changeProject(null);
+        }
     }
 
     /**
