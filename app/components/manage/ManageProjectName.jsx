@@ -9,7 +9,8 @@ import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
  */
 export default class ManageProjectName extends React.Component {
     state = {
-        editing: false
+        editing: false,
+        currentProject:""
     };
 
     constructor(props) {
@@ -23,15 +24,28 @@ export default class ManageProjectName extends React.Component {
     render() {
         if(this.state.editing) {
             return this.renderEdit();
+        } else {
+            return this.renderName();
         }
-        return this.renderName();
     }
 
 
 
     componentDidMount() {
         console.log("++++++ManageProjectName");
+        if (this.props.currentProject.length == 0) {
+            this.setState({currentProject: "No Project Selected", editing: false});
+        } else {
+            this.setState({currentProject: this.props.currentProject[0], editing: false});
+        }
+    }
 
+    componentWillReceiveProps(nextProps){
+        if (nextProps.currentProject.length == 0) {
+            this.setState({currentProject: "No Project Selected", editing: false});
+        } else {
+            this.setState({currentProject: nextProps.currentProject[0], editing: false});
+        }
     }
     // ============= Render Flow ===============
 
@@ -40,7 +54,7 @@ export default class ManageProjectName extends React.Component {
             <Tooltip
                 id="edit-artwork-tooltip"
                 className="tooltip">
-                Edit Project Name
+                Save Project Name
             </Tooltip>
         );
 
@@ -48,12 +62,6 @@ export default class ManageProjectName extends React.Component {
             width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
             maxWidth: "320px"
         };
-        let thisProject;
-        if (this.props.currentProject.length == 0) {
-            thisProject = "<select a project>";
-        } else {
-            thisProject = this.props.currentProject[0];
-        }
 
         return(
             <div
@@ -67,7 +75,7 @@ export default class ManageProjectName extends React.Component {
                         }
                         autoFocus={true}
                         name="project-name-input"
-                        defaultValue={thisProject}
+                        defaultValue={this.state.currentProject}
                         onBlur={this.finishEdit}
                         onKeyPress={this.checkEnter}
                         placeholder="Enter Project Name..." />
@@ -101,12 +109,6 @@ export default class ManageProjectName extends React.Component {
             width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
             maxWidth: "320px"
         };
-        let thisProject;
-        if (this.props.currentProject.length == 0) {
-            thisProject = "<~ ~>";
-        } else {
-            thisProject = this.props.currentProject[0];
-        }
 
         return(
             <div
@@ -115,7 +117,7 @@ export default class ManageProjectName extends React.Component {
                     className="project-name-writing"
                     style={styleProjectName}>
                     <h3 className="project-name">
-                        {thisProject}
+                        {this.state.currentProject}
                     </h3>
                 </div>
                 <div className="project-edit-button-container">
@@ -137,8 +139,6 @@ export default class ManageProjectName extends React.Component {
     // ============= Methods ===============
 
     edit = (e) => {
-            // Avoid bubbling to click that opens up album view
-            e.stopPropagation();
 
             // Enter edit mode.
             this.setState({
@@ -154,9 +154,15 @@ export default class ManageProjectName extends React.Component {
     };
 
     finishEdit = (e) => {
-        let newName = document.getElementsByName("project-name-input")[0].value;
-        this.props.renameCurrentProject(newName);
+        e.stopPropagation();
         // Exit edit mode.
+
+        let newName = document.getElementsByName("project-name-input")[0].value;
+
+        if (newName != this.state.currentProject) {
+            this.props.renameCurrentProject(newName);
+        }
+
         this.setState({
             editing: false
         });

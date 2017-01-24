@@ -29,8 +29,6 @@ export default class SearchMain extends React.Component {
             colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
             thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
         }],  // current list of search results
-        currentProject: [],  // name of current project ["name", "ID"]
-        artworkBuffer : [],  // a list of all artworks currently "selected"
         command       : "",  // used for controlling artworks
         moreInfoIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
@@ -73,38 +71,31 @@ export default class SearchMain extends React.Component {
 
     render() {
         return(
-            <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
-                <CurationHeader
-                    role={this.props.role}
-                    currentProject={this.state.currentProject}
-                    changeProject={this.changeProject}
-                    projects={this.props.projects}
-                    addArtworksToProject={this.addArtworksToProject}
-                />
-                <SearchArtworkManager
-                    detailArtwork={this.detailArtwork}
-                    toggleMoreInfo={this.toggleMoreInfo}
-                    command={this.state.command}
-                    results={this.state.results}
-                    managerIsOpen={this.props.managerIsOpen}
-                    addArtworkToBuffer={this.addArtworkToBuffer}
-                    removeArtworkFromBuffer={this.removeArtworkFromBuffer}
-                />
-                <SearchManager
-                    managerIsOpen={this.props.managerIsOpen}
-                    toggleManager={this.props.toggleManager}
-                    doQuery={this.doQuery}
-                 />
-                <EditArtworkDialog
-                    toggleMoreInfo={this.toggleMoreInfo}
-                    moreInfoIsOpen={this.state.moreInfoIsOpen}
-                    artworkInfo={this.state.artworkInfo}
-                 />
-                <div
-                    onClick     ={this.toggleNav}
-                    onTouchTap  ={this.toggleNav}
-                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
-            </div>
+        <div>
+            <SearchArtworkManager
+                detailArtwork={this.detailArtwork}
+                toggleMoreInfo={this.toggleMoreInfo}
+                command={this.state.command}
+                results={this.state.results}
+                managerIsOpen={this.props.managerIsOpen}
+                addArtworkToBuffer={this.props.addArtworkToBuffer}
+                removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
+            />
+            <SearchManager
+                managerIsOpen={this.props.managerIsOpen}
+                toggleManager={this.props.toggleManager}
+                doQuery={this.doQuery}
+             />
+            <EditArtworkDialog
+                toggleMoreInfo={this.toggleMoreInfo}
+                moreInfoIsOpen={this.state.moreInfoIsOpen}
+                artworkInfo={this.state.artworkInfo}
+             />
+            <div
+                onClick     ={this.props.toggleNav}
+                onTouchTap  ={this.props.toggleNav}
+                className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+        </div>
         );
 
     }
@@ -154,67 +145,13 @@ export default class SearchMain extends React.Component {
         }, 25);
     }
 
-    /**
-     * Updates the value of this.state.currentProject
-     * @param  {Object} newName [obj.label , obj.id]
-     */
-    changeProject = (newName) => {
-        if (newName === null) {
-            this.setState({currentProject:""})
-        } else {
-            let theProj = [newName.label, newName.id]
-            this.setState({currentProject:theProj});
-        }
-    }
-
-    /**
-     * Will add the contents of this.state.artworkBuffer into the project
-     * inside of the firebase DB.
-     * Duplicates are ignored, and order is un-important.
-     */
-    addArtworksToProject = () => {
-        firebase.database().ref(); // NOTE: initial request error
-        let updates = this.state.artworkBuffer;
-
-        let projectID  = this.state.currentProject[1]; // index 1 is the ID
-        let projectRef = `projects/${projectID}`
-        firebase.database().ref(projectRef).transaction((node)=>{
-            if (!node.artworks) {
-                node.artworks = {};
-            }
-            for (var i = 0; i < updates.length; i++) {
-                let update = updates[i];
-                let id = update.uid;
-                node.artworks[id] = update;
-            }
-            return node;
-        },()=>{
-            console.log(">>Project Updated successfully");
-            this.deselectAllArt();
-        });
-    }
-
-    deselectAllArt = () => {
-        this.setState({command: "deselect"});
-        this.setState({command: "",artworkBuffer:[]});
-    }
-
-    /**
-     *
-     * @param {[type]} artwordUID [description]
-     */
-    addArtworkToBuffer = (artwork) => {
-        let buffer = new Set(this.state.artworkBuffer);
-        buffer.add(artwork);
-        let theBuffer = Array.from(buffer);
-        this.setState({artworkBuffer:theBuffer});
-    }
-
-    removeArtworkFromBuffer = (artwork) => {
-        let buffer = new Set(this.state.artworkBuffer);
-        buffer.delete(artwork);
-        let theBuffer = Array.from(buffer);
-        this.setState({artworkBuffer:theBuffer});
+    addToProject = () => {
+        this.props.addArtworksToProject();
+        this.setState({command:"deselect"});
+        setTimeout( ()=>{
+            this.setState({command:""});
+        }, 50);
+        this.props.emptyBuffer();
     }
 
     /**

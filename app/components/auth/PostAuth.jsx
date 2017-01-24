@@ -24,7 +24,10 @@ export default class PostAuth extends React.Component {
         navIsOpen    : false,
         user         : {},
         role         : Roles.MANAGE,
-        projects     : []
+        projects     : [],
+        artworkBuffer  : [], // list of all 'selected' artworks
+        currentProject : [], // ["Project Name", "ProjectID"]
+        projectArtworks: []
     };
 
     constructor(props) {
@@ -66,38 +69,73 @@ export default class PostAuth extends React.Component {
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
-                <HamburgerIcon
-                    toggleNav={this.toggleNav}
-                    navIsOpen={this.state.navIsOpen} />
-                <SearchMain
-                    role={this.state.role}
-                    projects={this.state.projects}
-                    navIsOpen={this.state.navIsOpen}
-                    managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager}  />
+                <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                    <CurationHeader
+                        role={this.state.role}
+                        currentProject={this.state.currentProject}
+                        changeProject={this.changeProject}
+                        addNewProject={this.addNewProject}
+                        projects={this.state.projects}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                    />
+                    <HamburgerIcon
+                        toggleNav={this.toggleNav}
+                        navIsOpen={this.state.navIsOpen} />
+                    <SearchMain
+                        role={this.state.role}
+                        projects={this.state.projects}
+                        managerIsOpen={this.state.managerIsOpen}
+                        toggleManager={this.toggleManager}
+                        currentProject={this.state.currentProject}
+                        changeProject={this.changeProject}
+                        addArtworkToBuffer={this.addArtworkToBuffer}
+                        removeArtworkFromBuffer={this.removeArtworkFromBuffer}
+                        addArtworksToProject={this.addArtworksToProject}  />
+                </div>
             </div>
         );
     }
 
     goToManage = () => {
+
         return(
             <div>
                 <HiddenNav
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
-                <HamburgerIcon
-                    toggleNav={this.toggleNav}
-                    navIsOpen={this.state.navIsOpen} />
-                <ManagerMain
-                    role={this.state.role}
-                    createNewProject={this.props.createNewProject}
-                    fetchProjects={this.fetchProjects}
-                    projects={this.state.projects}
-                    navIsOpen={this.state.navIsOpen}
-                    managerIsOpen={this.state.managerIsOpen}
-                    toggleManager={this.toggleManager}
-                    toggleNav={this.toggleNav}  />
+                <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                    <CurationHeader
+                        role={this.state.role}
+                        currentProject={this.state.currentProject}
+                        changeProject={this.changeProject}
+                        addNewProject={this.addNewProject}
+                        projects={this.state.projects}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                    />
+                    <HamburgerIcon
+                        toggleNav={this.toggleNav}
+                        navIsOpen={this.state.navIsOpen} />
+                    <ManagerMain
+                        createNewProject={this.props.createNewProject}
+                        fetchProjects={this.fetchProjects}
+                        projects={this.state.projects}
+                        navIsOpen={this.state.navIsOpen}
+                        managerIsOpen={this.state.managerIsOpen}
+                        toggleManager={this.toggleManager}
+                        toggleNav={this.toggleNav}
+                        currentProject={this.state.currentProject}
+                        projectArtworks={this.state.projectArtworks}
+                        changeProject={this.changeProject}
+                        renameCurrentProject={this.renameCurrentProject}
+                        deleteCurrentProject={this.deleteCurrentProject}
+                        addArtworkToBuffer={this.addArtworkToBuffer}
+                        removeArtworkFromBuffer={this.removeArtworkFromBuffer}
+                        fillBuffer={this.fillBuffer}
+                        emptyBuffer={this.emptyBuffer}  />
+                </div>
             </div>
         );
     }
@@ -153,12 +191,14 @@ export default class PostAuth extends React.Component {
             this.setState({
                 navIsOpen: false,
                 managerIsOpen: true,
-                role:role
+                role:role,
+                artworkBuffer: []
             });
         } else {
             this.setState({
                 managerIsOpen: true,
-                role:role
+                role:role,
+                artworkBuffer: []
             });
         }
     }
@@ -207,7 +247,11 @@ export default class PostAuth extends React.Component {
                         let data = snapshot.val()
                         let thisProj = [data.name,data.id]
                         projects.push(thisProj)
-                        this.setState({projects:projects});
+                        this.setState({
+                            projects:projects,
+                            currentProject:projects[0]
+                        });
+                        this.fetchProjectArtworks();
                     }
                 } else {
                     callback = (snapshot) => {
@@ -226,6 +270,190 @@ export default class PostAuth extends React.Component {
                 },this);
             }
         }
+    }
+
+    /**
+     * Creates a new project, gives user rights to it, then updates current
+     * project.
+     */
+    addNewProject = () => {
+        let projectID   = this.props.createNewProject();
+        let defaultName = "New Project";
+        // give user access to project
+        let path = `users/${firebase.auth().currentUser.uid}/projects`;
+        firebase.database().ref(path).transaction((data)=>{
+            // transaction should trigger PostAuth.fetchProjectNames
+            if (data){
+                data.push(projectID);
+            } else {
+                data = [projectID];
+            }
+             //FIXME check for duplicate with set/array ?
+            return data;
+        }, (err,wasSuccessful,snapshot)=>{
+            // onComplete: update current project to be the new project
+            let theProject = {label:defaultName, id:projectID};
+            this.changeProject(theProject);
+        });
+    }
+
+    /**
+     * Updates the value of this.state.currentProject
+     * @param  {Array} newName [name , id]
+     */
+    changeProject = (newName) => {
+        if (newName === null) {
+            this.setState({
+                currentProject:"",
+                projectArtworks  :[]
+            });
+        } else {
+            let theProj = [newName.label,newName.id];
+            this.setState({currentProject:theProj});
+            setTimeout( ()=>{ // wait for state to update
+                this.fetchProjectArtworks();
+            }, 50);
+        }
+    }
+
+    /**
+     * Renames the current project to be called newName.
+     */
+    renameCurrentProject = (newName) => {
+        let projectID = this.state.currentProject[1];
+        let path      = `projects/${projectID}`;
+        firebase.database().ref(path).transaction((node)=>{
+            node.name = newName
+            return node;
+        },(err,wasSuccessful,snapshot)=>{
+            this.fetchProjects();
+            setTimeout( ()=>{
+                this.setState({currentProject:[newName,projectID]});
+                this.fetchProjectArtworks();
+            }, 50);
+        });
+    }
+
+    /**
+     * Deletes the current project from the firebaseDB, removes it from
+     * the user's projects, and updates the current project to none.
+     */
+    deleteCurrentProject = () => {
+        let projectID = this.state.currentProject[1];
+        let userUid   = firebase.auth().currentUser.uid;
+        let userPath  = `users/${userUid}/projects`;
+        firebase.database().ref(userPath).transaction((data)=>{
+            let index = data.indexOf(projectID);
+            data.splice(index,1);
+            return data;
+        });
+
+        let projectRef = `projects/${projectID}`;
+        firebase.database().ref(projectRef).remove();
+        this.changeProject(null);
+    }
+
+    /**
+     * When called, will fetch all artworks from the Project
+     * in the firebase database. Also initiates a listener, which
+     * will reactively update any changes to artworks.
+     */
+    fetchProjectArtworks = () => {
+        if (this.state.currentProject.length == 2) { // not null
+
+            let projectID = this.state.currentProject[1];
+            let path = `projects/${projectID}`;
+            firebase.database().ref(path).on("value", (snapshot)=>{
+                let art = [];
+                let node = snapshot.val();
+
+                console.log(node);
+                for (var key in node.artworks) { // obj -> array
+                    if (node.artworks.hasOwnProperty(key)) {
+                        art.push(node.artworks[key]);
+                    }
+                }
+                this.setState({projectArtworks:art});
+            });
+        }
+    }
+
+    /**
+     * Will add the contents of this.state.artworkBuffer into the project
+     * inside of the firebase DB.
+     * Duplicates are ignored, and order is un-important.
+     */
+    addArtworksToProject = () => {
+        firebase.database().ref(); // NOTE: initial request error
+        let updates = this.state.artworkBuffer;
+        let projectID  = this.state.currentProject[1]; // index 1 is the ID
+        let projectRef = `projects/${projectID}`
+        firebase.database().ref(projectRef).transaction((node)=>{
+            if (!node.artworks) {
+                node.artworks = {};
+            }
+            for (var i = 0; i < updates.length; i++) {
+                let update = updates[i];
+                let id = update.uid;
+                node.artworks[id] = update;
+            }
+            return node;
+        },()=>{
+            console.log(">>Project Updated successfully");
+            this.emptyBuffer();
+        });
+    }
+
+    /**
+     * Will add the contents of this.state.artworkBuffer into the project
+     * inside of the firebase DB.
+     * Duplicates are ignored, and order is un-important.
+     */
+    deleteArtworksFromProject = () => {
+        let updates    = this.state.artworkBuffer;
+        let projectID  = this.state.currentProject[1]; // index 1 is the ID
+        let projectRef = `projects/${projectID}`
+
+        firebase.database().ref(projectRef).transaction((node)=>{
+            if (!node.artworks) {
+                node.artworks = {};
+            }
+
+            for (var i = 0; i < updates.length; i++) {
+                let update = updates[i];
+                let id = update.uid; // uid or id ?
+                node.artworks[id] = null; //delete
+            }
+            return node;
+        },()=>{
+            console.log(">>Project Updated successfully");
+        });
+    }
+
+    /**
+     * TODO
+     * @param {[type]} artwork [description]
+     */
+    addArtworkToBuffer = (artworks) => {
+        let buffer = this.state.artworkBuffer;
+        buffer.push(artworks);
+        this.setState({artworkBuffer:buffer});
+    }
+
+    removeArtworkFromBuffer = (artwork) => {
+        let buffer = new Set(this.state.artworkBuffer);
+        buffer.delete(artwork);
+        let theBuffer = Array.from(buffer);
+        this.setState({artworkBuffer:theBuffer});
+    }
+
+    fillBuffer = () => {
+        let buffer = this.state.projectArtworks;
+        this.setState({artworkBuffer:buffer});
+    }
+
+    emptyBuffer = () => {
+        this.setState({artworkBuffer:[]});
     }
 
 }//EOF

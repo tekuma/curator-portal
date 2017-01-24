@@ -13,13 +13,6 @@ export default class HiddenNav extends React.Component {
     navItems = [
         {
             id   : uuid.v4(),
-            item : 'Search',
-            icon : 'assets/images/icons/search.svg',
-            href : Roles.SEARCH,
-            title: 'Search the Tekuma art DB'
-        },
-        {
-            id   : uuid.v4(),
             item : 'Manage',
             icon : 'assets/images/icons/manage.svg',
             href : Roles.MANAGE,
@@ -27,8 +20,15 @@ export default class HiddenNav extends React.Component {
         },
         {
             id   : uuid.v4(),
+            item : 'Search',
+            icon : 'assets/images/icons/search.svg',
+            href : Roles.SEARCH,
+            title: 'Search the Tekuma art DB'
+        },
+        {
+            id   : uuid.v4(),
             item : 'Review',
-            icon : 'assets/images/icons/manage.svg',
+            icon : 'assets/images/icons/review.svg',
             href : Roles.REVIEW,
             title: 'Review Artist Submissions'
         }
