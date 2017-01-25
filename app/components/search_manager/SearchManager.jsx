@@ -1301,6 +1301,13 @@ export default class SearchManager extends React.Component {
     generalChange = (general, e) => {
         console.log(e);
 
+        // Toggles Search Hint
+        if (general.length) {
+            this.toggleSearchCategory("general", true);
+        } else {
+            this.toggleSearchCategory("general", false);
+        }
+
         if (e.key === "Enter") {
             console.log(">>",general);
             this.setState({
@@ -1308,13 +1315,6 @@ export default class SearchManager extends React.Component {
             });
 
             this.props.doQuery(general);
-        }
-
-        // Toggles Search Hint
-        if (general.length) {
-            this.toggleSearchCategory("general", true);
-        } else {
-            this.toggleSearchCategory("general", false);
         }
     }
 

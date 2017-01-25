@@ -3774,14 +3774,17 @@ login-button.left {
 }
 
 .accordion-content input:not([type='radio']) {
-	background-color: #f4f6f7;
-    border: 1.5px solid #d6d3ce;
     color: #000000;
 	font-weight: 400;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: .9375em;
     line-height: normal;
     margin: 0;
+}
+
+.accordion-content input:not([type='radio'],#search-artist) {
+	background-color: #f4f6f7;
+    border: 1.5px solid #d6d3ce;
 }
 
 .accordion-content input[type=radio] {
@@ -4446,6 +4449,10 @@ label.age-confirm-label {
 	color: #ffffff;
 }
 
+.manager-function-box .collaborator-name span {
+	font-weight: 300;
+}
+
 .delete-collaborator {
 	position: absolute;
 	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
@@ -4567,6 +4574,59 @@ label.age-confirm-label {
 
 /* Animations */
 
+.empty-project-box,
+.empty-search-box {
+	background: #ffffff;
+	width: 200px;
+	height: 260px;
+	margin-top: 60px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+	flex-direction: column;
+	cursor: pointer;
+	overflow: hidden;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.empty-project-writing,
+.empty-search-writing {
+	color: #999999;
+	font-weight: 500;
+	text-align: center;
+	display: block;
+	margin-top: 30px;
+	font-size: 1.5em;
+}
+
+.empty-project-writing.small,
+.empty-search-writing.small {
+	margin-top: 10px;
+	font-size: 1em;
+	font-weight: 400;
+}
+
+#empty-search-arrow-icon {
+	animation: moveRight 2s linear infinite;
+}
+
+/*========================================== */
+
+/* Animations */
+
 /* Chrome, Safari, Opera */
 @-webkit-keyframes showAndHide {
     0%   {opacity: 0;}
@@ -4579,6 +4639,18 @@ label.age-confirm-label {
 	0%   {opacity: 0;}
     50% {opacity: 1;}
 	100%   {opacity: 0;}
+}
+
+/* Standard syntax */
+@keyframes moveRight {
+	25%   {transform: translateX(30px);}
+	100%   {transform: translateX(0px);}
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes moveRight {
+	25%   {transform: translateX(30px);}
+	100%   {transform: translateX(0px);}
 }
 
 /*========================================== */

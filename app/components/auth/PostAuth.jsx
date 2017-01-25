@@ -90,6 +90,7 @@ export default class PostAuth extends React.Component {
                         role={this.state.role}
                         projects={this.state.projects}
                         managerIsOpen={this.state.managerIsOpen}
+                        navIsOpen={this.state.navIsOpen}
                         toggleManager={this.toggleManager}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -140,7 +141,8 @@ export default class PostAuth extends React.Component {
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                         fillBuffer={this.fillBuffer}
-                        emptyBuffer={this.emptyBuffer}  />
+                        emptyBuffer={this.emptyBuffer}
+                        changeAppLayout={this.changeAppLayout}  />
                 </div>
             </div>
         );
@@ -170,7 +172,7 @@ export default class PostAuth extends React.Component {
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
-                <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
                         role={this.state.role}
                         currentProject={this.state.currentProject}
@@ -192,7 +194,7 @@ export default class PostAuth extends React.Component {
                     <div
                         onClick     ={this.props.toggleNav}
                         onTouchTap  ={this.props.toggleNav}
-                        className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                        className   ={this.state.navIsOpen ? "site-overlay open" : "site-overlay"} />
                 </div>
             </div>
         );

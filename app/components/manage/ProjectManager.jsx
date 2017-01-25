@@ -149,7 +149,7 @@ export default class ProjectManager extends React.Component {
                                         key={uuid.v4()}
                                         className="collaborator-thumb self">
                                         <p className="collaborator-name">
-                                            Afika Nyati
+                                            Afika Nyati<span> (creator)</span>
                                         </p>
                                         <div className="delete-collaborator">
                                             <img src="assets/images/icons/delete-white.svg" />

@@ -23,7 +23,11 @@ export default class ArtworkManager extends React.Component {
     }
 
     render() {
-        return this.renderArtworks();
+        if(this.props.results.length == 0) {
+            return this.renderEmptySearch();
+        } else {
+            return this.renderArtworks();
+        }
     }
 
     componentDidMount() {
@@ -109,6 +113,47 @@ export default class ArtworkManager extends React.Component {
         );
     };
 
+    renderEmptySearch = () => {
+        let styleManagerClosed = {
+            width: window.innerWidth - 40,
+            height: window.innerHeight - 60
+        };
 
+        let styleManagerOpen = {
+            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            height: window.innerHeight - 60
+        };
 
+        let styleLargeScreen = {
+            width: window.innerWidth - 440,
+            height: window.innerHeight - 60
+        };
+
+        let styleSmallScreen = {
+            width: window.innerWidth - 250,
+            height: window.innerHeight - 60
+        };
+
+        let fixedWidth = {
+            width: window.innerWidth,
+            height: window.innerHeight - 60
+        };
+
+        return (
+            <div
+                style={this.props.managerIsOpen ?
+                            (window.innerWidth * 0.3 > 440) ?
+                                styleLargeScreen :
+                                (window.innerWidth * 0.3 > 250) ?
+                                    styleManagerOpen :
+                                    (window.innerWidth > 410) ?
+                                        styleSmallScreen :
+                                        fixedWidth
+                                : styleManagerClosed}
+                className   ="empty-search-box">
+                <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-left-gradient.svg"/>
+                <h3 className="empty-search-writing medium">Search Using Interface on the Left</h3>
+            </div>
+        );
+    }
 }
