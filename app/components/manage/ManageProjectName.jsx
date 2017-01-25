@@ -157,14 +157,11 @@ export default class ManageProjectName extends React.Component {
     };
 
     finishEdit = (e) => {
-        e.stopPropagation();
         // Exit edit mode.
+        e.stopPropagation();
 
         let newName = document.getElementsByName("project-name-input")[0].value;
-
-        if (newName != this.state.currentProject) {
-            this.props.renameCurrentProject(newName);
-        }
+        this.props.renameCurrentProject(newName);
 
         this.setState({
             editing: false

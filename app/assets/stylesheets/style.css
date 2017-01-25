@@ -4319,6 +4319,7 @@ label.age-confirm-label {
 	width: 100%;
 	background: #dddddc;
 	margin: 0;
+	padding: 20px;
 	padding-top: 0px;
 	overflow: scroll;
 }
@@ -4463,7 +4464,7 @@ label.age-confirm-label {
 	border-radius: 15px;
 	background: #e73827;
 	box-shadow: 0 -2px 4px rgba(0,0,0,0.12),
-	2px 0 4px rgba(0,0,0,0.24);
+	-2px 0 4px rgba(0,0,0,0.24);
 	cursor: pointer;
 	transition: all 0.3s;
 	-webkit-transition: all 0.3s;
@@ -4473,7 +4474,7 @@ label.age-confirm-label {
 
 .delete-collaborator:hover {
 	box-shadow: 0 -6px 9px rgba(0,0,0,0.12),
-	4px 0 7px rgba(0,0,0,0.24);
+	-4px 0 7px rgba(0,0,0,0.24);
 }
 
 .delete-collaborator img {
