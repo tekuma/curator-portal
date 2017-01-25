@@ -25,7 +25,11 @@ export default class ProjectArtworkManager extends React.Component {
 
     render() {
         if(this.props.projectArtworks.length == 0) {
-            return this.renderEmptyProject();
+            if (this.props.projects.length == 0) {
+                return this.renderNoProject();
+            } else {
+                return this.renderEmptyProject();
+            }
         } else {
             return this.renderArtworks();
         }
@@ -151,10 +155,61 @@ export default class ProjectArtworkManager extends React.Component {
                                         fixedWidth
                                 : styleManagerClosed}
                 className   ="empty-project-box"
-                onClick      ={this.props.changeAppLayout.bind({}, Roles.SEARCH)}>
+                onClick      ={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
+                onTouchTap      ={this.props.changeAppLayout.bind({}, Roles.SEARCH)}>
                 <img id="empty-project-search-icon" src="assets/images/icons/search-gradient.svg"/>
                 <h3 className="empty-project-writing medium">Project Empty</h3>
                 <h3 className="empty-project-writing small">Click to Search for Artworks</h3>
+            </div>
+        );
+    }
+
+    renderNoProject = () => {
+        let styleManagerClosed = {
+            width: window.innerWidth - 40,
+            height: window.innerHeight - 60
+        };
+
+        let styleManagerOpen = {
+            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            height: window.innerHeight - 60
+        };
+
+        let styleLargeScreen = {
+            width: window.innerWidth - 440,
+            height: window.innerHeight - 60
+        };
+
+        let styleSmallScreen = {
+            width: window.innerWidth - 250,
+            height: window.innerHeight - 60
+        };
+
+        let fixedWidth = {
+            width: window.innerWidth,
+            height: window.innerHeight - 60
+        };
+
+        return (
+            <div
+                style={this.props.managerIsOpen ?
+                            (window.innerWidth * 0.3 > 440) ?
+                                styleLargeScreen :
+                                (window.innerWidth * 0.3 > 250) ?
+                                    styleManagerOpen :
+                                    (window.innerWidth > 410) ?
+                                        styleSmallScreen :
+                                        fixedWidth
+                                : styleManagerClosed}
+                className   ="empty-project-box"
+                onClick={this.props.addNewProject}
+                onTouchTap={this.props.addNewProject}>
+                <img
+                    className="first-project-icon"
+                    src="assets/images/icons/plus-pink.svg" />
+                <h2
+                    className="empty-project-writing medium"
+                    >Create First Project</h2>
             </div>
         );
     }

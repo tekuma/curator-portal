@@ -99,7 +99,7 @@ export default class ArtworkManager extends React.Component {
                          return (
                              <Artwork
                                  detailArtwork={this.props.detailArtwork}
-                                 toggleMoreInfo={this.props.toggleMoreInfo}
+                                 toggleDetailBox={this.props.toggleDetailBox}
                                  command={this.props.command}
                                  addArtworkToBuffer={this.props.addArtworkToBuffer}
                                  removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}

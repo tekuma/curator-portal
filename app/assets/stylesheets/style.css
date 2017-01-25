@@ -2523,13 +2523,16 @@ login-button.left {
 	height: 100%;
 	display: inline-block;
 	overflow: scroll;
+	padding: 30px;
+	background: #ffffff;
 }
 
 .artwork-preview-wrapper {
 	display: flex;
-	width: 456px;
-	height: 350px;
-	background: #ffffff;
+	border: 10px solid #000000;
+	border-style: inset;
+	width: 376px;
+	height: 100%;
 	-webkit-align-items: center;
 	-ms-align-items: center;
 	-moz-align-items: center;
@@ -2726,6 +2729,7 @@ login-button.left {
 .edit-artwork-body {
 	width: 848px !important;
 	height: 450px;
+	padding: 0px !important;
 }
 
 .edit-artwork-actions,

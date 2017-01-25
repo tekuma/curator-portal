@@ -5,7 +5,7 @@ import firebase from 'firebase';
 import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
 import CurationHeader       from '../headers/CurationHeader';
 import SearchManager        from './SearchManager';
-import EditArtworkDialog    from '../artwork_manager/EditArtworkDialog';
+import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 
 export default class SearchMain extends React.Component {
@@ -30,7 +30,7 @@ export default class SearchMain extends React.Component {
             thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
         }],  // current list of search results
         command       : "",  // used for controlling artworks
-        moreInfoIsOpen: false, // whether popup is open or not
+        detailBoxIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
         /*
         ## SCHEMA SKETCH
@@ -74,7 +74,7 @@ export default class SearchMain extends React.Component {
         <div>
             <SearchArtworkManager
                 detailArtwork={this.detailArtwork}
-                toggleMoreInfo={this.toggleMoreInfo}
+                toggleDetailBox={this.toggleDetailBox}
                 command={this.state.command}
                 results={this.state.results}
                 managerIsOpen={this.props.managerIsOpen}
@@ -86,9 +86,9 @@ export default class SearchMain extends React.Component {
                 toggleManager={this.props.toggleManager}
                 doQuery={this.doQuery}
              />
-            <EditArtworkDialog
-                toggleMoreInfo={this.toggleMoreInfo}
-                moreInfoIsOpen={this.state.moreInfoIsOpen}
+            <ArtworkDetailBoxDialog
+                toggleDetailBox={this.toggleDetailBox}
+                detailBoxIsOpen={this.state.detailBoxIsOpen}
                 artworkInfo={this.state.artworkInfo}
              />
             <div
@@ -127,9 +127,9 @@ export default class SearchMain extends React.Component {
         }, 25);
     }
 
-    toggleMoreInfo = () => {
+    toggleDetailBox = () => {
         this.setState({
-            moreInfoIsOpen: !this.state.moreInfoIsOpen
+            detailBoxIsOpen: !this.state.detailBoxIsOpen
         })
     }
 

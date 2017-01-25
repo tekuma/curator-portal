@@ -27,12 +27,6 @@ export default class EditArtworkForm extends React.Component {
             let tag = this.props.value.tags[i];
             tags.push({id:i, text:tag});
         }
-        let suggestions = this.state.suggestions;
-
-
-        let errorStyle = {
-            border: '1px solid #ec167c'
-        };
 
         let colors = [];
         for (let colr of this.props.value.colors) {
@@ -46,99 +40,7 @@ export default class EditArtworkForm extends React.Component {
         }
 
         return (
-            <div className="artwork-edit-dialog">
-                <div className="artwork-preview-colors">
-                    <div className="artwork-preview-wrapper">
-                        <div
-                            className="artwork-preview"
-                            style={previewImage}>
-                        </div>
-                    </div>
-                    <div className="artwork-colors">
-                            <label className="color-heading center">
-                                Color
-                            </label>
-                            <div className="color-circle-wrapper">
-                                {colors.map(color => {
-                                    return (
-                                        <div
-                                            key     ={uuid.v4()}
-                                            className="color-box"
-                                            style={color}>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                    </div>
-                </div>
-                <div className="artwork-form-wrapper">
-                    <form className="artwork-form" >
-                        <fieldset>
-                            <ul>
-                                <li>
-                                    <label htmlFor="artwork-title">
-                                        Title <span className="pink">*</span>
-                                    </label>
-                                    <label>
-                                        {this.props.value.title}
-                                    </label>
 
-                                </li>
-                                <li>
-                                    <label htmlFor="artwork-artist">
-                                        Artist <span className="pink">*</span>
-                                    </label>
-                                    <label>
-                                        {this.props.value.artist}
-                                    </label>
-                                </li>
-                                <li
-                                    id="li-album"
-                                    className="controls-album">
-                                    <label htmlFor="edit-artwork-album">
-                                        Album
-                                    </label>
-                                    <label>
-                                        {this.props.value.album}
-                                    </label>
-                                </li>
-                                <li>
-                                    <label htmlFor="artwork-year">
-                                        Year <span className="pink">*</span>
-                                    </label>
-                                    <label>
-                                        {this.props.value.year}
-                                    </label>
-                                </li>
-                                <li>
-                                    <label htmlFor="artwork-tags">
-                                        Tags
-                                    </label>
-                                    <ReactTags
-                                        tags={tags}
-                                        readOnly={true}
-                                        suggestions={suggestions}
-                                        handleAddition={this.handleTags}
-                                        handleDelete={this.handleTags}
-                                        />
-                                </li>
-                                <li>
-                                    <label
-                                        htmlFor="artwork-description">
-                                        Description
-                                    </label>
-                                    <textarea
-                                        id          ="artwork-description"
-                                        placeholder ="Give this artwork a short description..."
-                                        value       ={this.props.value.description}
-                                        maxLength   ="1500"/>
-                                </li>
-
-                            </ul>
-                        </fieldset>
-                    </form>
-                </div>
-            </div>
 
         );
     }

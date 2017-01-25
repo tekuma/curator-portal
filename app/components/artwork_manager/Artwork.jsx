@@ -66,7 +66,7 @@ export default class Artwork extends React.Component {
 
                 <OverlayTrigger placement="bottom" overlay={detailTooltip}>
                     <div
-                        onClick={this.handleMoreInfo}
+                        onClick={this.handleArtworkDetailBox}
                         className="artwork-info review">
                         <h3 className="artwork-name review"> {imageName} </h3>
                     </div>
@@ -90,10 +90,10 @@ export default class Artwork extends React.Component {
     // ========= Methods ===========
     //
 
-    handleMoreInfo = () => {
+    handleArtworkDetailBox = () => {
         console.log(this.props);
         this.props.detailArtwork(this.props.result.uid);
-        this.props.toggleMoreInfo();
+        this.props.toggleDetailBox();
     }
 
 

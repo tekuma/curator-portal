@@ -31,6 +31,8 @@ export default class ManagerMain extends React.Component {
                       addArtworkToBuffer={this.props.addArtworkToBuffer}
                       removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
                       changeAppLayout={this.props.changeAppLayout}
+                      projects={this.props.projects}
+                      addNewProject={this.props.addNewProject}
                   />
                   <ProjectManager
                       selectAllArt={this.selectAllArt}
