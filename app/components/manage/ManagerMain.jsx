@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import ProjectArtworkManager from '../artwork_manager/ProjectArtworkManager';
 import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
+import confirm    from '../confirm_dialog/ConfirmFunction';
 
 
 export default class ManagerMain extends React.Component {
@@ -42,6 +43,7 @@ export default class ManagerMain extends React.Component {
                       doQuery={this.doQuery}
                       projects={this.props.projects}
                       addNewProject={this.props.addNewProject}
+                      onDelete={this.deleteProject}
                    />
                   <div
                       onClick     ={this.props.toggleNav}
@@ -79,5 +81,20 @@ export default class ManagerMain extends React.Component {
             this.setState({command:""});
         }, 50);
         this.props.emptyBuffer();
+    }
+
+    deleteProject = (e) => {
+        e.stopPropagation();
+
+        confirm('Are you sure you want to delete this project?').then(
+            () => {
+                // Proceed Callback
+                this.props.deleteCurrentProject();
+            },
+            () => {
+                // Cancel Callback
+                return;
+            }
+        );
     }
 }

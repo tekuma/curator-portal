@@ -1060,11 +1060,7 @@ export default class SearchManager extends React.Component {
     }
 
     render() {
-        if(this.props.managerIsOpen) {
-            return this.openedManager();
-        } else {
-            return this.closedManager();
-        }
+        return this.manager();
     }
 
     componentDidMount() {
@@ -1077,7 +1073,7 @@ export default class SearchManager extends React.Component {
 
 // ============= Flow Control ===============
 
-    openedManager = () => {
+    manager = () => {
         const addAlbumTooltip = (
             <Tooltip
                 id="add-album-tooltip"
@@ -1092,12 +1088,25 @@ export default class SearchManager extends React.Component {
             maxWidth: "400px"
         }
 
+        const openManager = {
+            height: window.innerHeight - 60,
+            right: 0
+        }
+
+        let managerWidth = 200; // Magic Number to Instantiate
+
+        if (document.getElementsByClassName('search-manager')[0]) {
+            managerWidth = document.getElementsByClassName('search-manager')[0].offsetWidth;
+        }
+
+        const closedManager = {
+            height: window.innerHeight - 60,
+            right: -1 * managerWidth + 40
+        }
+
         return (
             <section
-                style={{
-                height: window.innerHeight - 60,
-                right: 0
-                }}
+                style={this.props.managerIsOpen ? openManager: closedManager}
                 className="search-manager">
                 <SearchToggler
                     background      ={"#323232"}
@@ -1138,7 +1147,8 @@ export default class SearchManager extends React.Component {
                     <div className="search-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool right-border">
+                            className="search-tool right-border"
+                            title="Open All Search Fields">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
                                 Open
@@ -1146,7 +1156,8 @@ export default class SearchManager extends React.Component {
                         </div>
                         <div
                             onClick={this.clearAllSearch}
-                            className="search-tool">
+                            className="search-tool"
+                            title="Clear All Search Fields">
                             <img src="assets/images/icons/cross.svg" />
                             <h4 className="search-tool-writing">
                                 Clear
@@ -1161,89 +1172,6 @@ export default class SearchManager extends React.Component {
             </section>
         );
     };
-
-    closedManager = () => {
-
-        let containerWidth = {
-            height: window.innerHeight - 60,
-            width: window.innerWidth * 0.4 - 40,
-            maxWidth: "400px"
-        }
-
-        let managerWidth = 200; // Magic Number to Instantiate
-
-        if (document.getElementsByClassName('search-manager')[0]) {
-            managerWidth = document.getElementsByClassName('search-manager')[0].offsetWidth;
-        }
-
-        return (
-            <section
-                style={{
-                height: window.innerHeight - 60,
-                right: -1 * managerWidth + 40
-                }}
-                className="search-manager">
-                <SearchToggler
-                    background      ={"#323232"}
-                    height          ={window.innerHeight - 60}
-                    managerIsOpen   ={this.props.managerIsOpen}
-                    toggleManager   ={this.props.toggleManager}/>
-                <div
-                    style={containerWidth}
-                    className="search-manager-container">
-                    <SearchHints
-                        searchCategories={this.state.searchCategories} />
-                    <SearchAccordion
-                      accordion={this.state.accordion}
-                      toggleAccordion={this.toggleAccordion}
-                      doQuery={this.props.doQuery}
-                      toggleSearchCategory={this.toggleSearchCategory}
-                      artistNames={this.state.artistNames}
-                      clearable={this.state.clearable}
-                      general={this.state.general}
-                      artist={this.state.artist}
-                      title={this.state.title}
-                      tags={this.state.tags}
-                      time={this.state.time}
-                      suggestions={this.state.suggestions}
-                      htmlColors={this.state.htmlColors}
-                      selectableColors={this.state.selectableColors}
-                      searchColors={this.state.searchColors}
-                      artistChange={this.artistChange}
-                      generalChange={this.generalChange}
-                      titleChange={this.titleChange}
-                      timeChange={this.timeChange}
-                      handleDrag={this.handleDrag}
-                      handleAddition={this.handleAddition}
-                      handleDelete={this.handleDelete}
-                      colorChange={this.colorChange}
-                      varyColor={this.varyColor}
-                      setSearchColors={this.setSearchColors} />
-                    <div className="search-tools">
-                        <div
-                            onClick={this.toggleAllAccordion}
-                            className="search-tool right-border">
-                            <img src="assets/images/icons/open-accordion.svg" />
-                            <h4 className="search-tool-writing">
-                                Open
-                            </h4>
-                        </div>
-                        <div
-                            onClick={this.clearAllSearch}
-                            className="search-tool">
-                            <img src="assets/images/icons/cross.svg" />
-                            <h4 className="search-tool-writing">
-                                Clear
-                            </h4>
-                        </div>
-                    </div>
-                    <div className="search-button">
-                        <h3>SEARCH</h3>
-                    </div>
-                </div>
-            </section>
-        );
-    }
 
 // ============= Methods ===============
 

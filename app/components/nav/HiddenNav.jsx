@@ -31,6 +31,13 @@ export default class HiddenNav extends React.Component {
             icon : 'assets/images/icons/review.svg',
             href : Roles.REVIEW,
             title: 'Review Artist Submissions'
+        },
+        {
+            id   : uuid.v4(),
+            item : 'Profile',
+            icon : 'assets/images/icons/profile.svg',
+            href : Roles.PROFILE,
+            title: 'Edit Personal Information'
         }
     ];
 

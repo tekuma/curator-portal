@@ -35,20 +35,43 @@ export default class Artwork extends React.Component {
         let imageUID = this.props.result.uid || "(unknown)";
         let artistUID = this.props.result.artist_uid || "(unknown)";;
 
+        // Tooltips
+        const selectTooltip = (
+            <Tooltip
+                id="select-artwork-tooltip"
+                className="tooltip">
+                Click to select artwork
+            </Tooltip>
+        );
+
+        const detailTooltip = (
+            <Tooltip
+                id="select-artwork-tooltip"
+                className="tooltip">
+                Click to view artwork details
+            </Tooltip>
+        );
+
         return (
             <article
                 htmlFor={imageUID}
                 className={ this.state.selected ? "artwork search selected": "artwork search"}>
-                <div
-                    onClick={this.toggleArtworkSelection}
-                    className="artwork-image search">
-                    <img src={imageURL} />
-                </div>
-                <div
-                    onClick={this.handleMoreInfo}
-                    className="artwork-info review">
-                    <h3 className="artwork-name review"> {imageName} </h3>
-                </div>
+                <OverlayTrigger placement="top" overlay={selectTooltip}>
+                    <div
+                        onClick={this.toggleArtworkSelection}
+                        className="artwork-image search">
+                        <img src={imageURL} />
+                    </div>
+                </OverlayTrigger>
+
+                <OverlayTrigger placement="bottom" overlay={detailTooltip}>
+                    <div
+                        onClick={this.handleMoreInfo}
+                        className="artwork-info review">
+                        <h3 className="artwork-name review"> {imageName} </h3>
+                    </div>
+                </OverlayTrigger>
+
             </article>
         );
     }

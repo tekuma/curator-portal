@@ -12,6 +12,7 @@ import ManagerMain    from '../manage/ManagerMain';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';
+import EditProfile    from '../edit_profile/EditProfile';
 
 
 
@@ -45,6 +46,8 @@ export default class PostAuth extends React.Component {
             return this.goToManage();
         } else if (this.state.role == Roles.REVIEW) {
             return this.goToReview();
+        } else if (this.state.role == Roles.PROFILE) {
+            return this.goToEditProfile();
         } else {
             console.log("ROLE ERROR");
         }
@@ -156,6 +159,41 @@ export default class PostAuth extends React.Component {
                 <ReviewManager
 
                      />
+            </div>
+        );
+    }
+
+    goToEditProfile = () => {
+        return (
+            <div>
+                <HiddenNav
+                    role={this.state.role}
+                    navIsOpen={this.state.navIsOpen}
+                    changeAppLayout={this.changeAppLayout} />
+                <div className={this.props.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                    <CurationHeader
+                        role={this.state.role}
+                        currentProject={this.state.currentProject}
+                        changeProject={this.changeProject}
+                        addNewProject={this.addNewProject}
+                        projects={this.state.projects}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                        changeAppLayout={this.changeAppLayout}
+                    />
+                    <HamburgerIcon
+                        toggleNav={this.toggleNav}
+                        navIsOpen={this.state.navIsOpen} />
+                    <div className="edit-profile-layout">
+                        <EditProfile
+                            toggleVerifyEmailDialog   ={this.props.toggleVerifyEmailDialog}
+                            />
+                    </div>
+                    <div
+                        onClick     ={this.props.toggleNav}
+                        onTouchTap  ={this.props.toggleNav}
+                        className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                </div>
             </div>
         );
     }

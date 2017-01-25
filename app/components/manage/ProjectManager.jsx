@@ -27,11 +27,7 @@ export default class ProjectManager extends React.Component {
     }
 
     render() {
-        if(this.props.managerIsOpen) {
-            return this.openedManager();
-        } else {
-            return this.closedManager();
-        }
+        return this.manager();
     }
 
     componentDidMount() {
@@ -44,16 +40,7 @@ export default class ProjectManager extends React.Component {
 
 // ============= Flow Control ===============
 
-    openedManager = () => {
-
-        // Tooltips
-        const addAlbumTooltip = (
-            <Tooltip
-                id="add-album-tooltip"
-                className="tooltip">
-                Create new album
-            </Tooltip>
-        );
+    manager = () => {
 
         // Dynamic CSS
         const containerWidth = {
@@ -66,6 +53,22 @@ export default class ProjectManager extends React.Component {
             height: window.innerHeight - 60 - 60 - 60 // Minus 60px for Header, Project Name, and SelectButtons
         }
 
+        const openManager = {
+            height: window.innerHeight - 60,
+            right: 0
+        }
+
+        let managerWidth = 200; // Magic Number to Instantiate
+
+        if (document.getElementsByClassName('search-manager')[0]) {
+            managerWidth = document.getElementsByClassName('search-manager')[0].offsetWidth;
+        }
+
+        const closedManager = {
+            height: window.innerHeight - 60,
+            right: -1 * managerWidth + 40
+        }
+
         const hide = {
             display: "none"
         }
@@ -76,12 +79,11 @@ export default class ProjectManager extends React.Component {
 
         let options = [{label: "Bob", value: "Bob"}];
 
+
+
         return (
             <section
-                style={{
-                height: window.innerHeight - 60,
-                right: 0
-                }}
+                style={this.props.managerIsOpen ? openManager: closedManager}
                 className="search-manager">
                 <ManageToggler
                     background      ={"#323232"}
@@ -210,8 +212,8 @@ export default class ProjectManager extends React.Component {
                             <div className="function-seperator"></div>
                             <div
                                 className="manager-function-box delete center"
-                                onClick={this.props.deleteCurrentProject}
-                                onTouchTap={this.props.deleteCurrentProject}>
+                                onClick={this.props.onDelete}
+                                onTouchTap={this.props.onDelete}>
                                 <p>Delete Project</p>
                             </div>
                         </div>
@@ -220,7 +222,8 @@ export default class ProjectManager extends React.Component {
                         <div
                             onClick={this.props.selectAllArt}
                             onTouchTap={this.props.selectAllArt}
-                            className="manage-tool right-border">
+                            className="manage-tool right-border"
+                            title="Select All Artworks">
                             <h4 className="manage-tool-writing">
                                 Select All
                             </h4>
@@ -228,7 +231,9 @@ export default class ProjectManager extends React.Component {
 
                         <div
                             onClick={this.props.deselectAllArt}
-                            onTouchTap={this.props.deselectAllArt}                            className="manage-tool">
+                            onTouchTap={this.props.deselectAllArt}
+                            className="manage-tool"
+                            title="Deselect All Artworks">
                             <h4 className="manage-tool-writing">
                                 Deselect All
                             </h4>
@@ -238,40 +243,6 @@ export default class ProjectManager extends React.Component {
             </section>
         );
     };
-
-    closedManager = () => {
-
-        const containerWidth = {
-            height: window.innerHeight - 60,
-            width: window.innerWidth * 0.4 - 40,
-            maxWidth: "400px"
-        }
-
-        let managerWidth = 200; // Magic Number to Instantiate
-
-        if (document.getElementsByClassName('search-manager')[0]) {
-            managerWidth = document.getElementsByClassName('search-manager')[0].offsetWidth;
-        }
-
-        return (
-            <section
-                style={{
-                height: window.innerHeight - 60,
-                right: -1 * managerWidth + 40
-                }}
-                className="search-manager">
-                <ManageToggler
-                    background      ={"#323232"}
-                    height          ={window.innerHeight - 60}
-                    managerIsOpen   ={this.props.managerIsOpen}
-                    toggleManager   ={this.props.toggleManager}/>
-                <div
-                    style={containerWidth}
-                    className="search-manager-container">
-                </div>
-            </section>
-        );
-    }
 
 // ============= Methods ===============
 
