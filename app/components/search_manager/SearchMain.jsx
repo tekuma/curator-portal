@@ -51,13 +51,13 @@ export default class SearchMain extends React.Component {
          */
         artworkInfo   : {  // TODO: remove placeholder info
             description  : "Much art. Very nice.",
-            title        : "Best art ever",
-            artist       : "XXX",
-            album        : "best of",
-            year         : 2020,
-            tags         : ["#art", "Picasso", "#stuff"],
+            title        : "Starry Night",
+            artist       : "Vincent Van Gogh",
+            album        : "Impressionism",
+            year         : 1888,
+            tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
             colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+            thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
         }
     }
 
