@@ -128,6 +128,7 @@ export default class PostAuth extends React.Component {
                         managerIsOpen={this.state.managerIsOpen}
                         toggleManager={this.toggleManager}
                         toggleNav={this.toggleNav}
+                        addNewProject={this.addNewProject}
                         currentProject={this.state.currentProject}
                         projectArtworks={this.state.projectArtworks}
                         changeProject={this.changeProject}
@@ -311,12 +312,14 @@ export default class PostAuth extends React.Component {
      */
     changeProject = (newName) => {
         if (newName === null) {
+            console.log("Received Null");
             this.setState({
                 currentProject:"",
                 projectArtworks  :[]
             });
         } else {
             let theProj = [newName.label,newName.id];
+            console.log(theProj, "kdkddkkdkdkdkdkdkdk");
             this.setState({currentProject:theProj});
             setTimeout( ()=>{ // wait for state to update
                 this.fetchProjectArtworks();
@@ -346,25 +349,30 @@ export default class PostAuth extends React.Component {
      * Deletes the current project from the firebaseDB, removes it from
      * the user's projects, and updates the current project to none.
      */
-    deleteCurrentProject = () => {
+    deleteCurrentProject = (e) => {
         let projectID = this.state.currentProject[1];
         let userUid   = firebase.auth().currentUser.uid;
         let userPath  = `users/${userUid}/projects`;
         firebase.database().ref(userPath).transaction((data)=>{
             let index = data.indexOf(projectID);
             data.splice(index,1);
+
             return data;
+        }, ()=>{
+            let projectRef = `projects/${projectID}`;
+            firebase.database().ref(projectRef).remove();
+
+            if(this.state.projects.length > 1) {
+                let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
+                this.changeProject(project);
+            } else {
+                this.changeProject(null);
+            }
         });
 
-        let projectRef = `projects/${projectID}`;
-        firebase.database().ref(projectRef).remove();
 
-        if(this.state.projects.length > 0) {
-            let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
-            this.changeProject(project);
-        } else {
-            this.changeProject(null);
-        }
+
+
     }
 
     /**
@@ -380,7 +388,6 @@ export default class PostAuth extends React.Component {
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-
                 console.log(node);
                 for (var key in node.artworks) { // obj -> array
                     if (node.artworks.hasOwnProperty(key)) {

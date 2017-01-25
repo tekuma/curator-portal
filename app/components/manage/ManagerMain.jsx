@@ -40,6 +40,8 @@ export default class ManagerMain extends React.Component {
                       toggleManager={this.props.toggleManager}
                       changeProject={this.props.changeProject}
                       doQuery={this.doQuery}
+                      projects={this.props.projects}
+                      addNewProject={this.props.addNewProject}
                    />
                   <div
                       onClick     ={this.props.toggleNav}

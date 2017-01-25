@@ -66,6 +66,14 @@ export default class ProjectManager extends React.Component {
             height: window.innerHeight - 60 - 60 - 60 // Minus 60px for Header, Project Name, and SelectButtons
         }
 
+        const hide = {
+            display: "none"
+        }
+
+        const show = {
+            display: "inline-block"
+        }
+
         let options = [{label: "Bob", value: "Bob"}];
 
         return (
@@ -83,15 +91,37 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="project-manager-container">
-                    <ManageProjectName
-                        renameCurrentProject={this.props.renameCurrentProject}
-                        currentProject={this.props.currentProject}
-
-                        />
+                    {this.props.projects.length == 0 ?
+                        <div></div>
+                        :
+                        <ManageProjectName
+                            renameCurrentProject={this.props.renameCurrentProject}
+                            currentProject={this.props.currentProject}
+                            />
+                    }
                     <div
                         style={managerFunctionHeight}
-                        className="manager-function-wrapper">
-                        <div className="manager-function">
+                        className={this.props.projects.length == 0 ? "manager-function-wrapper centering" : "manager-function-wrapper"}>
+                        <div
+                            className="manager-function"
+                            style={this.props.projects.length == 0 ? show : hide}
+                            onClick={this.props.addNewProject}
+                            onTouchTap={this.props.addNewProject}
+                            >
+                            <div className="manager-function-box center">
+                                <div className="first-project-button">
+                                    <img
+                                        className="first-project-icon"
+                                        src="assets/images/icons/plus-pink.svg" />
+                                    <h2
+                                        className="first-project-writing"
+                                        >Create First Project</h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            className="manager-function"
+                            style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Download
                             </h3>
@@ -105,11 +135,13 @@ export default class ProjectManager extends React.Component {
                                 <p>Print Files</p>
                             </div>
                         </div>
-                        <div className="manager-function">
+                        <div
+                            className="manager-function"
+                            style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Collaborators
                             </h3>
-                            <div className="manager-function-box center">
+                            <div className="manager-function-box center collaborators">
                                 <div className="collaborator-box">
                                     <article
                                         key={uuid.v4()}
@@ -162,7 +194,9 @@ export default class ProjectManager extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="manager-function">
+                        <div
+                            className="manager-function"
+                            style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Notes
                             </h3>
@@ -170,7 +204,9 @@ export default class ProjectManager extends React.Component {
                             <p>View Notes</p>
                             </div>
                         </div>
-                        <div className="manager-function">
+                        <div
+                            className="manager-function"
+                            style={this.props.projects.length == 0 ? hide : show}>
                             <div className="function-seperator"></div>
                             <div
                                 className="manager-function-box delete center"
