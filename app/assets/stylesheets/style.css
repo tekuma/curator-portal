@@ -4520,7 +4520,8 @@ label.age-confirm-label {
 .artwork-album-heading,
 .artwork-tags-heading,
 .artwork-description-heading,
-.artwork-colors-heading  {
+.artwork-colors-heading,
+.artwork-review-heading  {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1.2em;
 	font-weight: 500;
@@ -4530,7 +4531,9 @@ label.age-confirm-label {
 .artwork-album,
 .artwork-tags,
 .artwork-description,
-.artwork-colors  {
+.artwork-colors,
+.atwork-review  {
+	position: relative;
 	background: #ffffff;
 	padding: 15px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -4541,6 +4544,11 @@ label.age-confirm-label {
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
 
+}
+
+.artwork-reviewer {
+	text-align: right;
+	color: #e9217e;
 }
 
 .artwork-tags-heading {
@@ -4628,6 +4636,138 @@ label.age-confirm-label {
 
 #empty-search-arrow-icon {
 	animation: moveRight 2s linear infinite;
+}
+
+/*========================================== */
+
+/* Manage Notes */
+
+.manage-notes-content {
+	width: 848px !important;
+	max-width: 1000px !important;
+	max-width: none;
+}
+
+.manage-notes-title {
+	padding-bottom: 0px !important;
+	text-align: center;
+	font-size: 1.6em !important;
+	color: #000000 !important;
+	background: #ffffff;
+	font-weight: 600 !important;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.manage-notes-body {
+	width: 848px !important;
+	height: 450px;
+	padding: 0px !important;
+}
+
+.manage-notes-actions {
+	padding: 0 !important;
+}
+
+.manage-notes-dialog {
+	position: relative;
+	height: 450px;
+	background: #ffffff;
+}
+
+.manage-notes-group-notes-wrapper {
+	width: 456px;
+	height: 100%;
+	display: inline-block;
+	overflow: scroll;
+	padding: 30px;
+	padding-right: 0px;
+	background: #ffffff;
+}
+
+.manage-notes-group-notes {
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
+	border-radius: 5px;
+	width: 426px;
+	height: 390px;
+	background: #eeeeee;
+	padding: 20px;
+	overflow: scroll;
+}
+
+.manage-notes-textarea-wrapper {
+	width: 392px;
+	height: 450px;
+	vertical-align: top;
+	background: #ffffff;
+	display: inline-flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#public-note,
+#personal-note {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	background-color: #f4f6f7;
+	border: 1.5px solid #d6d3ce;
+    border-radius: 3px;
+    padding: 0.75em .75em;
+    width: 300px;
+	height: 80px;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	font-size: 0.8em;
+	line-height: 1.2em;
+	color: #000000;
+	resize: none;
+}
+
+.manage-notes-textarea {
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+	flex-direction: column;
+	padding-bottom: 20px;
+	background: #ffffff;
+}
+
+.manage-notes-textarea > label  {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.2em;
+	font-weight: 500;
+	margin-bottom: 10px;
+	color: rgba(0,0,0,0.87);
+}
+
+.group-note {
+	position: relative;
+	background: #ffffff;
+	padding: 15px;
+	margin-bottom: 10px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	color: #000000;
+
 }
 
 /*========================================== */

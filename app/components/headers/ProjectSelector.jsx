@@ -37,87 +37,53 @@ export default class ProjectSelector extends React.Component {
         }
 
 
-        if (this.props.role == Roles.SEARCH) {
-
-            const selectorContainerWidth = {
-                width: window.innerWidth * 0.2 + 36
-            }
-            const selectorWidth = {
-                width: window.innerWidth * 0.2 + 36 ,
-                display: "inline-block"
-            }
-
-            return (
-                <div>
-                    <div
-                        id="project-selector"
-                        style={selectorContainerWidth}>
-
-                        <Select
-                            className="project-select"
-                            style={selectorWidth}
-                            options={options}
-                            name="project-select"
-                            placeholder="Select a project..."
-                            value={display}
-                            onChange={this.props.changeProject}
-                            clearable="true"
-                        />
-                    </div>
-                </div>
-            );
-
-
-        } else {  // in MANAGE
-            const selectorContainerWidth = {
-                width: window.innerWidth * 0.2 + 36
-            }
-
-            const selectorWidth = {
-                width: window.innerWidth * 0.2 + "!important",
-                display: "inline-block"
-            }
-
-            const addProjectTooltip = (
-                <Tooltip
-                    id="add-project-tooltip"
-                    className="tooltip">
-                    Add Project
-                </Tooltip>
-            );
-            return (
-                <div>
-                    <div
-                        id="project-selector"
-                        style={selectorContainerWidth}>
-                        <OverlayTrigger
-                            placement   ="bottom"
-                            overlay     ={this.props.role == Roles.SEARCH ? null : addProjectTooltip}
-                            >
-
-                            <div
-                                className="add-project-button"
-                                onClick={this.handleAddProject}
-                                onTouchTap={this.handleAddProject}
-                                >
-                                <img src='assets/images/icons/plus-white.svg' />
-                            </div>
-                        </OverlayTrigger>
-                        <Select
-                            className="project-select"
-                            style={selectorWidth}
-                            options={options}
-                            name="project-select"
-                            placeholder="Select a project..."
-                            value={display}
-                            onChange={this.props.changeProject}
-                            clearable="true"
-                        />
-                    </div>
-                </div>
-            );
+        const selectorContainerWidth = {
+            width: window.innerWidth * 0.2 + 36
         }
 
+        const selectorWidth = {
+            width: window.innerWidth * 0.2 + "!important",
+            display: "inline-block"
+        }
+
+        const addProjectTooltip = (
+            <Tooltip
+                id="add-project-tooltip"
+                className="tooltip">
+                Add Project
+            </Tooltip>
+        );
+        return (
+            <div>
+                <div
+                    id="project-selector"
+                    style={selectorContainerWidth}>
+                    <OverlayTrigger
+                        placement   ="bottom"
+                        overlay     ={addProjectTooltip}
+                        >
+
+                        <div
+                            className="add-project-button"
+                            onClick={this.handleAddProject}
+                            onTouchTap={this.handleAddProject}
+                            >
+                            <img src='assets/images/icons/plus-white.svg' />
+                        </div>
+                    </OverlayTrigger>
+                    <Select
+                        className="project-select"
+                        style={selectorWidth}
+                        options={options}
+                        name="project-select"
+                        placeholder="Select a project..."
+                        value={display}
+                        onChange={this.props.changeProject}
+                        clearable="true"
+                    />
+                </div>
+            </div>
+        );
 
     }
 

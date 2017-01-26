@@ -202,8 +202,11 @@ export default class ProjectManager extends React.Component {
                             <h3 className="manager-heading">
                                 Notes
                             </h3>
-                            <div className="manager-function-box center">
-                            <p>View Notes</p>
+                            <div
+                                className="manager-function-box center"
+                                onClick={this.props.toggleManageNotes}
+                                onTouchTap={this.props.toggleManageNotes}>
+                            <p>Manage Notes</p>
                             </div>
                         </div>
                         <div

@@ -7,14 +7,18 @@ import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
 import confirm    from '../confirm_dialog/ConfirmFunction';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
+import ManageNotesDialog   from './ManageNotesDialog';
 
 
 export default class ManagerMain extends React.Component {
     state = {
         command        : "", // for sending actions down to Artworks
         detailBoxIsOpen: false, // whether popup is open or not
+        manageNotesIsOpen: false, // whether popup is open or not
         artworkInfo   : {  // TODO: remove placeholder info
             description  : "Much art. Very nice.",
+            reviewer     : "Kun Qian",
+            review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
             title        : "Starry Night",
             artist       : "Vincent Van Gogh",
             album        : "Impressionism",
@@ -55,7 +59,9 @@ export default class ManagerMain extends React.Component {
                       renameCurrentProject={this.props.renameCurrentProject}
                       currentProject={this.props.currentProject}
                       managerIsOpen={this.props.managerIsOpen}
+                      manageNotesIsOpen={this.state.manageNotesIsOpen}
                       toggleManager={this.props.toggleManager}
+                      toggleManageNotes={this.toggleManageNotes}
                       changeProject={this.props.changeProject}
                       doQuery={this.doQuery}
                       projects={this.props.projects}
@@ -67,6 +73,11 @@ export default class ManagerMain extends React.Component {
                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                        artworkInfo={this.state.artworkInfo}
                     />
+                <ManageNotesDialog
+                        toggleManageNotes={this.toggleManageNotes}
+                        manageNotesIsOpen={this.state.manageNotesIsOpen}
+                        updateNotes={this.updateNotes}
+                     />
                   <div
                       onClick     ={this.props.toggleNav}
                       onTouchTap  ={this.props.toggleNav}
@@ -137,5 +148,14 @@ export default class ManagerMain extends React.Component {
         this.setState({
             detailBoxIsOpen: !this.state.detailBoxIsOpen
         })
+    }
+    toggleManageNotes = () => {
+        this.setState({
+            manageNotesIsOpen: !this.state.manageNotesIsOpen
+        })
+    }
+
+    updateNotes = () => {
+        console.log("Notes Updated!");
     }
 }
