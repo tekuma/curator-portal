@@ -4704,7 +4704,7 @@ label.age-confirm-label {
 	flex-direction: column;
 }
 
-#public-note,
+#collab-note,
 #personal-note {
 	appearance: none;
 	-webkit-appearance: none;
