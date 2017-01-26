@@ -26,7 +26,7 @@ var config = {
   apiKey           : "AIzaSyDPLbeNTIctAEKu14VFeQuun8wz6ZbdTWU",
   authDomain       : "curator-tekuma.firebaseapp.com",
   databaseURL      : "https://curator-tekuma.firebaseio.com",
-  storageBucket    : "curator-tekuma.appspot.com",
+  storageBucket    : "curator-uploads",
   messagingSenderId: "319359735831"
 };
 firebase.initializeApp(config);

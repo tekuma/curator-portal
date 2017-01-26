@@ -96,7 +96,24 @@ export default class EditProfile extends React.Component {
     editPublicUserInfo = (data) => {
         let uid = firebase.auth().currentUser.uid;
         let path = `users/${uid}/public`;
-        firebase.database().ref(path).update(data);
+
+
+        if (data.hasOwnProperty('avatar')) { // image + text update
+            let filePath = `portal/${uid}/avatars/${data.avatar.name}`;
+            let avatarRef = firebase.storage().ref(filePath);
+            avatarRef.put(data.avatar).on( firebase.storage.TaskEvent.STATE_CHANGED,
+                (snapshot)=>{}, //on change
+                (err)=>{console.log(err);},// err
+                ()=>{  // on complete
+                    console.log(">> New Avatar Uploaded successfully");
+                    avatarRef.getDownloadURL().then( (avatarURL)=>{
+                        data.avatar = avatarURL;
+                        firebase.database().ref(path).update(data);
+                    });
+                });
+        } else {
+            firebase.database().ref(path).update(data);
+        }
     }
 
     editPrivateUserInfo = (data) => {

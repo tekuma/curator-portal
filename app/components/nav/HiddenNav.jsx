@@ -52,11 +52,18 @@ export default class HiddenNav extends React.Component {
     render() {
         const navItems = this.navItems;
         let avatar ='assets/images/default-avatar.png';
+        console.log(this.props.user.public.avatar);
+        if (this.props.user.public.avatar) {
+            avatar = this.props.user.public.avatar;
+        }
 
         let avatarStyle = {
             backgroundImage: 'url(' + avatar + ')'
         }
         let displayName = "Curator Name";
+        if (this.props.user.public) {
+            displayName = this.props.user.public.display_name;
+        }
 
         // if (this.props.user.info && this.props.user.info.display_name) {
         //     displayName = this.props.user.info.display_name; // This is here because of the initial split second an account isn't created
