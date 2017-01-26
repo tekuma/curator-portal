@@ -148,13 +148,19 @@ export default class ProjectManager extends React.Component {
                             <h3 className="manager-heading">
                                 Download
                             </h3>
-                            <div className="manager-function-box download center">
+                            <div className="manager-function-box download center"
+                                 onClick={this.handleCSV}
+                                 onTouchTap={this.handleCSV}>
                                 <p>CSV</p>
                             </div>
-                            <div className="manager-function-box download center">
+                            <div className="manager-function-box download center"
+                                 onClick={this.handleRaw}
+                                 onTouchTap={this.handleRaw}>
                                 <p>Raw Images</p>
                             </div>
-                            <div className="manager-function-box download center">
+                            <div className="manager-function-box download center"
+                                 onClick={this.handlePrintfile}
+                                 onTouchTap={this.handlePrintfile}>
                                 <p>Print Files</p>
                             </div>
                         </div>
@@ -329,6 +335,18 @@ export default class ProjectManager extends React.Component {
         }
     }
 
+    handleCSV = () => {
+        console.log("Requested CSV for ->", this.props.artworkBuffer);
+        //do ajax call here
+    }
+
+    handleRaw = () => {
+        console.log("Requested Raw Files->",this.props.artworkBuffer);
+
+    }
+    handlePrintfile = () => {
+        console.log("Requested Printfiles->",this.props.artworkBuffer);
+    }
 
     /**
      * TODO

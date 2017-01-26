@@ -54,6 +54,7 @@ export default class ManagerMain extends React.Component {
                       toggleDetailBox={this.toggleDetailBox}
                   />
                   <ProjectManager
+                      artworkBuffer={this.props.artworkBuffer}
                       projectDetails={this.props.projectDetails}
                       users={this.state.users}
                       selectAllArt={this.selectAllArt}
