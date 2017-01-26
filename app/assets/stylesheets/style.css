@@ -523,7 +523,7 @@ header.black {
 	right: 0;
 	padding: 0;
 	margin: 0;
-	width: 200px;
+	width: 100px;
 	height: 60px;
 	transition: width 0.5s;
 	-webkit-transition: width 0.5s;
@@ -577,10 +577,6 @@ header.black {
 
 .header-icon img {
 	height: 30px;
-}
-
-.header-icon.curator.manage {
-	border-left: 1px solid #222222;
 }
 
 .header-icon.curator.manage img {
@@ -713,7 +709,7 @@ input::-webkit-search-cancel-button {
 .project-selector {
 	position: absolute;
 	top   : 12px;
-	right  : 235px;
+	right  : 140px;
 	width : 20%;
 	height: 60px;
 	z-index: 100;
