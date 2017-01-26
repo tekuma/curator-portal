@@ -118,10 +118,10 @@ export default class LandingPage extends React.Component {
 
 // ============= Methods ===============
 
-/**
- * Used to log in a user
- * @param  {[HTML element]} e [The element that has been pressed]
- */
+    /**
+     * Used to log in a user
+     * @param  {HTML element} e [The element that has been pressed]
+     */
     onLogin = (e) => {
         e.preventDefault();
 

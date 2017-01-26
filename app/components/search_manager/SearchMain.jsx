@@ -2,9 +2,9 @@
 import React    from 'react';
 import firebase from 'firebase';
 // Components
-import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
-import CurationHeader       from '../headers/CurationHeader';
-import SearchManager        from './SearchManager';
+import SearchArtworkManager     from '../artwork_manager/SearchArtworkManager';
+import CurationHeader           from '../headers/CurationHeader';
+import SearchManager            from './SearchManager';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 
@@ -93,7 +93,10 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            payload.auth = idToken;
+            var payload = {
+                auth: idToken,
+                uid: uid
+            };
             $.ajax({
                 url: 'detail',
                 data: payload,
@@ -105,10 +108,7 @@ export default class SearchMain extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        this.setState({ infoArtwork:{} });
-        setTimeout( ()=>{
-            this.setState({results: data.rows});
-        }, 25);
+        this.setState({ artworkInfo: data });
     }
 
     toggleDetailBox = () => {
