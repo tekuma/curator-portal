@@ -2,26 +2,15 @@
 import React    from 'react';
 import firebase from 'firebase';
 // Components
-import SearchArtworkManager     from '../artwork_manager/SearchArtworkManager';
-import CurationHeader           from '../headers/CurationHeader';
-import SearchManager            from './SearchManager';
+import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
+import CurationHeader       from '../headers/CurationHeader';
+import SearchManager        from './SearchManager';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [{  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            reviewer     : "Kun Qian",
-            review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-            title        : "Starry Night",
-            artist       : "Vincent Van Gogh",
-            album        : "Impressionism",
-            year         : 1888,
-            tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-        }],  // current list of search results
+        results       : [],  // current list of search results
         command       : "",  // used for controlling artworks
         detailBoxIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
@@ -104,10 +93,7 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            var payload = {
-                auth: idToken,
-                uid: uid
-            };
+            payload.auth = idToken;
             $.ajax({
                 url: 'detail',
                 data: payload,
@@ -119,7 +105,10 @@ export default class SearchMain extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        this.setState({ artworkInfo: data });
+        this.setState({ infoArtwork:{} });
+        setTimeout( ()=>{
+            this.setState({results: data.rows});
+        }, 25);
     }
 
     toggleDetailBox = () => {

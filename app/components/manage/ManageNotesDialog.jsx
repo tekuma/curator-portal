@@ -20,7 +20,7 @@ export default class ManageNotesDialog extends React.Component {
             {curator: "Heidi Bloom", note: "Fabulous!"}
         ],
         my_notes: {
-            public: "This project is very interesting. It has many artworks, and is cohesive.",
+            collab: "This project is very interesting. It has many artworks, and is cohesive.",
             personal: "I lowkey don't think this project is cohesive, but that's just me."
         }
     }
@@ -78,16 +78,16 @@ export default class ManageNotesDialog extends React.Component {
                             <div className="manage-notes-textarea-wrapper">
                                 <div className="manage-notes-textarea">
                                     <label
-                                        htmlFor="public-note">
-                                        Public Note
+                                        htmlFor="collab-note">
+                                        Collaboration Note
                                     </label>
                                     <textarea
-                                        id          ="public-note"
+                                        id          ="collab-note"
                                         placeholder ="Write a short note about this project that will be viewable by all collaborators..."
-                                        value       ={this.state.my_notes.public}
+                                        value       ={this.state.my_notes.collab}
                                         maxLength   ="1500"
                                         onChange    ={(e) => {
-                                            this.updateManageNotes(Object.assign({}, myNotes, {public: e.target.value}))
+                                            this.updateManageNotes(Object.assign({}, myNotes, {collab: e.target.value}))
                                         }} />
                                 </div>
                                 <div className="manage-notes-textarea">

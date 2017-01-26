@@ -94,7 +94,7 @@ export default class CurationHeader extends React.Component {
                                  <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/plus-pink.svg' : 'assets/images/icons/minus-pink.svg'} />
                              </div>
                         </OverlayTrigger>
-                        {this.props.role == Roles.SEARCH || this.props.role == Roles.REVIEW ?
+                        {this.props.role == Roles.SEARCH || this.props.role == Roles.REVIEW || this.props.role == Roles.PROFILE ?
                             <OverlayTrigger placement="bottom" overlay={manageTooltip}>
                                  <div
                                      className="header-icon curator manage"
