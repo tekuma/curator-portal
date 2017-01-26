@@ -27,9 +27,9 @@ export default class PostAuth extends React.Component {
         role         : Roles.MANAGE,
         projects     : [],
         artworkBuffer  : [], // list of all 'selected' artworks
-        currentProject : [], // ["Project Name", "ProjectID"]
+        currentProject : null, // ["Project Name", "ProjectID"]
         projectArtworks: [],
-        paths : {} //TODO implement a paths object
+        projectDetails : {}
     };
 
     constructor(props) {
@@ -127,6 +127,7 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ManagerMain
+                        projectDetails={this.state.projectDetails}
                         createNewProject={this.props.createNewProject}
                         fetchProjects={this.fetchProjects}
                         projects={this.state.projects}
@@ -284,26 +285,30 @@ export default class PostAuth extends React.Component {
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects. FIXME: race condition ?
+     * state.projects.
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {
             let projects = [];
-            let projectIDs = snapshot.val()
-            let leng = projectIDs.length;
+            const projectIDs = snapshot.val()
+            let callbacks = projectIDs.length;
+            const leng = projectIDs.length;
+
 
             for (var i = 0; i < leng ; i++) {
                 let projID = projectIDs[i];
 
-                let callback;
-                // To use a async. for-loop, we pass a special callback to the
-                // last iteration, to set the state.
-                if (i === leng-1) { // if in last loop, pass special callback
-                    callback = (snapshot) => {
-                        let data = snapshot.val()
-                        let thisProj = [data.name,data.id]
-                        projects.push(thisProj)
-                        if (this.state.currentProject.length == 0) {
+                // make calls
+                let path   = `projects/${projID}`;
+
+                firebase.database().ref(path).once('value', (snapshot) => {
+                    let data = snapshot.val()
+                    let thisProj = [data.name,data.id];
+                    projects.push(thisProj)
+                    callbacks--;
+                    if (callbacks === 0) {
+                        if (!this.state.currentProject) {
+                            //by default, set the first project as selected.
                             this.setState({
                                 projects:projects,
                                 currentProject:projects[0]
@@ -313,21 +318,9 @@ export default class PostAuth extends React.Component {
                                 projects:projects
                             });
                         }
-                        this.fetchProjectArtworks();
+                        this.fetchProjectDetails();
                     }
-                } else {
-                    callback = (snapshot) => {
-                        let data = snapshot.val()
-                        let thisProj = [data.name,data.id]
-                        projects.push(thisProj)
-                    }
-                }
-
-                // make calls
-                let path   = `projects/${projID}`;
-
-
-                firebase.database().ref(path).once('value', callback,(err)=>{
+                },(err)=>{
                     console.log(err);
                 },this);
             }
@@ -375,7 +368,7 @@ export default class PostAuth extends React.Component {
             console.log(theProj, "kdkddkkdkdkdkdkdkdk");
             this.setState({currentProject:theProj});
             setTimeout( ()=>{ // wait for state to update
-                this.fetchProjectArtworks();
+                this.fetchProjectDetails();
             }, 50);
         }
     }
@@ -393,7 +386,7 @@ export default class PostAuth extends React.Component {
             this.fetchProjects();
             setTimeout( ()=>{
                 this.setState({currentProject:[newName,projectID]});
-                this.fetchProjectArtworks();
+                this.fetchProjectDetails();
             }, 50);
         });
     }
@@ -433,21 +426,22 @@ export default class PostAuth extends React.Component {
      * in the firebase database. Also initiates a listener, which
      * will reactively update any changes to artworks.
      */
-    fetchProjectArtworks = () => {
-        if (this.state.currentProject.length == 2) { // not null
+    fetchProjectDetails = () => {
+        if (this.state.currentProject) { // not null
 
             let projectID = this.state.currentProject[1];
             let path = `projects/${projectID}`;
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-                console.log(node);
+                // console.log(node);
                 for (var key in node.artworks) { // obj -> array
                     if (node.artworks.hasOwnProperty(key)) {
                         art.push(node.artworks[key]);
                     }
                 }
                 this.setState({projectArtworks:art});
+                this.setState({projectDetails:node});
             });
         }
     }

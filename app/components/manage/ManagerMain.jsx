@@ -22,7 +22,8 @@ export default class ManagerMain extends React.Component {
             tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
             colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
             thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-        }
+        },
+        users:[],
     }
 
     constructor(props) {
@@ -49,6 +50,8 @@ export default class ManagerMain extends React.Component {
                       toggleDetailBox={this.toggleDetailBox}
                   />
                   <ProjectManager
+                      projectDetails={this.props.projectDetails}
+                      users={this.state.users}
                       selectAllArt={this.selectAllArt}
                       deselectAllArt={this.deselectAllArt}
                       deleteCurrentProject={this.props.deleteCurrentProject}
@@ -77,6 +80,7 @@ export default class ManagerMain extends React.Component {
 
     componentDidMount() {
         console.log("+++++ManagerMain");
+        this.fetchAllUsers();
     }
 
     componentWillReceiveProps(nextProps){
@@ -84,6 +88,20 @@ export default class ManagerMain extends React.Component {
     }
 
     // =============== Methods =====================
+
+
+    fetchAllUsers = () => {
+        let users = [];
+        firebase.database().ref('users').on("value", (snapshot)=>{
+            snapshot.forEach((childSnap)=>{
+                let uid  = childSnap.child("uid").val();
+                let name = childSnap.child("public/display_name").val();
+                users.push([uid,name]);
+            });
+            this.setState({users:users});
+        })
+    }
+
 
     /**
     * This method sets the state.command to be "select",

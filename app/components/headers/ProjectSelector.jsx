@@ -30,7 +30,7 @@ export default class ProjectSelector extends React.Component {
 
         let display;
 
-        if (this.props.currentProject.length === 0) {
+        if (!this.props.currentProject) {
             display = "";
         } else {
             display = this.props.currentProject[0];

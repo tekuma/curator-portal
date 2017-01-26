@@ -160,7 +160,7 @@ export default class App extends React.Component {
      * @return {String} [the project ID]
      */
     createNewProject = () => {
-        let projectsRef = firebase.database().ref(this.paths.projects);
+        let projectsRef = firebase.database().ref('projects');
         let projectRef  = projectsRef.push();
         let projectID   =  projectRef.key;
         let project = {

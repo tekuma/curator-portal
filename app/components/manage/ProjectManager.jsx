@@ -16,6 +16,7 @@ import Select                       from 'react-select';
  */
 export default class ProjectManager extends React.Component {
     state = {
+        collabBuffer:"",
     }
 
     constructor(props) {
@@ -77,9 +78,29 @@ export default class ProjectManager extends React.Component {
             display: "inline-block"
         }
 
-        let options = [{label: "Bob", value: "Bob"}];
+        let options = [];
+        let ownerName = "";
+        if (this.props.users) {
+            this.props.users.map( (user)=>{
+                //NOTE: this is for dynamic usage of the curator's name.
+                // We dont store it in the project, so we must find it.
+                if (user[0]=== this.props.projectDetails.curator){
+                    ownerName = user[1];
+                }
+                options.push({label:user[1], value:user[0], user:user});
+            });
+        }
 
+        //NOTE: collaborators have their id AND name stored in the project.
+        //If a collaborator changes their display_name , it will not be reflected here.
 
+        let collaborators = [];
+        if (this.props.projectDetails.collaborators) {
+            collaborators = this.props.projectDetails.collaborators;
+        }
+
+        //NOTE: in the Collaborator tool, the current user is shown in black, and
+        //all other collaborators in grey.  collaborator-thumb self
 
         return (
             <section
@@ -146,35 +167,33 @@ export default class ProjectManager extends React.Component {
                             <div className="manager-function-box center collaborators">
                                 <div className="collaborator-box">
                                     <article
-                                        key={uuid.v4()}
-                                        className="collaborator-thumb self">
+                                        key={this.props.projectDetails.curator}
+                                        className={this.props.projectDetails.curator==firebase.auth().currentUser.uid
+                                             ? "collaborator-thumb self" : "collaborator-thumb"}>
                                         <p className="collaborator-name">
-                                            Afika Nyati<span> (creator)</span>
+                                            {ownerName} <span>(creator)</span>
                                         </p>
-                                        <div className="delete-collaborator">
-                                            <img src="assets/images/icons/delete-white.svg" />
-                                        </div>
+
                                     </article>
-                                    <article
-                                        key={uuid.v4()}
-                                        className="collaborator-thumb">
-                                        <p className="collaborator-name">
-                                            Stephen White
-                                        </p>
-                                        <div className="delete-collaborator">
-                                            <img src="assets/images/icons/delete-white.svg" />
-                                        </div>
-                                    </article>
-                                    <article
-                                        key={uuid.v4()}
-                                        className="collaborator-thumb">
-                                        <p className="collaborator-name">
-                                            Scott Livingston
-                                        </p>
-                                        <div className="delete-collaborator">
-                                            <img src="assets/images/icons/delete-white.svg" />
-                                        </div>
-                                    </article>
+                                    {collaborators.map( user => {
+                                        let self2 = user[0] === firebase.auth().currentUser.uid;
+                                        return(
+                                            <article
+                                                key={user[0]}
+                                                className={self2 ? "collaborator-thumb self" : "collaborator-thumb"}>
+                                                <p className="collaborator-name">
+                                                    {user[1]}
+                                                </p>
+                                                <div className="delete-collaborator"
+                                                     onTouchTap={this.deleteCollaborator.bind({}, user)}
+                                                     onClick={this.deleteCollaborator.bind({}, user)}>
+                                                    <img src="assets/images/icons/delete-white.svg" />
+                                                </div>
+                                            </article>
+                                        );
+                                    })}
+
+
                                 </div>
                                 <p>Add Collaborator</p>
                                 <Select
@@ -182,14 +201,17 @@ export default class ProjectManager extends React.Component {
                                     ref="searchArtist"
                                     inputProps={{id: 'search-artist'}}
                                     autofocus
+                                    onChange={this.collaboratorChange}
                                     options={options}
-                                    simpleValue
+
                                     clearable={false}
                                     name="artist-search"
-                                    value={"Hello"}
+                                    value={this.state.collabBuffer[0]}
                                     placeholder="Name..."
                                     />
                                 <div
+                                    onClick={this.addCollaborator}
+                                    onTouchTap={this.addCollaborator}
                                     className="collaborator-add-button"
                                     title="Add Collaborator">
                                     <p>+</p>
@@ -246,13 +268,68 @@ export default class ProjectManager extends React.Component {
 
 // ============= Methods ===============
 
+    /**
+     * This method deletes a collaborator from a project.
+     * - Remove user from /project branch
+     * - Remove project from /user branch
+     * @param  {Array} user [uid,name]
+     */
+    deleteCollaborator = (user) => {
+        let project_id = this.props.currentProject[1];
+        let projPath = `projects/${project_id}/collaborators`;
+        firebase.database().ref(projPath).transaction((data)=>{
+            function isNotUser(value){
 
+                return value[0] != user[0]
+            }
+            let newdata = data.filter(isNotUser);
+            return newdata;
+        });
+
+        let userPath = `users/${user[0]}/projects`;
+        firebase.database().ref(userPath).transaction((data)=>{
+            function isNotProject(value){
+                return value != project_id
+            }
+            let newData = data.filter(isNotProject);
+            return newData;
+        });
+    }
+
+    collaboratorChange = (data) => {
+        this.setState({collabBuffer:data.user});
+    }
+
+    /**
+     * Adds user from this.state.collabBuffer to the
+     * current project.
+     * - in project branch
+     * - in user branch
+     */
+    addCollaborator = () => {
+        if (this.state.collabBuffer != "") {
+            // console.log(this.props.currentProject[1]);
+            let project_id = this.props.currentProject[1];
+            let projPath = `projects/${project_id}/collaborators`;
+            firebase.database().ref(projPath).transaction((data)=>{
+                if (!data){
+                    data = [];
+                }
+                data.push(this.state.collabBuffer);
+                return data;
+            });
+            let userPath = `users/${this.state.collabBuffer[0]}/projects`;
+            firebase.database().ref(userPath).transaction((data)=>{
+                data.push(project_id);
+                return data;
+            });
+        }
+    }
 
 
     /**
      * TODO
      * @param  {[type]} item [description]
-     * @return {[type]}      [description]
      */
     toggleAccordion = (item) => {
         let accordion   = this.state.accordion;
