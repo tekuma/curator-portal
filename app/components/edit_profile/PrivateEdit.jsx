@@ -7,17 +7,21 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Snackbar         from 'material-ui/Snackbar';
 import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 
+
+const min_password_len = 8;
+
+
 export default class PrivateEdit extends React.Component {
     state = {
         gender          : "",
         accordion: {
-            legal_name: false,
-            email: false,
+            legal_name   : false,
+            email        : false,
             emailVerified: false,
-            password: false,
-            paypal: false,
-            age         : false,
-            pronoun     : false
+            password     : false,
+            paypal       : false,
+            age          : false,
+            pronoun      : false
         },
         allAccordion    : false,
         errorType: {},
@@ -34,6 +38,8 @@ export default class PrivateEdit extends React.Component {
     }
 
     render() {
+        //NOTE: this.props.user.private holds the user data.
+
 
         let errorStylePasswordAuth = {
             border: '1px solid #ec167c'
@@ -521,7 +527,8 @@ export default class PrivateEdit extends React.Component {
 
         // Only test regex if user has typed in an email and has password
         if(email.length > 0 &&
-            email != this.props.userPrivate.email &&
+            this.props.user.pivate &&
+            email != this.props.user.private.email &&
             !/.+@.+\..+/.test(email) &&
             this.props.user.auth_provider == "password") {
             this.state.errors.push("The email address you supplied is invalid.");
@@ -531,7 +538,8 @@ export default class PrivateEdit extends React.Component {
             this.setState({
                 errorType: errorType
             });
-        } else if (email != this.props.userPrivate.email &&
+        } else if ( this.props.user.private &&
+            email != this.props.user.private.email &&
             emailPassword.length == 0 &&
             this.props.user.auth_provider == "password") {
             this.state.errors.push("To change your email, you must enter your current password.");
@@ -541,10 +549,10 @@ export default class PrivateEdit extends React.Component {
             this.setState({
                 errorType: errorType
             });
-        } else if (email != this.props.userPrivate.email &&
+        } else if ( this.props.user.private &&
+                email != this.props.user.private.email &&
                 email.length > 0 &&
-                emailPassword.length > 0 &&
-                this.props.user.auth_provider == "password") {
+                emailPassword.length > 0 ) {
             data.email = email;
             data.email_password = emailPassword;
         }
@@ -552,7 +560,7 @@ export default class PrivateEdit extends React.Component {
         // Password
 
         // Only test password length if typed in
-        if(password.length > 0 && password.length < 6 && this.props.user.auth_provider == "password") {
+        if (password.length > 0 && password.length < min_password_len ) {
             this.state.errors.push("Your password must be at least 6 characters long.");
 
             let errorType = this.state.errorType;
@@ -563,7 +571,7 @@ export default class PrivateEdit extends React.Component {
         }
 
         // Only test confirm password length if password typed in
-        if(password.length > 0 && confirmPassword.length == 0 && this.props.user.auth_provider == "password") {
+        if (password.length > 0 && confirmPassword.length == 0) {
             this.state.errors.push("Please confirm your password.");
 
             let errorType = this.state.errorType;
@@ -578,8 +586,7 @@ export default class PrivateEdit extends React.Component {
             currentPassword.length > 0
             && password.length > 0
             && confirmPassword.length > 0
-            && password != confirmPassword
-            && this.props.user.auth_provider == "password") {
+            && password != confirmPassword) {
             this.state.errors.push("Passwords do not match.");
 
             let errorType = this.state.errorType;
@@ -588,10 +595,9 @@ export default class PrivateEdit extends React.Component {
             this.setState({
                 errorType: errorType
             });
-        } else if (password.length >= 6
-        && confirmPassword.length >= 6
-        && currentPassword.length == 0
-        && this.props.user.auth_provider == "password") {
+        } else if (password.length >= min_password_len
+        && confirmPassword.length >= min_password_len
+        && currentPassword.length == 0) {
                 this.state.errors.push("To change your password, you must enter your current password.");
 
                 let errorType = this.state.errorType;
@@ -599,11 +605,10 @@ export default class PrivateEdit extends React.Component {
                 this.setState({
                     errorType: errorType
                 });
-        } else if (currentPassword.length >= 6
-                    && password.length >= 6
-                    && confirmPassword.length >= 6
-                    && password == confirmPassword
-                    && this.props.user.auth_provider == "password") {
+        } else if (currentPassword.length >= min_password_len
+                    && password.length >= min_password_len
+                    && confirmPassword.length >= min_password_len
+                    && password == confirmPassword) {
                         data.current_password = currentPassword;
                         data.password = password;
                     }
@@ -660,8 +665,10 @@ export default class PrivateEdit extends React.Component {
 
         // gather inputs that have been entered
 
-        if(this.state.errors.length == 0) {
+        if (this.state.errors.length == 0) {
+            console.log("here");
             this.props.editPrivateUserInfo(data);
+            console.log("now here");
             this.refs.currentPassword.value = "";
             this.refs.password.value = "";
             this.refs.confirmPassword.value = "";

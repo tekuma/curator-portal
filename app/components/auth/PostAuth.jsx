@@ -28,7 +28,8 @@ export default class PostAuth extends React.Component {
         projects     : [],
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : [], // ["Project Name", "ProjectID"]
-        projectArtworks: []
+        projectArtworks: [],
+        paths : {} //TODO implement a paths object
     };
 
     constructor(props) {
@@ -54,8 +55,9 @@ export default class PostAuth extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchProjects();
         console.log("++++++PostAuth");
+        this.fetchProjects();
+        this.fetchUserData();
         window.addEventListener("resize",this.rerender);
     }
 
@@ -188,6 +190,7 @@ export default class PostAuth extends React.Component {
                         navIsOpen={this.state.navIsOpen} />
                     <div className="edit-profile-layout">
                         <EditProfile
+                            user={this.state.user}
                             toggleVerifyEmailDialog   ={this.props.toggleVerifyEmailDialog}
                             />
                     </div>
@@ -222,12 +225,22 @@ export default class PostAuth extends React.Component {
         });
     };
 
+    fetchUserData = () => {
+        const uid = firebase.auth().currentUser.uid;
+        const path = `users/${uid}`;
+        firebase.database().ref(path).on("value", (snapshot)=>{
+            this.setState({
+                user:snapshot.val()
+            });
+        });
+    }
+
     /**
      * This method is used by the HiddenNav component and PostAuthHeader component
      * to switch the the layout currently being displayed in the Root App Layout component
      * by changing this.state.currentAppLayout.
      * The value can be: Views.UPLOAD, Views.ARTWORKS, and Views.PROFILE
-     * @param  {[A field of the Views object]} view [View to be displayed]
+     * @param  {A field of the Views object} view [View to be displayed]
      */
     changeAppLayout = (role) => {
         if(this.state.navIsOpen) {
@@ -271,7 +284,7 @@ export default class PostAuth extends React.Component {
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects.
+     * state.projects. FIXME: race condition ?
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {

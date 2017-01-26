@@ -55,7 +55,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
                                 +firebase_db[artist_uid].artworks[artwork_ref].id)
             };
             logger.debug('Pushing artwork:', artwork);
-            let label_promises = [search.insert_artwork(artwork)];
+            let label_promises = [search.insert_artwork(artwork, true)];
 
             if (firebase_db[artist_uid].artworks[artwork_ref].tags) {
                 for (let j = 0; j < firebase_db[artist_uid].artworks[artwork_ref].tags.length; j++) {
@@ -107,7 +107,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
                 artist: firebase_db[artist_uid].display_name || ''
             };
             logger.debug('Pushing artist:', artist_row);
-            insertion_promise = insertion_promise.then(function () { return search.insert_artist(artist_row); });
+            insertion_promise = insertion_promise.then(function () { return search.insert_artist(artist_row, true); });
         }
     }
 

@@ -45,11 +45,6 @@ export default class App extends React.Component {
         loggedIn: false
     };
 
-    paths = {
-        projects : `projects/`,
-        paths    : `users/`
-    }
-
     constructor(props) {
         super(props);
     }
@@ -123,10 +118,16 @@ export default class App extends React.Component {
                 this.createNewUser(user);
                 return false;
             } else {
+                this.logLogin(user.uid);
                 return true;
             }
 
         })
+    }
+
+    logLogin = (uid)=>{
+        let path = `users/${uid}/last_login`;
+        firebase.database().ref(path).set(new Date().toISOString());
     }
 
     /**
@@ -139,13 +140,18 @@ export default class App extends React.Component {
         console.log(">>>> ID", projectID);
         let projects = [projectID];
         let child = {
+            first_login : new Date().toISOString(),
             email       : user.email,
-            display_name: user.displayName,
             uid         : user.uid,
-            projects    : projects
+            projects    : projects,
+            public      : {
+                display_name: "Unset"
+            },
+            private     : {
+                legal_name: "Unset"
+            }
         };
-        let uid = user.uid;
-        const userPath = `users/${uid}`;
+        const userPath = `users/${user.uid}`;
         firebase.database().ref(userPath).set(child);
     }
 

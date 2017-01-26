@@ -35,12 +35,13 @@ export default class PublicEdit extends React.Component {
     }
 
     render() {
-        let avatar;
+        //NOTE: this.props.user.public   holds all current info.
 
-        if (this.props.user &&
-            this.props.user.hasOwnProperty('avatar') &&
-            this.props.user.avatar != "") {
-                avatar = this.props.user.avatar;
+        let avatar;
+        if (this.props.user.public &&
+            this.props.user.public.hasOwnProperty('avatar') &&
+            this.props.user.public.avatar != "") {
+                avatar = this.props.user.public.avatar;
             } else {
                 avatar = 'assets/images/default-avatar.png';
             }
@@ -50,17 +51,17 @@ export default class PublicEdit extends React.Component {
         }
 
         let showSocialIconPreview = {
-            facebook : false,
-            twitter : false,
+            facebook  : false,
+            twitter   : false,
             instagram : false,
             pinterest : false,
-            behance : false
+            behance   : false
         };
 
         let socialSet = false;
 
-        // for (let social_media in this.props.user.social_media) {
-        //     if (this.props.user.social_media[social_media].length > 0) {
+        // for (let social_media in this.props.user.public.social_media) {
+        //     if (this.props.user.public.social_media[social_media].length > 0) {
         //         showSocialIconPreview[social_media] = true;
         //         socialSet = true;
         //     }
@@ -69,23 +70,18 @@ export default class PublicEdit extends React.Component {
         let facebookStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/facebook-gray.svg)'
         }
-
         let instagramStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/instagram-gray.svg)'
         }
-
         let twitterStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/twitter-gray.svg)'
         }
-
         let pinterestStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/pinterest-gray.svg)'
         }
-
         let behanceStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/behance-gray.svg)'
         }
-
         const saveTooltip = (
             <Tooltip
                 id="delete-tooltip-regular"
@@ -93,7 +89,6 @@ export default class PublicEdit extends React.Component {
                 Save Public Information
             </Tooltip>
         );
-
         const accordionTooltip = (
             <Tooltip
                 id="delete-tooltip-regular"
@@ -101,6 +96,31 @@ export default class PublicEdit extends React.Component {
                 Open All Public Fields
             </Tooltip>
         );
+
+        let display_name = "Unset";
+        if (this.props.user.public.display_name) {
+            display_name = this.props.user.public.display_name;
+        }
+        console.log(display_name);
+
+        let bio = "Please tell us a little bit about yourself";
+        let bioPreview = "Unset";
+        if (this.props.user.public.bio) {
+            bio = this.props.user.public.bio;
+            if (bio.length > 20) {
+                bioPreview = bio.slice(0,20) + "....";
+            } else {
+                bioPreview = bio;
+            }
+        }
+        let portfolio = "Unset";
+        if (this.props.user.public.portfolio) {
+            portfolio  = this.props.user.public.portfolio;
+        }
+        let location = "Unset";
+        if (this.props.user.public.location) {
+            location = this.props.user.public.location;
+        }
 
         return(
             <div>
@@ -122,7 +142,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.display_name ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"display_name")}>
                             <h2 className="accordion-item-heading">Display Name</h2>
-                            <h3 className="accordion-item-preview">{false ? this.props.user.display_name : "Unset"}</h3>
+                            <h3 className="accordion-item-preview">{display_name}</h3>
                         </div>
                         <div
                             id="display-name-content"
@@ -130,7 +150,7 @@ export default class PublicEdit extends React.Component {
                             <input
                             type="text"
                             id="edit-displayname"
-                            defaultValue={"Afika"}
+                            defaultValue={"Please enter your name"}
                             onChange={this.setUnsaved}
                             ref="displayname"
                             placeholder="Display Name"
@@ -172,7 +192,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.bio ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"bio")}>
                             <h2 className="accordion-item-heading">Bio</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{bioPreview}</h3>
                         </div>
                         <div
                             id="bio-content"
@@ -181,7 +201,7 @@ export default class PublicEdit extends React.Component {
                                 className="bio"
                                 placeholder="Bio"
                                 ref="bio"
-                                defaultValue={"This is a bio."}
+                                defaultValue={bio}
                                 maxLength="1500"
                                 onChange={this.setUnsaved}></textarea>
                         </div>
@@ -189,7 +209,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.location ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"location")}>
                             <h2 className="accordion-item-heading">Location</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{location}</h3>
                         </div>
                         <div
                             id="location-content"
@@ -199,7 +219,7 @@ export default class PublicEdit extends React.Component {
                             id="edit-location"
                             ref="location"
                             placeholder="Location"
-                            defaultValue={"Boston, MA"}
+                            defaultValue={location}
                             maxLength="50"
                             onChange={this.setUnsaved} />
                         </div>
@@ -207,7 +227,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.portfolio ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"portfolio")}>
                             <h2 className="accordion-item-heading">Portfolio</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{portfolio}</h3>
                         </div>
                         <div
                             id="portfolio-content"
@@ -217,7 +237,7 @@ export default class PublicEdit extends React.Component {
                             id="edit-portfolio"
                             ref="portfolio"
                             placeholder="Portfolio/Website"
-                            defaultValue={"http://afikanyati.com"}
+                            defaultValue={portfolio}
                             maxLength="200"
                             onChange={this.setUnsaved} />
                         </div>

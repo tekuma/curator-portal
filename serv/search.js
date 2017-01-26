@@ -222,7 +222,7 @@ exports.cleardb = () => {
 
 exports.disconnectdb = () => {
     if (db_provider === 'mysql') {
-        db.end();
+        db.end(function (err) { assert.ifError(err); });
     } else {  // === 'sqlite'
         db.close();
     }
@@ -238,28 +238,32 @@ exports.disconnectdb = () => {
 //
 // If try_use_existing is true but no match is found, then a new label
 // is created.
-//
-// This function does not check for an existing association that is
-// essentially similar to the given label. But it should, to avoid
-// superfluous associations, i.e., multiple rows in the associations
-// table that match the same object and label.
 exports.apply_label = (artwork_uid, label, try_use_existing) => {
     var label_uid = label.uid || null;
     var label_origin = label.origin || null;
 
     return new Promise(function (resolve, reject) {
         var add_assoc = (function (err) {
-            var sql_template = 'INSERT INTO associations ' +
-                '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
-            var qelems = [label_uid,
-                          artwork_uid];
-            db.query(sql_template, qelems, function (err) {
-                assert.ifError(err);
-                db.commit(function (err) {
-                    assert.ifError(err);
-                    resolve();
-                });
-            });
+            dbq('SELECT label_uid FROM associations WHERE (label_uid = ?) AND (object_uid = ?) AND (object_table = ?)',
+                [label_uid,
+                 artwork_uid,
+                 "artworks"]).then(function (rows) {
+                     if (rows.length > 0) {
+                         resolve();
+                     } else {
+                         var sql_template = 'INSERT INTO associations ' +
+                             '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
+                         var qelems = [label_uid,
+                                       artwork_uid];
+                         db.query(sql_template, qelems, function (err) {
+                             assert.ifError(err);
+                             db.commit(function (err) {
+                                 assert.ifError(err);
+                                 resolve();
+                             });
+                         });
+                     }
+                 });
         });
         db.beginTransaction(function (err) {
             assert.ifError(err);
@@ -341,35 +345,83 @@ exports.consolidate_all_labels = () => {
     );
 }
 
-exports.insert_artwork = (artwork) => {
-    var sql_template = 'INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)';
-    var qelems = [artwork.uid,
-                  artwork.title,
-                  artwork.artist_uid || null,
-                  artwork.thumbnail_url || null];
-    return dbq(sql_template, qelems, false);
+// If update is false (default), then INSERT the given artwork entry
+// without checking for existing conflicting uid.  If update is true,
+// check whether there is row with given uid, and then, UPDATE or
+// INSERT accordingly.
+exports.insert_artwork = (artwork, update) => {
+    update = update || false;
+    var new_insert = (function () {
+        return dbq('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
+                   [artwork.uid,
+                    artwork.title,
+                    artwork.artist_uid || null,
+                    artwork.thumbnail_url || null], false);
+    });
+    if (update) {
+        return new Promise(function (resolve, reject) {
+            dbq('SELECT uid FROM artworks WHERE uid = ?', [artwork.uid]).then(
+                function (rows) {
+                    if (rows.length === 0) {
+                        return new_insert();
+                    } else {
+                        return dbq('UPDATE artworks SET title = ?, artist_uid = ?, thumbnail_url = ? WHERE uid = ?',
+                                   [artwork.title,
+                                    artwork.artist_uid || null,
+                                    artwork.thumbnail_url || null,
+                                    artwork.uid], false).then(resolve);
+                    }
+                });
+        });
+    } else {
+        return new_insert();
+    }
 }
 
-exports.insert_artworks = (artworks) => {
+// `update` parameter here has same interpretation as that of insert_artwork()
+// except that it is applied to all artworks.
+exports.insert_artworks = (artworks, update) => {
     var promises = [];
     for (let i = 0; i < artworks.length; i++) {
-        promises[i] = exports.insert_artwork(artworks[i]);
+        promises[i] = exports.insert_artwork(artworks[i], update);
     }
     return Promise.all(promises);
 }
 
-exports.insert_artist = (artist) => {
-    var sql_template = 'INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)';
-    var qelems = [artist.uid,
-                  artist.artist,
-                  artist.human_name];
-    return dbq(sql_template, qelems, false);
+// `update` parameter here has same interpretation as that of insert_artwork()
+exports.insert_artist = (artist, update) => {
+    update = update || false;
+    var new_insert = (function () {
+        return dbq('INSERT INTO artists (uid, artist, human_name) VALUES (?, ?, ?)',
+                   [artist.uid,
+                    artist.artist,
+                    artist.human_name], false);
+    });
+    if (update) {
+        return new Promise(function (resolve, reject) {
+            dbq('SELECT uid FROM artists WHERE uid = ?', [artist.uid]).then(
+                function (rows) {
+                    if (rows.length === 0) {
+                        return new_insert();
+                    } else {
+                        return dbq('UPDATE artists SET artist = ?, human_name = ? WHERE uid = ?',
+                                   [artist.artist,
+                                    artist.human_name,
+                                    artist.uid], false).then(resolve);
+                    }
+                });
+        });
+    } else {
+        return new_insert();
+    }
 }
 
-exports.insert_artists = (artists) => {
+// `update` parameter here has same interpretation as that of insert_artwork()
+// except that it is applied to all artists.
+exports.insert_artists = (artists, update) => {
     var promises = [];
     for (let i = 0; i < artists.length; i++) {
-        promises[i] = exports.insert_artist(artists[i]);
+        promises[i] = exports.insert_artist(artists[i], update);
     }
     return Promise.all(promises);
 }
@@ -397,7 +449,8 @@ exports.get_detail = (artwork_uid) => {
                         uid: row.uid,
                         title: row.title,
                         description: row.description,
-                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512)
+                        thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512),
+                        tags: {w3c_rgb_colors: [], labels: []}
                     };
                     dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
                         [details.uid]).then(function (rows) {
@@ -476,42 +529,45 @@ exports.q = (query, fields) => {
         }
 
         if (query === '' && fields.artist === undefined) {
-            artists_direct = new Promise(function(resolve, reject) { resolve([]); });
+            artists_direct = new Promise(function (resolve, reject) { resolve([]); });
         } else {
-            let qelems = ['%'+query+'%', '%'+query+'%'];
-            let sql_template = 'SELECT uid, artist ' +
-                'FROM artists ' +
-                'WHERE (LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
-            if (fields.artist) {
-                if (query === '') {
-                    sql_template += ' AND '
-                } else {
-                    sql_template += ' OR ';
+            artists_direct = new Promise(function (resolve, reject) {
+                var qelems = ['%'+query+'%', '%'+query+'%'];
+                var sql_template = 'SELECT uid, artist ' +
+                    'FROM artists ' +
+                    'WHERE (LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                if (fields.artist) {
+                    if (query === '') {
+                        sql_template += ' AND ';
+                    } else {
+                        sql_template += ' OR ';
+                    }
+                    sql_template += '(LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
+                    qelems[qelems.length] = '%'+fields.artist+'%';
                 }
-                sql_template += '(LOWER(artist) LIKE ? OR LOWER(human_name) LIKE ?)';
-                qelems[qelems.length] = '%'+fields.artist+'%';
-                qelems[qelems.length] = '%'+fields.artist+'%';
-            }
-            artists_direct = dbq(sql_template, qelems).then(function (rows) {
-                if (rows.length === 0) {
-                    return (new Promise( function (resolve, reject) {
+                dbq(sql_template, qelems).then(function (rows) {
+                    if (rows.length === 0) {
+                        resolve([]);
+                        return;
+                    }
+
+                    var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
+
+                    var qelems = [];
+                    var sql_template = 'SELECT ' +
+                        'uid, title, artist_uid, description, origin, thumbnail_url ' +
+                        'FROM `artworks` ' +
+                        'WHERE (' + uid_exprs.join(' OR ') + ')';
+                    if (fields.title) {
+                        sql_template += ' AND LOWER(`title`) LIKE ?';
+                        qelems[qelems.length] = '%'+fields.title+'%';
+                    }
+
+                    dbq(sql_template, qelems).then(function (rows) {
                         resolve(rows);
-                    }));
-                }
-
-                var uid_exprs = rows.map((row) => 'artist_uid = \''+String(row.uid) + '\'');
-
-                var qelems = [];
-                var sql_template = 'SELECT ' +
-                    'uid, title, artist_uid, description, origin, thumbnail_url ' +
-                    'FROM `artworks` ' +
-                    'WHERE (' + uid_exprs.join(' OR ') + ')';
-                if (fields.title) {
-                    sql_template += ' AND LOWER(`title`) LIKE ?';
-                    qelems[qelems.length] = '%'+fields.title+'%';
-                }
-
-                return dbq(sql_template, qelems)
+                    });
+                });
             });
         }
 
@@ -548,11 +604,17 @@ exports.q = (query, fields) => {
                     var sql_template = 'SELECT uid, artist ' +
                         'FROM artists WHERE uid = ?';
                     if (db_provider === 'mysql') {
-                    db.query(sql_template, [ex],
-                             function (err, artist_rows) {
-                                 if (err) throw err;
-                                 resolve(artist_rows[0]);
-                             });
+                        db.query(sql_template, [ex],
+                                 function (err, artist_rows) {
+                                     if (err) throw err;
+                                     if (artist_rows.length > 0) {
+                                         resolve(artist_rows[0]);
+                                     } else {
+                                         // This case should only occur when there are inconsistencies among
+                                         // tables, which should be handled somewhere else.
+                                         resolve([]);
+                                     }
+                                 });
                     } else {
                         db.all(sql_template, [ex],
                                function (err, artist_rows) {

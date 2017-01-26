@@ -21,26 +21,138 @@ export default class EditArtworkForm extends React.Component {
     }
 
     render() {
-        let oldArtwork  = this.props.value;
+        if (this.props.value.found) {
+            var artwork_details = this.props.value;
+        } else {
+            var artwork_details = {
+                found: false,
+                artist: null,
+                title: null,
+                album: null,
+                year: null,
+                tags: { labels: [], w3c_rgb_colors: [] },
+                thumbnail512_url: ""
+            };
+        }
         let tags        = [];
-        for (var i = 0; i < this.props.value.tags.length; i++) {
-            let tag = this.props.value.tags[i];
+        for (var i = 0; i < artwork_details.tags.labels.length; i++) {
+            let tag = artwork_details.tags.labels[i];
             tags.push({id:i, text:tag});
         }
 
         let colors = [];
-        for (let colr of this.props.value.colors) {
-            colors.push({background:colr});
+        for (let colr of artwork_details.tags.w3c_rgb_colors) {
+            let color_string = '#';
+            for (let j = 0; j < 3; j++) {
+                let cbyte = Number(colr[j]).toString(16);
+                if (cbyte.length < 2) {
+                    cbyte = '0'+cbyte;
+                }
+                color_string += cbyte;
+            }
+            colors.push({background: color_string});
         }
 
-        let image = this.props.value.thumbnail_url;
+        let image = artwork_details.thumbnail512_url;
 
         let previewImage = {
             backgroundImage: 'url(' + image + ')'
         }
 
         return (
+            <div className="artwork-edit-dialog">
+                <div className="artwork-preview-colors">
+                    <div className="artwork-preview-wrapper">
+                        <div
+                            className="artwork-preview"
+                            style={previewImage}>
+                        </div>
+                    </div>
+                    <div className="artwork-colors">
+                            <label className="color-heading center">
+                                Color
+                            </label>
+                            <div className="color-circle-wrapper">
+                                {colors.map(color => {
+                                    return (
+                                        <div
+                                            key     ={uuid.v4()}
+                                            className="color-box"
+                                            style={color}>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                    </div>
+                </div>
+                <div className="artwork-form-wrapper">
+                    <form className="artwork-form" >
+                        <fieldset>
+                            <ul>
+                                <li>
+                                    <label htmlFor="artwork-title">
+                                        Title <span className="pink">*</span>
+                                    </label>
+                                    <label>
+                                        {artwork_details.title}
+                                    </label>
 
+                                </li>
+                                <li>
+                                    <label htmlFor="artwork-artist">
+                                        Artist <span className="pink">*</span>
+                                    </label>
+                                    <label>
+                                        {artwork_details.artist}
+                                    </label>
+                                </li>
+                                <li
+                                    id="li-album"
+                                    className="controls-album">
+                                    <label htmlFor="edit-artwork-album">
+                                        Album
+                                    </label>
+                                    <label>
+                                        {artwork_details.album}
+                                    </label>
+                                </li>
+                                <li>
+                                    <label htmlFor="artwork-year">
+                                        Year <span className="pink">*</span>
+                                    </label>
+                                    <label>
+                                        {artwork_details.year}
+                                    </label>
+                                </li>
+                                <li>
+                                    <label htmlFor="artwork-tags">
+                                        Tags
+                                    </label>
+                                    <ReactTags
+                                        tags={tags}
+                                        readOnly={true}
+                                        suggestions={suggestions}
+                                        handleAddition={this.handleTags}
+                                        handleDelete={this.handleTags}
+                                        />
+                                </li>
+                                <li>
+                                    <label
+                                        htmlFor="artwork-description">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        id          ="artwork-description"
+                                        placeholder ="Give this artwork a short description..."
+                                        value       = {artwork_details.description || ""}
+                                        maxLength   ="1500"/>
+                                </li>
+
+                            </ul>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
 
         );
     }
@@ -49,8 +161,16 @@ export default class EditArtworkForm extends React.Component {
         console.log("+++++EditArtworkForm");
 
         // Get Tags
-        if (this.props.value.tags) {
-            let allTags  = this.props.value.tags;
+        if (this.props.value.found) {
+            var artwork_details = this.props.value;
+        } else {
+            var artwork_details = {
+                found: false,
+                tags: { labels: [], w3c_rgb_colors: [] }
+            };
+        }
+        if (artwork_details.tags.labels) {
+            let allTags  = artwork_details.tags.labels;
             let tagKeys  = Object.keys(allTags);
             let tags = [];
 
