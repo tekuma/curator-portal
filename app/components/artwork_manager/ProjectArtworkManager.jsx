@@ -105,6 +105,8 @@ export default class ProjectArtworkManager extends React.Component {
                 {this.props.projectArtworks.map(result => {
                     return (
                         <Artwork
+                            detailArtwork={this.props.detailArtwork}
+                            toggleDetailBox={this.props.toggleDetailBox}
                             command = {this.props.command}
                             addArtworkToBuffer={this.props.addArtworkToBuffer}
                             removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}

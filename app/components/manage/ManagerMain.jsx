@@ -6,11 +6,23 @@ import ProjectArtworkManager from '../artwork_manager/ProjectArtworkManager';
 import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
 import confirm    from '../confirm_dialog/ConfirmFunction';
+import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 
 export default class ManagerMain extends React.Component {
     state = {
-        command        : "" // for sending actions down to Artworks
+        command        : "", // for sending actions down to Artworks
+        detailBoxIsOpen: false, // whether popup is open or not
+        artworkInfo   : {  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "Starry Night",
+            artist       : "Vincent Van Gogh",
+            album        : "Impressionism",
+            year         : 1888,
+            tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+        }
     }
 
     constructor(props) {
@@ -33,6 +45,8 @@ export default class ManagerMain extends React.Component {
                       changeAppLayout={this.props.changeAppLayout}
                       projects={this.props.projects}
                       addNewProject={this.props.addNewProject}
+                      detailArtwork={this.detailArtwork}
+                      toggleDetailBox={this.toggleDetailBox}
                   />
                   <ProjectManager
                       selectAllArt={this.selectAllArt}
@@ -48,6 +62,11 @@ export default class ManagerMain extends React.Component {
                       addNewProject={this.props.addNewProject}
                       onDelete={this.deleteProject}
                    />
+                   <ArtworkDetailBoxDialog
+                       toggleDetailBox={this.toggleDetailBox}
+                       detailBoxIsOpen={this.state.detailBoxIsOpen}
+                       artworkInfo={this.state.artworkInfo}
+                    />
                   <div
                       onClick     ={this.props.toggleNav}
                       onTouchTap  ={this.props.toggleNav}
@@ -99,5 +118,24 @@ export default class ManagerMain extends React.Component {
                 return;
             }
         );
+    }
+
+    detailArtwork = (uid) => {
+        firebase.auth().currentUser.getToken(true).then( (idToken)=>{
+            payload.auth = idToken;
+            $.ajax({
+                url: 'detail',
+                data: payload,
+                dataType: 'json',
+                cache: false,
+                success: this.updateInfoArtwork
+            });
+        });
+    }
+
+    toggleDetailBox = () => {
+        this.setState({
+            detailBoxIsOpen: !this.state.detailBoxIsOpen
+        })
     }
 }

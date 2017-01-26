@@ -523,7 +523,7 @@ header.black {
 	right: 0;
 	padding: 0;
 	margin: 0;
-	width: 200px;
+	width: 100px;
 	height: 60px;
 	transition: width 0.5s;
 	-webkit-transition: width 0.5s;
@@ -577,10 +577,6 @@ header.black {
 
 .header-icon img {
 	height: 30px;
-}
-
-.header-icon.curator.manage {
-	border-left: 1px solid #222222;
 }
 
 .header-icon.curator.manage img {
@@ -713,7 +709,7 @@ input::-webkit-search-cancel-button {
 .project-selector {
 	position: absolute;
 	top   : 12px;
-	right  : 235px;
+	right  : 140px;
 	width : 20%;
 	height: 60px;
 	z-index: 100;
@@ -1178,91 +1174,6 @@ input::-webkit-search-cancel-button {
 }
 
 .album.selected .review-status h4 {
-	color: #ffffff;
-}
-
-.review-album-banner {
-	position: absolute;
-	padding: 20px;
-	top: 60px;
-	right: 0;
-	width: 75vw;
-	background: #1b1b1b;
-	box-shadow: 0 4px 8px -2px rgba(0,0,0,0.5),
-	0 3px 1px -2px rgba(0,0,0,.2),
-	0 1px 5px 0 rgba(0,0,0,.12);
-	z-index: 3;
-}
-
-.album-banner-preview-wrapper {
-	display: inline-block;
-	vertical-align: top;
-	width: 30%;
-	height: 245px;
-}
-
-.album-banner-preview {
-    background-position: 50%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    width: 100%;
-    height: 100%;
-}
-
-.album-banner-details-wrapper {
-	position: relative;
-	vertical-align: top;
-	display: inline-block;
-	width: 30%;
-	height: 100%;
-	padding-top: 20px;
-}
-
-.album-banner-details {
-	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
-	transition: all 0.3s linear 0.6s;
-	-webkit-transition: all 0.3s linear 0.6s;
-	-moz-transition: all 0.3s 0.6s;
-	-ms-transition: all 0.3s 0.6s;
-}
-
-.album-banner-title {
-	font-size: 2.2em;
-	font-weight: 600;
-	margin-bottom: 10px;
-	color: #ffffff;
-}
-
-.album-banner-artist {
-	font-size: 1.3em;
-	font-weight: 400;
-	color: #ffffff;
-	margin-bottom: 10px;
-}
-
-.album-banner-date {
-	color: rgba(255,255,255, 0.7);
-}
-
-.album-banner-description-wrapper {
-	display: inline-block;
-	padding-top: 30px;
-	margin-left: 2%;
-	width: 38%;
-}
-
-.album-banner-description,
-.album-banner-tags {
-	font-weight: 200;
-	font-size: 0.8em;
-	color: rgba(255,255,255, 0.7);
-}
-
-.album-banner-tags-heading {
-	margin-top: 20px;
-	font-size: 0.9em;
 	color: #ffffff;
 }
 
@@ -2513,68 +2424,6 @@ login-button.left {
 /*========================================== */
 
 /* Edit Artwork */
-.artwork-edit-dialog {
-	position: relative;
-	height: 100%;
-}
-
-.artwork-preview-colors {
-	width: 456px;
-	height: 100%;
-	display: inline-block;
-	overflow: scroll;
-	padding: 30px;
-	background: #ffffff;
-}
-
-.artwork-preview-wrapper {
-	display: flex;
-	border: 10px solid #000000;
-	border-style: inset;
-	width: 376px;
-	height: 100%;
-	-webkit-align-items: center;
-	-ms-align-items: center;
-	-moz-align-items: center;
-	align-items: center;
-	-webkit-justify-content: center;
-	-ms-justify-content: center;
-	-moz-justify-content: center;
-	justify-content: center;
-}
-
-.artwork-preview {
-	background-position: center center;
-	background-size: contain;
-    background-repeat: no-repeat;
-	width: 100%;
-	height: 100%;
-}
-
-.artwork-colors {
-	height: 76px;
-	width: 100%;
-}
-
-.color-heading {
-	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 500;
-    color: #000000;
-    width: 100%;
-    font-size: .9375em;
-    text-align: center;
-    line-height: 1.5em;
-    margin-top: 5px;
-	margin-bottom: 0;
-}
-
-.artwork-form-wrapper {
-	display: inline-block;
-	overflow: scroll;
-	width: 320px;
-	height: 100%;
-	margin-left: 24px;
-}
 
 .artwork-form, .album-form {
 	vertical-align: top;
@@ -4572,6 +4421,160 @@ label.age-confirm-label {
 	color: #000000;
 	font-size: 1.5em;
 	margin-bottom: 20px;
+}
+
+/*========================================== */
+
+/* Artwork Detail Box */
+
+.artwork-detail-dialog {
+	position: relative;
+	height: 100%;
+	background: #aaaaaa;
+}
+
+.artwork-edit-dialog {
+	position: relative;
+	height: 100%;
+	background: #aaaaaa;
+}
+
+.artwork-preview {
+	width: 456px;
+	height: 100%;
+	display: inline-block;
+	overflow: scroll;
+	padding: 30px;
+	background: #ffffff;
+}
+
+.artwork-image-wrapper {
+	display: flex;
+	border: 15px solid #000000;
+	box-shadow: 13px 10px 13px rgba(0,0,0,0.19),
+	0px 10px 10px rgba(0,0,0,0.19);
+	border-style: inset;
+	width: 396px;
+	height: 100%;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	justify-content: center;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+}
+
+.artwork-image {
+	background-position: center center;
+	background-size: contain;
+    background-repeat: no-repeat;
+	width: 100%;
+	height: 100%;
+}
+
+.artwork-info-wrapper {
+	display: inline-block;
+	overflow: scroll;
+	width: 392px;
+	height: 100%;
+	background: #aaaaaa;
+}
+
+.artwork-details {
+	padding: 40px;
+}
+
+.artwork-title {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 2.2em;
+	font-weight: 600;
+	margin-bottom: 10px;
+	color: #ffffff;
+}
+
+.artwork-artist {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	font-weight: 500;
+	color: rgba(0,0,0,0.87);
+	margin-bottom: 10px;
+}
+
+.artwork-date {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: rgba(0,0,0,0.54);
+	font-size: 0.9em;
+}
+
+.other-artwork-details {
+	padding: 40px;
+	background: #dddddc;
+}
+
+.artwork-album-heading,
+.artwork-tags-heading,
+.artwork-description-heading,
+.artwork-colors-heading  {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.2em;
+	font-weight: 500;
+	color: rgba(0,0,0,0.87);
+}
+
+.artwork-album,
+.artwork-tags,
+.artwork-description,
+.artwork-colors  {
+	background: #ffffff;
+	padding: 15px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	cursor: pointer;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	transition: all 0.3s 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+
+}
+
+.artwork-tags-heading {
+	margin-top: 20px;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1.2em;
+	font-weight: 500;
+	color: rgba(0,0,0,0.87);
+}
+
+.artwork-info-wrapper div.ReactTags__selected {
+	border: none;
+    border-radius: 0px;
+}
+
+.artwork-info-wrapper div.ReactTags__selected span.ReactTags__tag {
+	border: none;
+    background: #eeeeee;
+    font-size: 12px;
+    font-family: "Nexa" , "Helvetica Neue", Helvetica, "Gill Sans", Arial, sans-serif;
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    cursor: default;
+    border-radius: 2px;
+	box-shadow: 0 0px 2px rgba(0,0,0,0.12), 0 1px 0px rgba(0,0,0,0.24);
+}
+
+.artwork-info-wrapper div.ReactTags__selected span.ReactTags__tag:hover {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.artwork-info-wrapper div.ReactTags__selected span.ReactTags__tag:first-child {
+    margin-left: 0px;
 }
 
 /*========================================== */
