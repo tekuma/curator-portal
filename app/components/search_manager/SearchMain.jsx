@@ -2,15 +2,33 @@
 import React    from 'react';
 import firebase from 'firebase';
 // Components
-import SearchArtworkManager     from '../artwork_manager/SearchArtworkManager';
-import CurationHeader           from '../headers/CurationHeader';
-import SearchManager            from './SearchManager';
+import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
+import CurationHeader       from '../headers/CurationHeader';
+import SearchManager        from './SearchManager';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [],  // current list of search results
+        results       : [{  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "Best art ever",
+            artist       : "Stephen White",
+            album        : "best of",
+            year         : 2020,
+            tags         : ["#art", "Picasso", "#stuff"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+        },{  // TODO: remove placeholder info
+            description  : "Much art. Very nice.",
+            title        : "other art",
+            artist       : "Stephen White",
+            album        : "best of",
+            year         : 2001,
+            tags         : ["#art", "Picasso", "#stuff"],
+            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+            thumbnail_url: "http://photos1.blogger.com/blogger2/4695/2685/400/mujer%20ante%20el%20espejo%20picasso%201931.jpg"
+        }],  // current list of search results
         command       : "",  // used for controlling artworks
         detailBoxIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
@@ -93,10 +111,7 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            var payload = {
-                auth: idToken,
-                uid: uid
-            };
+            payload.auth = idToken;
             $.ajax({
                 url: 'detail',
                 data: payload,
@@ -108,7 +123,10 @@ export default class SearchMain extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        this.setState({ artworkInfo: data });
+        this.setState({ infoArtwork:{} });
+        setTimeout( ()=>{
+            this.setState({results: data.rows});
+        }, 25);
     }
 
     toggleDetailBox = () => {

@@ -4283,13 +4283,6 @@ label.age-confirm-label {
 	-ms-transition: all 0.3s;
 }
 
-.collaborator-thumb:hover {
-	box-shadow: 0 5px 10px rgba(0,0,0,0.19),
-	0 3px 3px rgba(0,0,0,0.23);
-}
-
-
-
 .collaborator-thumb.self {
 	background: #000000;
 }
@@ -4532,7 +4525,7 @@ label.age-confirm-label {
 .artwork-tags,
 .artwork-description,
 .artwork-colors,
-.atwork-review  {
+.artwork-review  {
 	position: relative;
 	background: #ffffff;
 	padding: 15px;
@@ -4718,11 +4711,12 @@ label.age-confirm-label {
 	-moz-appearance: none;
 	-ms-appearance: none;
 	background-color: #f4f6f7;
-	border: 1.5px solid #d6d3ce;
+	border: none;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
     border-radius: 3px;
     padding: 0.75em .75em;
     width: 300px;
-	height: 80px;
+	height: 120px;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 300;
 	font-size: 0.8em;
