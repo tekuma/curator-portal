@@ -55,9 +55,6 @@ export default class ManageNotesDialog extends React.Component {
             }
         }
 
-
-        console.log(public_notes);
-
         return (
             <div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>

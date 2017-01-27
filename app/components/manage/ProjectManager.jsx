@@ -328,6 +328,9 @@ export default class ProjectManager extends React.Component {
             });
             let userPath = `users/${this.state.collabBuffer[0]}/projects`;
             firebase.database().ref(userPath).transaction((data)=>{
+                if (!data){
+                    data = [];
+                }
                 data.push(project_id);
                 return data;
             });
