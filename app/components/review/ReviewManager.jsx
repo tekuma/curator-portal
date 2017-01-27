@@ -1,8 +1,10 @@
 // Libs
 import React      from 'react';
 import Firebase   from 'firebase';
+import uuid       from 'node-uuid';
 // Files
 import ReviewItem from './ReviewItem';
+import { WithContext as ReactTags } from 'react-tag-input';
 
 /*  a Submission object looks like:
     -jd7Jd21ka: {
@@ -18,7 +20,9 @@ import ReviewItem from './ReviewItem';
 
 export default class ReviewManager extends React.Component {
     state = {
-        reviewItems: []
+        pendingScreen: true,        // Will determine which screen user is in (pending or reviewed)
+        reviewItems: [],
+        status_types: ["In Review", "Approved", "Held","Rejected"]
     };
 
     constructor(props) {
@@ -30,10 +34,178 @@ export default class ReviewManager extends React.Component {
     }
 
     render() {
+        if (this.state.pendingScreen) {
+            return this.goToPending();
+        } else {
+            return this.goToReviewed();
+        }
+    }
+
+    componentDidMount() {
+        console.log("++++++ReviewManager");
+        this.fetchSubmissions();
+    }
+
+    // =========== Flow Control =============
+
+    goToPending = () => {
+
+        const tableWidth = {
+            width: window.innerWidth - 40
+        }
+
+        const itemTableWidth = {
+            width: window.innerWidth - 40 - 20
+        }
+
+        const reviewBodyStyle = {
+            height: window.innerHeight - 184 - 20,
+            width: window.innerWidth - 40
+        }
+
+        let tags = [
+            {id: 1, text: "#art"},
+            {id: 2, text: "#impasto"},
+            {id: 3, text: "#night"},
+            {id: 4, text: "#stars"},
+            {id: 5, text: "#blue"},
+            {id: 6, text: "#sky"},
+            {id: 7, text: "#tree"}
+        ];
+
+        let artworkImage = {
+            backgroundImage: 'url(assets/starry.jpg)'
+        }
+
         return (
-            <ul
-                className=""
-                style="" >
+            <div>
+                <div className="review-sections">
+                    <div
+                        className="review-section-pending selected"
+                        onClick={this.toggleReviewScreen}>
+                        <h2>Pending</h2>
+                    </div>
+                    <div
+                        className="review-section-reviewed"
+                        onClick={this.toggleReviewScreen}>
+                        <h2>Reviewed</h2>
+                    </div>
+                </div>
+                <table
+                    className="review-table"
+                    style={tableWidth}>
+            		<thead className="review-headings">
+            			<tr>
+                            <th>Artwork</th>
+            				<th>Details</th>
+            				<th>Tags</th>
+            				<th>Description</th>
+            				<th>Submitted</th>
+            				<th>Status</th>
+            				<th>Review Note</th>
+            				<th></th>
+            			</tr>
+            		</thead>
+            	</table>
+                <div className="review-body-wrapper"
+                    style={reviewBodyStyle}>
+                    <table
+                        className="review-item-table"
+                        style={itemTableWidth}>
+                        <tr className="review-item">
+                            <td className="review-item-artwork">
+                                <div
+                                    className="review-item-artwork-image"
+                                    style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
+                            </td>
+                            <td className="review-item-details">
+                                <h3 className="review-item-title">Starry Night</h3>
+                                <h3 className="review-item-artist">Van Gogh</h3>
+                                <h3 className="review-item-year">1888</h3>
+                            </td>
+                            <td className="review-item-tags">
+                                <div className="review-item-tags-wrapper">
+                                    <ReactTags
+                                        tags={tags}
+                                        readOnly={true}
+                                        />
+                                </div>
+                            </td>
+                            <td className="review-item-description">
+                                <div
+                                    className="review-item-description-button">
+                                    <sup className="pink"> Click</sup> Hover
+                                </div>
+                            </td>
+                            <td className="review-item-submitted">
+                                <h3>Mar 26, 2017</h3>
+                            </td>
+                            <td className="review-item-status">
+                                <select
+                                    className   ="edit-artwork-select"
+                                    ref         ="editAlbum"
+                                    value="In Review">
+                                    {this.state.status_types.map(type => {
+                                            return (
+                                                <option
+                                                    key     ={uuid.v4()}
+                                                    value   ={type}>
+                                                    {type}
+                                                </option>
+                                            );
+                                        })}
+                                </select>
+                            </td>
+                            <td className="review-item-note">
+                                <textarea
+                                    placeholder ="Write a short note back to the artist explaining their artwork's status..."
+                                    value       ={""}
+                                    maxLength   ="1500" />
+                            </td>
+                            <td className="review-item-save">
+                                <div
+                                    className="review-item-save-button">
+                                    Save
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div
+                    className="review-item-wrapper">
+                    {this.state.reviewItems.map(item => {
+                        return (
+                            <ReviewItem
+                                item={item}
+                                writeMemo={this.writeMemo}
+                                updateSubmissionStatus={this.updateSubmissionStatus}
+                             />
+                        );
+                    })}
+                </div>
+                <div
+                    onClick     ={this.props.toggleNav}
+                    onTouchTap  ={this.props.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+            </div>
+        );
+    }
+
+    goToReviewed = () => {
+        return (
+            <div>
+                <div className="review-sections">
+                    <div
+                        className="review-section-pending"
+                        onClick={this.toggleReviewScreen}>
+                        <h2>Pending</h2>
+                    </div>
+                    <div
+                        className="review-section-reviewed selected"
+                        onClick={this.toggleReviewScreen}>
+                        <h2>Reviewed</h2>
+                    </div>
+                </div>
                 {this.state.reviewItems.map(item => {
                     return (
                         <ReviewItem
@@ -43,14 +215,12 @@ export default class ReviewManager extends React.Component {
                          />
                     );
                 })}
-
-            </ul>
+                <div
+                    onClick     ={this.props.toggleNav}
+                    onTouchTap  ={this.props.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+            </div>
         );
-    }
-
-    componentDidMount() {
-        console.log("++++++ReviewManager");
-        this.fetchSubmissions();
     }
 
     // =========== Methods ==============
@@ -73,9 +243,15 @@ export default class ReviewManager extends React.Component {
     }
 
     updateSubmissionStatus = (status) => {
-        if (status === "Accepted" || status === "Rejected" || status === "Held") {
+        if (status === "Accepted" || status === "Deferred" || status === "Held") {
 
         }
+    }
+
+    toggleReviewScreen = () => {
+        this.setState({
+            pendingScreen: !this.state.pendingScreen
+        });
     }
 
 }//END App

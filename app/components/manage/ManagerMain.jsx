@@ -76,7 +76,7 @@ export default class ManagerMain extends React.Component {
                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                        artworkInfo={this.state.artworkInfo}
                     />
-                <ManageNotesDialog
+                    <ManageNotesDialog
                         toggleManageNotes={this.toggleManageNotes}
                         manageNotesIsOpen={this.state.manageNotesIsOpen}
                         updateNotes={this.updateNotes}
@@ -103,7 +103,7 @@ export default class ManagerMain extends React.Component {
 
     fetchAllUsers = () => {
         let users = [];
-        firebase.database().ref('users').on("value", (snapshot)=>{
+        firebase.database().ref('users').once("value", (snapshot)=>{
             snapshot.forEach((childSnap)=>{
                 let uid  = childSnap.child("uid").val();
                 let name = childSnap.child("public/display_name").val();

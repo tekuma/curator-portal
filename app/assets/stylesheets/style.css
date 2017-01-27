@@ -4530,7 +4530,6 @@ label.age-confirm-label {
 	background: #ffffff;
 	padding: 15px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-	cursor: pointer;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	transition: all 0.3s 0.3s;
 	-webkit-transition: all 0.3s;
@@ -4580,7 +4579,7 @@ label.age-confirm-label {
 
 /*========================================== */
 
-/* Animations */
+/* Empty Project in Manage Interface */
 
 .empty-project-box,
 .empty-search-box {
@@ -4762,6 +4761,265 @@ label.age-confirm-label {
 	font-weight: 400;
 	color: #000000;
 
+}
+
+/*========================================== */
+
+/* Review Interface */
+
+.review-sections {
+	position: absolute;
+	top: 60px;
+	left: 0px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;  /* TWEENER - IE 10 */
+  	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+  	display: flex;
+	-webkit-align-items: center;
+	-ms-align-items: center;
+	-moz-align-items: center;
+	align-items: center;
+	-webkit-justify-content: center;
+	-ms-justify-content: center;
+	-moz-justify-content: center;
+	height: 50px;
+	width: 100%;
+	background: #222222;
+	box-shadow: 0 3px 3px -2px rgba(0,0,0,0.5),
+	0 3px 1px -2px rgba(0,0,0,.2),
+	0 1px 5px 0 rgba(0,0,0,.12);
+	cursor: pointer;
+	z-index: 9;
+}
+
+.review-sections div {
+	width: 50%;
+	text-align: center;
+	height: 50px;
+	transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+}
+
+.review-section-pending.selected,
+.review-section-reviewed.selected {
+	border-bottom: 3px solid #ec167e;
+	transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+}
+
+.review-sections h2 {
+	margin: 12.5px 0;
+	font-size: 1.3em;
+	color: #ffffff;
+	font-weight: 400;
+}
+
+.review-table {
+	position: relative;
+	top: 110px;
+	margin: 20px;
+	margin-bottom: 0px;
+}
+
+.review-table .review-headings th {
+  	text-align: center;
+  	font-weight: 600;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 1em;
+	text-transform: capitalize;
+	padding: 10px;
+	padding-bottom: 20px;
+}
+
+.review-table > thead > tr > th,
+.review-table > tbody > tr > th,
+.review-table > thead > tr > td,
+.review-table > tbody > tr > td {
+  line-height: 1.5em;
+  vertical-align: top;
+}
+
+.review-body-wrapper {
+	position: absolute;
+	top: 184px;
+	margin: 0 20px;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 5px;
+	background: #eeeeee;
+	padding: 10px;
+	overflow: scroll;
+	border: 2px solid #dddddc;
+}
+
+.review-item-table {
+	margin-bottom: 10px;
+}
+
+.review-item {
+	background: #ffffff;
+    margin: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.review-item td {
+	padding: 15px;
+}
+
+.review-item-artwork-image {
+	margin: 0 auto;
+	width: 100px;
+	height: 100px;
+	background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	cursor: pointer;
+	transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+}
+
+.review-item-artwork-image:hover {
+	box-shadow: 0 5px 7px rgba(0,0,0,0.12), 0 3px 7px rgba(0,0,0,0.24);
+}
+
+.review-item-details h3 {
+	font-size: 1em;
+	margin-top: 10px;
+}
+
+.review-item-details  {
+	font-size: 1em;
+}
+
+.review-item-details .review-item-title {
+	font-weight: 600;
+}
+
+.review-item-details .review-item-artist {
+	font-weight: 400;
+}
+
+.review-item-details .review-item-year {
+	color: #999999;
+	font-weight: 400;
+}
+
+.review-item-tags-wrapper  {
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	width: 100px;
+	height:80px;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 5px;
+	background-color: #f4f6f7;
+	overflow: scroll;
+}
+
+.review-item-tags-wrapper div.ReactTags__selected {
+	border: none;
+    border-radius: 0px;
+	background: none;
+}
+
+.review-item-tags-wrapper div.ReactTags__selected span.ReactTags__tag {
+	border: none;
+    background: #ffffff;
+    font-size: 12px;
+    font-family: "Nexa" , "Helvetica Neue", Helvetica, "Gill Sans", Arial, sans-serif;
+    display: inline-block;
+    padding: 5px;
+    margin: 5px;
+    cursor: default;
+    border-radius: 2px;
+	box-shadow: 0 0px 2px rgba(0,0,0,0.12), 0 1px 0px rgba(0,0,0,0.24);
+}
+
+.review-item-tags-wrapper div.ReactTags__selected span.ReactTags__tag:hover {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.review-item-description-button,
+.review-item-save-button  {
+	background: #000000;
+	padding: 15px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	text-transform: uppercase;
+	text-align: center;
+	font-size: 0.8em;
+	font-weight: 600;
+	color: #ffffff;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	cursor: pointer;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+
+}
+
+.review-item-description-button:hover,
+.review-item-save-button:hover {
+	box-shadow: 0 5px 7px rgba(0,0,0,0.12), 0 3px 7px rgba(0,0,0,0.24);
+}
+
+.review-item-description-button .pink {
+	color: #ec167c;
+	font-size: 1em;
+	position: static;
+	font-weight: 700;
+	margin-right: 5px;
+}
+
+
+.review-item-submitted h3 {
+	font-size: 1em;
+	font-weight: 400;
+}
+
+.review-item-note textarea {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	background-color: #f4f6f7;
+	border: none;
+	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
+    border-radius: 3px;
+    padding: 0.75em .75em;
+    width: 180px;
+	height: 80px;
+	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	font-size: 0.8em;
+	line-height: 1.2em;
+	color: #000000;
+	resize: none;
+}
+
+.review-item-save-button  {
+	width: 70px;
+	margin: 0 auto;
+}
+
+.review-item-save-button:hover {
+	background: #e73827;
+	background: -moz-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, #e73827), color-stop(100%, #ec167e));
+	background: -webkit-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -o-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: -ms-linear-gradient(top, #e73827 0%, #ec167e 100%);
+	background: linear-gradient(to bottom, #e73827 0%, #ec167e 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e73827', endColorstr='#ec167e', GradientType=0 );
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
 }
 
 /*========================================== */
