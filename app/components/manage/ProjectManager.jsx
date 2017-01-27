@@ -209,7 +209,6 @@ export default class ProjectManager extends React.Component {
                                     autofocus
                                     onChange={this.collaboratorChange}
                                     options={options}
-
                                     clearable={false}
                                     name="artist-search"
                                     value={this.state.collabBuffer[0]}

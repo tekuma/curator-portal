@@ -1,5 +1,6 @@
 // Libs
 import React                from 'react';
+import firebase             from 'firebase';
 import uuid                 from 'node-uuid';
 import Dialog               from 'material-ui/Dialog';
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
@@ -13,15 +14,9 @@ import ConfirmButton        from '../confirm_dialog/ConfirmButton';
  */
 export default class ManageNotesDialog extends React.Component {
     state = {
-        public_notes: [
-            {curator: "Paul Higgins", note: "Hello, my name is Paul."},
-            {curator: "Seamus Maloo", note: "I really like this one."},
-            {curator: "Bob Tomman", note: "It's got an aura to it."},
-            {curator: "Heidi Bloom", note: "Fabulous!"}
-        ],
         my_notes: {
-            collab: "This project is very interesting. It has many artworks, and is cohesive.",
-            personal: "I lowkey don't think this project is cohesive, but that's just me."
+            collab  : "",
+            personal: ""
         }
     }
 
@@ -38,7 +33,7 @@ export default class ManageNotesDialog extends React.Component {
             <ConfirmButton
                 label     ={"Update"}
                 className ="edit-artwork-yes"
-                onClick   ={this.props.updateNotes} />,
+                onClick   ={this.props.addNote.bind({},this.state.my_notes)} />,
 
             <ConfirmButton
                 label     ={"Cancel"}
@@ -46,7 +41,22 @@ export default class ManageNotesDialog extends React.Component {
                 onClick   ={this.props.toggleManageNotes} />
         ];
 
-        let myNotes = this.state.my_notes;
+        let myNotes = [];
+        if (true) {
+            myNotes = this.state.my_notes;
+        }
+        let public_notes = [];
+        if (this.props.projectDetails.notes) {
+            for (var uid in this.props.projectDetails.notes) {
+                if (this.props.projectDetails.notes.hasOwnProperty(uid)) {
+                    console.log(this.props.projectDetails.notes);
+                    public_notes.push(this.props.projectDetails.notes[uid].public);
+                }
+            }
+        }
+
+
+        console.log(public_notes);
 
         return (
             <div>
@@ -63,7 +73,7 @@ export default class ManageNotesDialog extends React.Component {
                         <div className="manage-notes-dialog">
                             <div className="manage-notes-group-notes-wrapper">
                                 <div className="manage-notes-group-notes">
-                                    {this.state.public_notes.map(note => {
+                                    {public_notes.map(note => {
                                         return (
                                             <div
                                                 key={uuid.v4()}
@@ -117,7 +127,17 @@ export default class ManageNotesDialog extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        let uid = firebase.auth().currentUser.uid;
 
+        if (nextProps.projectDetails.notes) {
+            let private_note = nextProps.projectDetails.notes[uid].private;
+
+            let update = this.state.my_notes;
+            update.personal = private_note;
+            this.setState({
+                my_notes: update
+            })
+        }
     }
 
     updateManageNotes = (my_notes) => {

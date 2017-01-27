@@ -129,6 +129,7 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ManagerMain
+                        user={this.state.user}
                         artworkBuffer={this.state.artworkBuffer}
                         projectDetails={this.state.projectDetails}
                         createNewProject={this.props.createNewProject}
