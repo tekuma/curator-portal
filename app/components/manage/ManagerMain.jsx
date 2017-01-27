@@ -28,6 +28,7 @@ export default class ManagerMain extends React.Component {
             thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
         },
         users:[],
+        projectNotes:[],
     }
 
     constructor(props) {
@@ -54,6 +55,7 @@ export default class ManagerMain extends React.Component {
                       toggleDetailBox={this.toggleDetailBox}
                   />
                   <ProjectManager
+                      artworkBuffer={this.props.artworkBuffer}
                       projectDetails={this.props.projectDetails}
                       users={this.state.users}
                       selectAllArt={this.selectAllArt}
@@ -76,11 +78,13 @@ export default class ManagerMain extends React.Component {
                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                        artworkInfo={this.state.artworkInfo}
                     />
-                    <ManageNotesDialog
-                        toggleManageNotes={this.toggleManageNotes}
-                        manageNotesIsOpen={this.state.manageNotesIsOpen}
-                        updateNotes={this.updateNotes}
-                     />
+                <ManageNotesDialog
+                    addNote={this.addNote}
+                    removeNote={this.removeNote}
+                    projectDetails={this.props.projectDetails}
+                    toggleManageNotes={this.toggleManageNotes}
+                    manageNotesIsOpen={this.state.manageNotesIsOpen}
+                    updateNotes={this.updateNotes} />
                   <div
                       onClick     ={this.props.toggleNav}
                       onTouchTap  ={this.props.toggleNav}
@@ -92,27 +96,55 @@ export default class ManagerMain extends React.Component {
     componentDidMount() {
         console.log("+++++ManagerMain");
         this.fetchAllUsers();
+
     }
 
     componentWillReceiveProps(nextProps){
-
     }
 
     // =============== Methods =====================
 
 
+    addNote = (notes) => {
+        let publicNote = notes.collab;
+        let privateNote = notes.personal;
+        let project_id = this.props.currentProject[1];
+        let uid = firebase.auth().currentUser.uid;
+
+        let full_note = {
+            note: publicNote,
+            curator: this.props.user.public.display_name,
+            uid:uid
+        }
+        console.log(full_note);
+        let path = `projects/${project_id}/notes`;
+        firebase.database().ref(path).transaction( (data)=>{
+            if (!data) {
+                data = {};
+                data[uid] = {}
+            }
+            data[uid]["public"] = full_note;
+            data[uid]["private"] = privateNote;
+            return data;
+        });
+
+    }
+
     fetchAllUsers = () => {
+        console.log("fetch");
         let users = [];
         firebase.database().ref('users').once("value", (snapshot)=>{
             snapshot.forEach((childSnap)=>{
+                console.log("callback");
                 let uid  = childSnap.child("uid").val();
                 let name = childSnap.child("public/display_name").val();
+                console.log(uid);
                 users.push([uid,name]);
             });
+            console.log(users);
             this.setState({users:users});
         })
     }
-
 
     /**
     * This method sets the state.command to be "select",
@@ -173,7 +205,4 @@ export default class ManagerMain extends React.Component {
         })
     }
 
-    updateNotes = () => {
-        console.log("Notes Updated!");
-    }
 }

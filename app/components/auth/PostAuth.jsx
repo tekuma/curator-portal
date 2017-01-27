@@ -72,6 +72,7 @@ export default class PostAuth extends React.Component {
         return(
             <div>
                 <HiddenNav
+                    user={this.state.user}
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
@@ -110,6 +111,7 @@ export default class PostAuth extends React.Component {
         return(
             <div>
                 <HiddenNav
+                    user={this.state.user}
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
@@ -128,6 +130,8 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ManagerMain
+                        user={this.state.user}
+                        artworkBuffer={this.state.artworkBuffer}
                         projectDetails={this.state.projectDetails}
                         createNewProject={this.props.createNewProject}
                         fetchProjects={this.fetchProjects}
@@ -156,6 +160,7 @@ export default class PostAuth extends React.Component {
         return(
             <div>
                 <HiddenNav
+                    user={this.state.user}
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
@@ -186,6 +191,7 @@ export default class PostAuth extends React.Component {
         return (
             <div>
                 <HiddenNav
+                    user={this.state.user}
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
