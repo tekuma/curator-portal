@@ -4820,10 +4820,8 @@ label.age-confirm-label {
 }
 
 .review-table {
-	position: relative;
-	top: 110px;
-	margin: 20px;
-	margin-bottom: 0px;
+	border-collapse: separate;
+    border-spacing: 0 10px;
 }
 
 .review-table .review-headings th {
@@ -4832,8 +4830,6 @@ label.age-confirm-label {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	text-transform: capitalize;
-	padding: 10px;
-	padding-bottom: 20px;
 }
 
 .review-table > thead > tr > th,
@@ -4841,23 +4837,25 @@ label.age-confirm-label {
 .review-table > thead > tr > td,
 .review-table > tbody > tr > td {
   line-height: 1.5em;
-  vertical-align: top;
 }
 
-.review-body-wrapper {
+.review-wrapper {
 	position: absolute;
-	top: 184px;
+	top: 140px;
 	margin: 0 20px;
 	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
     border-radius: 5px;
 	background: #eeeeee;
 	padding: 10px;
+	padding-top: 0px;
 	overflow: scroll;
 	border: 2px solid #dddddc;
 }
 
 .review-item-table {
 	margin-bottom: 10px;
+	border-collapse: separate;
+    border-spacing: 0 10px;
 }
 
 .review-item {
@@ -4868,6 +4866,10 @@ label.age-confirm-label {
 
 .review-item td {
 	padding: 15px;
+}
+
+.review-item-artwork {
+	min-width: 100px;
 }
 
 .review-item-artwork-image {
@@ -4913,7 +4915,9 @@ label.age-confirm-label {
 
 .review-item-tags-wrapper  {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	width: 100px;
+	min-width: 100px;
+	max-width: 150px;
+	margin: 0 auto;
 	height:80px;
 	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
     border-radius: 5px;
@@ -4925,6 +4929,7 @@ label.age-confirm-label {
 	border: none;
     border-radius: 0px;
 	background: none;
+	text-align: center;
 }
 
 .review-item-tags-wrapper div.ReactTags__selected span.ReactTags__tag {
@@ -4945,7 +4950,7 @@ label.age-confirm-label {
 }
 
 .review-item-description-button,
-.review-item-save-button  {
+.review-item-review-button  {
 	background: #000000;
 	padding: 15px;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -4964,7 +4969,7 @@ label.age-confirm-label {
 }
 
 .review-item-description-button:hover,
-.review-item-save-button:hover {
+.review-item-review-button:hover {
 	box-shadow: 0 5px 7px rgba(0,0,0,0.12), 0 3px 7px rgba(0,0,0,0.24);
 }
 
@@ -4980,6 +4985,7 @@ label.age-confirm-label {
 .review-item-submitted h3 {
 	font-size: 1em;
 	font-weight: 400;
+	text-align: center;
 }
 
 .review-item-note textarea {
@@ -4992,7 +4998,7 @@ label.age-confirm-label {
 	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
     border-radius: 3px;
     padding: 0.75em .75em;
-    width: 180px;
+    width: 100%;
 	height: 80px;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 300;
@@ -5002,12 +5008,16 @@ label.age-confirm-label {
 	resize: none;
 }
 
-.review-item-save-button  {
-	width: 70px;
+.review-item-review-button  {
+	width: 90px;
 	margin: 0 auto;
+	transition: all 0.3s;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
 }
 
-.review-item-save-button:hover {
+.review-item-review-button:hover {
 	background: #e73827;
 	background: -moz-linear-gradient(top, #e73827 0%, #ec167e 100%);
 	background: -webkit-gradient(left top, left bottom, color-stop(0%, #e73827), color-stop(100%, #ec167e));
