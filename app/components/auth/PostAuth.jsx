@@ -286,12 +286,14 @@ export default class PostAuth extends React.Component {
     fetchProjects = () => {
         let thisUID      = firebase.auth().currentUser.uid;
         let projectsPath = `users/${thisUID}/projects`;
+        //NOTE use 'on' so that fetchProjects fires every time there is an update
+        // which projects the user can see.
         firebase.database().ref(projectsPath).on('value', this.fetchProjectNames);
     }
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects.
+     * state.projects. This method has an async. for-loop
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {
@@ -306,7 +308,7 @@ export default class PostAuth extends React.Component {
 
                 // make calls
                 let path   = `projects/${projID}`;
-
+                //NOTE: Use once, not on. On is called in the parent method.
                 firebase.database().ref(path).once('value', (snapshot) => {
                     let data = snapshot.val()
                     let thisProj = [data.name,data.id];
@@ -440,7 +442,6 @@ export default class PostAuth extends React.Component {
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-                // console.log(node);
                 for (var key in node.artworks) { // obj -> array
                     if (node.artworks.hasOwnProperty(key)) {
                         art.push(node.artworks[key]);
