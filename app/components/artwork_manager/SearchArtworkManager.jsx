@@ -152,7 +152,7 @@ export default class ArtworkManager extends React.Component {
                                 : styleManagerClosed}
                 className   ="empty-search-box">
                 <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-left-gradient.svg"/>
-                <h3 className="empty-search-writing medium">Search Using Interface on the Left</h3>
+                <h3 className="empty-search-writing medium">Search Using Interface on the Right</h3>
             </div>
         );
     }

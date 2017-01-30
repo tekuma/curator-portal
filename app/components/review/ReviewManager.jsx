@@ -56,7 +56,7 @@ export default class ReviewManager extends React.Component {
         }
 
         const tableWidth = {
-            width: window.innerWidth - 40 - 40
+            width: window.innerWidth - 40 - 20
         }
 
         const itemTableWidth = {
@@ -91,23 +91,87 @@ export default class ReviewManager extends React.Component {
                         <h2>Reviewed</h2>
                     </div>
                 </div>
+                <table
+                    className="review-headings-wrapper"
+                    style={reviewWrapperStyle}>
+                    <thead className="review-headings">
+                        <tr>
+                            <th className="review-artwork-heading">Artwork</th>
+                            <th className="review-details-heading">Details</th>
+                            <th className="review-tags-heading">Tags</th>
+                            <th className="review-description-heading">Description</th>
+                            <th className="review-submitted-heading">Submitted</th>
+                            <th className="review-status-heading">Status</th>
+                            <th className="review-note-heading">Review Note</th>
+                            <th className="review-button-heading"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="review-item">
+                            <td
+                                className="review-item-artwork">
+                                <div
+                                    className="review-item-artwork-image"
+                                    style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
+                            </td>
+                            <td className="review-item-details">
+                                <h3 className="review-item-title">Starry Night</h3>
+                                <h3 className="review-item-artist">Van Gogh</h3>
+                                <h3 className="review-item-year">1888</h3>
+                            </td>
+                            <td className="review-item-tags">
+                                <div className="review-item-tags-wrapper">
+                                    <ReactTags
+                                        tags={tags}
+                                        readOnly={true}
+                                        />
+                                </div>
+                            </td>
+                            <td className="review-item-description">
+                                <div
+                                    className="review-item-description-button">
+                                    Click<sup className="pink"> | </sup>Hover
+                                </div>
+                            </td>
+                            <td className="review-item-submitted">
+                                <h3>Mar 26, 2017</h3>
+                            </td>
+                            <td className="review-item-status">
+                                <select
+                                    className   ="edit-artwork-select"
+                                    ref         ="editAlbum"
+                                    value="In Review">
+                                    {this.state.status_types.map(type => {
+                                            return (
+                                                <option
+                                                    key     ={uuid.v4()}
+                                                    value   ={type}>
+                                                    {type}
+                                                </option>
+                                            );
+                                        })}
+                                </select>
+                            </td>
+                            <td className="review-item-note">
+                                <textarea
+                                    placeholder ="Write a short note back to the artist explaining their artwork's status..."
+                                    value       ={""}
+                                    maxLength   ="1500" />
+                            </td>
+                            <td className="review-item-review">
+                                <div
+                                    className="review-item-review-button">
+                                    Review
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div className="review-wrapper"
                     style={reviewWrapperStyle}>
                     <table
                         className="review-table"
                         style={tableWidth}>
-                		<thead className="review-headings">
-                			<tr>
-                                <th>Artwork</th>
-                				<th>Details</th>
-                				<th>Tags</th>
-                				<th>Description</th>
-                				<th>Submitted</th>
-                				<th>Status</th>
-                				<th>Review Note</th>
-                				<th></th>
-                			</tr>
-                		</thead>
                         <tbody>
                             <tr className="review-item">
                                 <td

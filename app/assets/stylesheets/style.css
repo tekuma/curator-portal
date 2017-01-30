@@ -4824,13 +4824,24 @@ label.age-confirm-label {
     border-spacing: 0 10px;
 }
 
-.review-table .review-headings th {
+.review-headings-wrapper {
+	position: absolute;
+	top: 110px;
+	margin: 0 20px;
+}
+
+.review-headings-wrapper .review-headings th {
   	text-align: center;
   	font-weight: 600;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	text-transform: capitalize;
+	padding: 10px;
 }
+.review-headings-wrapper tbody {
+	opacity: 0;
+}
+
 
 .review-table > thead > tr > th,
 .review-table > tbody > tr > th,
@@ -4841,7 +4852,7 @@ label.age-confirm-label {
 
 .review-wrapper {
 	position: absolute;
-	top: 140px;
+	top: 150px;
 	margin: 0 20px;
 	box-shadow: inset 0 1px 3px rgba(0,0,0,0.12), inset 0 1px 2px rgba(0,0,0,0.24);
     border-radius: 5px;
