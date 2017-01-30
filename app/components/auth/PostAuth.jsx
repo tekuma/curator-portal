@@ -78,6 +78,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -117,6 +118,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
