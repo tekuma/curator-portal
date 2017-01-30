@@ -106,8 +106,6 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                         <ReactTags
                                             tags={tags}
                                             readOnly={true}
-                                            handleAddition={this.handleTags}
-                                            handleDelete={this.handleTags}
                                             />
                                     </div>
                                     <h4

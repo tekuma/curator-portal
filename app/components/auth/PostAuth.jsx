@@ -9,6 +9,7 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import CurationHeader from '../headers/CurationHeader';
 import SearchMain     from '../search_manager/SearchMain';
 import ManagerMain    from '../manage/ManagerMain';
+import ReviewManager    from '../review/ReviewManager';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';
@@ -163,12 +164,25 @@ export default class PostAuth extends React.Component {
                     role={this.state.role}
                     navIsOpen={this.state.navIsOpen}
                     changeAppLayout={this.changeAppLayout} />
-                <HamburgerIcon
-                    toggleNav={this.toggleNav}
-                    navIsOpen={this.state.navIsOpen} />
-                <ReviewManager
-
-                     />
+                <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
+                    <CurationHeader
+                        role={this.state.role}
+                        currentProject={this.state.currentProject}
+                        changeProject={this.changeProject}
+                        addNewProject={this.addNewProject}
+                        projects={this.state.projects}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                        changeAppLayout={this.changeAppLayout}
+                    />
+                    <HamburgerIcon
+                        toggleNav={this.toggleNav}
+                        navIsOpen={this.state.navIsOpen} />
+                    <ReviewManager
+                        toggleNav={this.toggleNav}
+                        navIsOpen={this.state.navIsOpen}
+                         />
+                </div>
             </div>
         );
     }
