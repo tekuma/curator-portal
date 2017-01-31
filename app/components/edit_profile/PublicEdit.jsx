@@ -60,12 +60,12 @@ export default class PublicEdit extends React.Component {
 
         let socialSet = false;
 
-        // for (let social_media in this.props.user.public.social_media) {
-        //     if (this.props.user.public.social_media[social_media].length > 0) {
-        //         showSocialIconPreview[social_media] = true;
-        //         socialSet = true;
-        //     }
-        // }
+        for (let social_media in this.props.user.public.social_media) {
+            if (this.props.user.public.social_media[social_media].length > 0) {
+                showSocialIconPreview[social_media] = true;
+                socialSet = true;
+            }
+        }
 
         let facebookStyle = {
             backgroundImage: 'url(assets/images/icons/social-icons/facebook-gray.svg)'
@@ -97,31 +97,6 @@ export default class PublicEdit extends React.Component {
             </Tooltip>
         );
 
-        let display_name = "Unset";
-        if (this.props.user.public.display_name) {
-            display_name = this.props.user.public.display_name;
-        }
-        console.log(display_name);
-
-        let bio = "Please tell us a little bit about yourself";
-        let bioPreview = "Unset";
-        if (this.props.user.public.bio) {
-            bio = this.props.user.public.bio;
-            if (bio.length > 20) {
-                bioPreview = bio.slice(0,20) + "....";
-            } else {
-                bioPreview = bio;
-            }
-        }
-        let portfolio = "Unset";
-        if (this.props.user.public.portfolio) {
-            portfolio  = this.props.user.public.portfolio;
-        }
-        let location = "Unset";
-        if (this.props.user.public.location) {
-            location = this.props.user.public.location;
-        }
-
         return(
             <div>
                 <div className="edit-profile-heading">
@@ -142,7 +117,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.display_name ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"display_name")}>
                             <h2 className="accordion-item-heading">Display Name</h2>
-                            <h3 className="accordion-item-preview">{display_name}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.public.display_name != "" ? this.props.user.public.display_name : "Unset"}</h3>
                         </div>
                         <div
                             id="display-name-content"
@@ -150,7 +125,7 @@ export default class PublicEdit extends React.Component {
                             <input
                             type="text"
                             id="edit-displayname"
-                            defaultValue={"Please enter your name"}
+                            defaultValue={this.props.user.public.display_name}
                             onChange={this.setUnsaved}
                             ref="displayname"
                             placeholder="Display Name"
@@ -180,8 +155,12 @@ export default class PublicEdit extends React.Component {
                                 onDrop={this.onDrop}>
                                 <img
                                     className="edit-avatar-no-avatar-icon"
-                                    style={{display: "none" }}
+                                    style={{display: (this.props.user.public.avatar == "" || this.props.user.public.avatar == undefined || this.props.user.public.avatar == null) && !this.state.avatarUploaded ? "block" : "none" }}
                                     src="../assets/images/icons/person-beige.svg" />
+                                <img
+                                    id="uploaded-avatar"
+                                    style={{display: (this.props.user.public.avatar !== "" && this.props.user.public.avatar !== undefined && this.props.user.public.avatar !== null && !this.state.avatarUploaded)  ? "block" : "none" }}
+                                    src={this.props.user.avatar} />
                                 <img
                                     id="uploaded-avatar"
                                     style={{display: this.state.avatarUploaded ? "block" : "none" }}
@@ -192,7 +171,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.bio ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"bio")}>
                             <h2 className="accordion-item-heading">Bio</h2>
-                            <h3 className="accordion-item-preview">{bioPreview}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.public.bio ? this.props.user.public.bio.substring(0, 44).length > this.props.user.public.bio ?  this.props.user.public.bio.substring(0, 44) + "..." : this.props.user.public.bio.substring(0, 44) : "Unset"}</h3>
                         </div>
                         <div
                             id="bio-content"
@@ -201,7 +180,7 @@ export default class PublicEdit extends React.Component {
                                 className="bio"
                                 placeholder="Bio"
                                 ref="bio"
-                                defaultValue={bio}
+                                defaultValue={this.props.user.public.bio}
                                 maxLength="1500"
                                 onChange={this.setUnsaved}/>
                         </div>
@@ -209,7 +188,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.location ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"location")}>
                             <h2 className="accordion-item-heading">Location</h2>
-                            <h3 className="accordion-item-preview">{location}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.public.location ? this.props.user.public.location : "Unset"}</h3>
                         </div>
                         <div
                             id="location-content"
@@ -219,7 +198,7 @@ export default class PublicEdit extends React.Component {
                             id="edit-location"
                             ref="location"
                             placeholder="Location"
-                            defaultValue={location}
+                            defaultValue={this.props.user.public.location}
                             maxLength="50"
                             onChange={this.setUnsaved} />
                         </div>
@@ -227,7 +206,7 @@ export default class PublicEdit extends React.Component {
                             className={this.state.accordion.portfolio ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"portfolio")}>
                             <h2 className="accordion-item-heading">Portfolio</h2>
-                            <h3 className="accordion-item-preview">{portfolio}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.public.portfolio ? this.props.user.public.portfolio : "Unset"}</h3>
                         </div>
                         <div
                             id="portfolio-content"
@@ -237,7 +216,7 @@ export default class PublicEdit extends React.Component {
                             id="edit-portfolio"
                             ref="portfolio"
                             placeholder="Portfolio/Website"
-                            defaultValue={portfolio}
+                            defaultValue={this.props.user.public.portfolio}
                             maxLength="200"
                             onChange={this.setUnsaved} />
                         </div>
@@ -298,7 +277,7 @@ export default class PublicEdit extends React.Component {
                                     className="edit-social-input"
                                     ref="facebook"
                                     placeholder="tekuma.world"
-                                    defaultValue={"tekuma"}
+                                    defaultValue={this.props.user.public.social_media.facebook}
                                     maxLength="50"
                                     onChange={this.setUnsaved} />
                                 </li>
@@ -315,7 +294,7 @@ export default class PublicEdit extends React.Component {
                                     className="edit-social-input"
                                     ref="instagram"
                                     placeholder="tekuma.io"
-                                    defaultValue={"tekuma"}
+                                    defaultValue={this.props.user.public.social_media.instagram}
                                     maxLength="50"
                                     onChange={this.setUnsaved} />
                                 </li>
@@ -332,7 +311,7 @@ export default class PublicEdit extends React.Component {
                                     className="edit-social-input"
                                     ref="twitter"
                                     placeholder="tekuma_"
-                                    defaultValue={"tekuma"}
+                                    defaultValue={this.props.user.public.social_media.twitter}
                                     maxLength="50"
                                     onChange={this.setUnsaved} />
                                 </li>
@@ -349,7 +328,7 @@ export default class PublicEdit extends React.Component {
                                     className="edit-social-input"
                                     ref="pinterest"
                                     placeholder="Tekumaio"
-                                    defaultValue={"tekuma"}
+                                    defaultValue={this.props.user.public.social_media.pinterest}
                                     maxLength="50"
                                     onChange={this.setUnsaved} />
                                 </li>
@@ -366,7 +345,7 @@ export default class PublicEdit extends React.Component {
                                     className="edit-social-input"
                                     ref="behance"
                                     placeholder="tekuma.io"
-                                    defaultValue={"tekuma"}
+                                    defaultValue={this.props.user.public.social_media.behance}
                                     maxLength="50"
                                     onChange={this.setUnsaved} />
                                 </li>
