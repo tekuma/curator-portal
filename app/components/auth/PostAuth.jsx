@@ -9,7 +9,7 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import CurationHeader from '../headers/CurationHeader';
 import SearchMain     from '../search_manager/SearchMain';
 import ManagerMain    from '../manage/ManagerMain';
-import ReviewManager    from '../review/ReviewManager';
+import ReviewManager  from '../review/ReviewManager';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';
@@ -172,6 +172,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -203,6 +204,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -282,7 +284,7 @@ export default class PostAuth extends React.Component {
                 navIsOpen: false,
                 managerIsOpen: true,
                 role:role,
-                artworkBuffer: []
+                artworkBuffer   : []
             });
         } else {
             this.setState({

@@ -29,8 +29,12 @@ export default class ArtworkImagePreview extends React.Component {
               />
         ];
 
+        let thumbnail_url = "url('assets/images/artwork-substitute.png')";
+        if (this.props.reviewInfo.artist_uid && this.props.reviewInfo.artwork_uid) {
+            thumbnail_url = `url(https://storage.googleapis.com/art-uploads/portal/${this.props.reviewInfo.artist_uid}/thumb512/${this.props.reviewInfo.artwork_uid})`;
+        }
         let previewImage = {
-            backgroundImage: 'url(' + this.props.reviewInfo.imageURL + ')'
+            backgroundImage: thumbnail_url
         }
 
         return (
