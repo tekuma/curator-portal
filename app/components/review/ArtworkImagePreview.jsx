@@ -30,7 +30,9 @@ export default class ArtworkImagePreview extends React.Component {
         ];
 
         let thumbnail_url = "url('assets/images/artwork-substitute.png')";
+        let fullsize_url  = 'assets/images/artwork-substitute.png';
         if (this.props.reviewInfo.artist_uid && this.props.reviewInfo.artwork_uid) {
+            fullsize_url = `https://storage.cloud.google.com/art-uploads/portal/${this.props.reviewInfo.artist_uid}/uploads/${this.props.reviewInfo.artwork_uid}`
             thumbnail_url = `url(https://storage.googleapis.com/art-uploads/portal/${this.props.reviewInfo.artist_uid}/thumb512/${this.props.reviewInfo.artwork_uid})`;
         }
         let previewImage = {
@@ -39,6 +41,7 @@ export default class ArtworkImagePreview extends React.Component {
 
         return (
             <div>
+
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Dialog
                         actions                     ={actions}
@@ -56,11 +59,17 @@ export default class ArtworkImagePreview extends React.Component {
                                         style={previewImage}>
                                     </div>
                                 </div>
+                                Fullsize (must have credentials): <a href={fullsize_url}
+                                             target="_blank">
+                                        {fullsize_url}</a>
+
                             </div>
                         </div>
                     </Dialog>
                 </MuiThemeProvider>
+
             </div>
+
         );
     }
 

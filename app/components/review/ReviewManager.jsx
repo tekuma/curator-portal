@@ -52,6 +52,10 @@ export default class ReviewManager extends React.Component {
     componentWillReceiveProps(nextProps) {
 
     }
+
+    componentWillUnmount() {
+        firebase.database().ref("submissions").off();
+    }
     // =========== Flow Control =============
 
     goToPending = () => {
@@ -120,7 +124,9 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-                            {this.state.reviewItems.map(item => {
+                            {
+                                this.state.reviewItems.map(item => {
+
                                     return (
                                         <ReviewItem
                                             item={item}
@@ -262,7 +268,7 @@ export default class ReviewManager extends React.Component {
     // =========== Methods ==============
 
 
-    updateReviewInfo = (artist_uid,artwork_uid,description) =>{
+    updateReviewInfo = (artist_uid,artwork_uid,description) => {
         let info = {
             artwork_uid:artwork_uid,
             artist_uid:artist_uid,
@@ -271,11 +277,45 @@ export default class ReviewManager extends React.Component {
         this.setState({reviewInfo:info});
     }
 
-    
+    /**
+     * This method first checks if the status has been changed to approve.
+     * If so, it updates the status and moves the obj from the submissions
+     * branch to the approved branch. Else, it updates the status/memo fields
+     * on the submissions branch.
+     * @param  {Object} artwork [artwork obj as in FB db]
+     * @param  {String} status  ["Approve", "In Review", ..]
+     * @param  {String} memo    []
+     */
     approveArtwork = (artwork,status,memo) =>{
-        console.log(artwork);
         if (status == "Approved") {
-            console.log("approved..",artwork,status,memo);
+            console.log(artwork.artwork_uid);
+            artwork.status = status; // "Approved"
+            let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
+            let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
+            aprRef.set(artwork).then(()=>{
+                subRef.set(null).then( ()=>{
+                    console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
+                });
+            });
+            for (var i = 0; i < this.state.reviewItems.length; i++) {
+                let item = this.state.reviewItems[i];
+                if (item.artwork_uid == artwork.artwork_uid) {
+                    let updates = this.state.reviewItems.concat([]); //deepcopy
+                    this.setState({reviewItems:updates})
+                }
+            }
+
+        } else if (status ==) {
+            if (artwork.status != status || artwork.memo != memo) {
+                console.log("updating db...",artwork.artwork_uid);
+                let path = `submissions/${artwork.artwork_uid}`;
+                let updates = {
+                    memo:memo,
+                    status:status
+                };
+                firebase.database().ref(path).update(updates);
+                console.log("updated");
+            }
         }
     }
 
@@ -286,16 +326,13 @@ export default class ReviewManager extends React.Component {
      * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
-        this.setState({reviewItems:[]});
         let submitRef = firebase.database().ref(`submissions`);
         submitRef.orderByChild('submitted').on("value", (snapshot)=>{
-            let limit = 5; // pagination of some kind
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();
-                    limit--
-                    this.setState({reviewItems: this.state.reviewItems.concat([submit])});
-                    if (limit == 0) return true;
+                    let updated = this.state.reviewItems.concat([submit]);
+                    this.setState({reviewItems:updated});
                 }
             });
 

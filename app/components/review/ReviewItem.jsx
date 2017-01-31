@@ -70,7 +70,9 @@ export default class ReviewItem extends React.Component {
                     <select
                         className   ="edit-artwork-select"
                         ref         ="review_status"
-                        defualtValue={this.state.status}>
+                        value={this.state.status}
+                        onChange ={this.handleSelect}
+                        >
                         {this.state.status_types.map(type => {
                                 return (
                                     <option
@@ -94,7 +96,7 @@ export default class ReviewItem extends React.Component {
                     <div
                         className="review-item-review-button"
                         onClick={this.handleReviewButton}>
-                        Review
+                        Update
                     </div>
                 </td>
             </tr>
@@ -108,7 +110,17 @@ export default class ReviewItem extends React.Component {
         })
     }
 
+    componentWillReceiveProps(nextProps) {
+
+    }
+
     // =========== Methods ==============
+
+    handleSelect = (e) => {
+        let status = this.refs.review_status.value;
+        console.log("status->",status);
+        this.setState({status:status});
+    }
 
     handleReviewButton = () => {
         let status = this.refs.review_status.value;
