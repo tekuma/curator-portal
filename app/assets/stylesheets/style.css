@@ -2813,7 +2813,7 @@ login-button.left {
 .confirm-edit-profile {
 	width: 100%;
 	height: 100%;
-	background: #292e3a;
+	background: #000000;
 	display: inline-flex;
 	-webkit-align-items: center;
 	-ms-align-items: center;
@@ -3659,6 +3659,11 @@ login-button.left {
     font-size: .9375em;
     line-height: normal;
     margin: 0;
+}
+
+.edit-accordion .accordion-content input:not([type='radio']) {
+	border: 1.5px solid #d6d3ce;
+	background: #f4f6f7;
 }
 
 .accordion-content input:not([type='radio'],#search-artist) {
@@ -4743,8 +4748,8 @@ label.age-confirm-label {
     width: 300px;
 	height: 120px;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight: 300;
-	font-size: 0.8em;
+	font-weight: 400;
+	font-size: 0.9375em;
 	line-height: 1.2em;
 	color: #000000;
 	resize: none;

@@ -59,6 +59,7 @@ export default class EditProfile extends React.Component {
                 user = {this.props.user}
                 editPrivateUserInfo     ={this.editPrivateUserInfo}
                 editingPublic           ={this.state.editingPublic}
+                toggleVerifyEmailDialog ={this.props.toggleVerifyEmailDialog}
                 editPublic              ={this.editPublic}
                 editPrivate             ={this.editPrivate}
                 setSaved                ={this.setSaved}
@@ -108,11 +109,17 @@ export default class EditProfile extends React.Component {
                     console.log(">> New Avatar Uploaded successfully");
                     avatarRef.getDownloadURL().then( (avatarURL)=>{
                         data.avatar = avatarURL;
-                        firebase.database().ref(path).update(data);
+                        firebase.database().ref(path).update(data)
+                        .then( ()=>{
+                            this.props.toggleProfileDialog();
+                        });
                     });
                 });
         } else {
-            firebase.database().ref(path).update(data);
+            firebase.database().ref(path).update(data)
+            .then( ()=>{
+                this.props.toggleProfileDialog();
+            });
         }
     }
 

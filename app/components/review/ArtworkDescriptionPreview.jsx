@@ -36,18 +36,9 @@ export default class ArtworkDescriptionPreview extends React.Component {
                         actions                     ={actions}
                         modal                       ={false}
                         open                        ={this.props.artworkDescriptionIsOpen}
-                        titleClassName              ="review-description-title"
-                        actionsContainerClassName   ="review-description-actions"
-                        bodyClassName               ="review-description-body"
-                        contentClassName            ="review-description-content" >
-                        <div className="review-description-dialog">
-                            <div className="review-descrition-wrapper">
-                                <p
-                                    className="review-description">
-                                    {this.props.reviewInfo.description}
-                                </p>
-                            </div>
-                        </div>
+                        actionsContainerClassName   ="confirm-actions"
+                        bodyClassName               ="confirm-body" >
+                        {this.props.reviewInfo.description}
                     </Dialog>
                 </MuiThemeProvider>
             </div>

@@ -155,12 +155,12 @@ export default class PublicEdit extends React.Component {
                                 onDrop={this.onDrop}>
                                 <img
                                     className="edit-avatar-no-avatar-icon"
-                                    style={{display: (this.props.user.public.avatar == "" || this.props.user.public.avatar == undefined || this.props.user.public.avatar == null) && !this.state.avatarUploaded ? "block" : "none" }}
+                                    style={{display: !this.props.user.public.avatar && !this.state.avatarUploaded ? "block" : "none" }}
                                     src="../assets/images/icons/person-beige.svg" />
                                 <img
                                     id="uploaded-avatar"
-                                    style={{display: (this.props.user.public.avatar !== "" && this.props.user.public.avatar !== undefined && this.props.user.public.avatar !== null && !this.state.avatarUploaded)  ? "block" : "none" }}
-                                    src={this.props.user.avatar} />
+                                    style={{display: (this.props.user.public.avatar && !this.state.avatarUploaded)  ? "block" : "none" }}
+                                    src={this.props.user.public.avatar} />
                                 <img
                                     id="uploaded-avatar"
                                     style={{display: this.state.avatarUploaded ? "block" : "none" }}
@@ -216,7 +216,7 @@ export default class PublicEdit extends React.Component {
                             id="edit-portfolio"
                             ref="portfolio"
                             placeholder="Portfolio/Website"
-                            defaultValue={this.props.user.public.portfolio}
+                            defaultValue={this.props.user.public.portfolio ? this.props.user.public.portfolio : "http://"}
                             maxLength="200"
                             onChange={this.setUnsaved} />
                         </div>

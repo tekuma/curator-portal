@@ -60,8 +60,8 @@ export default class CurationHeader extends React.Component {
                 <header className={this.state.display_tools ? "light": "dark"}>
                 	<div
                         className="tekuma-logo"
-                        onClick={this.props.changeAppLayout.bind({}, Roles.MANAGE)}
-                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.MANAGE)} >
+                        onClick={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
+                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.SEARCH)} >
                         <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
                             <g>
                                 <g>
