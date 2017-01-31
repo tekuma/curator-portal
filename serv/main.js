@@ -100,9 +100,11 @@ if (cmd_q_string != null) {
             if (req.query.q_artist) {
                 fields.artist = req.query.q_artist;
             }
-            if (req.query.q_w3c_color_list) {
-                console.log('color list:', req.query.q_w3c_color_list);
-                fields.w3c_color_list = req.query.q_w3c_color_list;
+            if (req.query.q_color_list) {
+                fields.color_list = req.query.q_color_list;
+            }
+            if (req.query.q_tag_list) {
+                fields.tag_list = req.query.q_tag_list;
             }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
