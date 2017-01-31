@@ -71,6 +71,13 @@ For it to be used client-side, replace all imports from `firebase` to
 It should be possible to automate this as part of testing, e.g., using
 `webpack`. (low priority, unassigned task)
 
+### Using the remote testing, staging host
+
+For SSH to accept the private key, the file permissions must not allow read
+access by users other than you. E.g., this can be achieved from
+
+    chmod 600 conf/keys/staging
+
 ### Using an existing remote database
 
 There is a CloudSQL database named "test-artworkdb" on the Google Cloud project
