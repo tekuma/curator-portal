@@ -9,7 +9,7 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import CurationHeader from '../headers/CurationHeader';
 import SearchMain     from '../search_manager/SearchMain';
 import ManagerMain    from '../manage/ManagerMain';
-import ReviewManager    from '../review/ReviewManager';
+import ReviewManager  from '../review/ReviewManager';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';

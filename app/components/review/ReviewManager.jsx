@@ -1,6 +1,6 @@
 // Libs
 import React      from 'react';
-import Firebase   from 'firebase';
+import firebase   from 'firebase';
 import uuid       from 'node-uuid';
 // Files
 import ReviewItem from './ReviewItem';
@@ -22,49 +22,10 @@ import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
 export default class ReviewManager extends React.Component {
     state = {
         pendingScreen: true,        // Will determine which screen user is in (pending or reviewed)
-        reviewItems: [
-            {
-                imageURL: 'url(assets/images/artwork-substitute.png',
-                artwork_name: 'Starry Night',
-                artist_name: 'Vincent Van Gogh',
-                year: '1888',
-                tags: [
-                    {id: 1, text: '#art'},
-                    {id: 2, text: '#impasto'},
-                    {id: 3, text: '#night'},
-                    {id: 4, text: '#stars'},
-                    {id: 5, text: '#blue'},
-                    {id: 6, text: '#sky'},
-                    {id: 7, text: '#tree'}
-                    ],
-                description: 'Swirls of wind, bright sky filled with yellow stars, remniscent of candles light in an abandoned room.',
-                submitted: '2016-11-26T20:33:35.393Z',
-                status: 'In Review',
-                memo:''
-            }
-        ],
+        reviewItems: [],
         artworkPreviewIsOpen: false,
         artworkDescriptionIsOpen: false,
-        reviewInfo: {
-            imageURL: 'assets/images/artwork-substitute.png',
-            artwork_name: 'Starry Night',
-            artist_name: 'Vincent Van Gogh',
-            year: '1888',
-            tags: [
-                {id: 1, text: '#art'},
-                {id: 2, text: '#impasto'},
-                {id: 3, text: '#night'},
-                {id: 4, text: '#stars'},
-                {id: 5, text: '#blue'},
-                {id: 6, text: '#sky'},
-                {id: 7, text: '#tree'}
-                ],
-            description: 'Swirls of wind, bright sky filled with yellow stars, remniscent of candles light in an abandoned room.',
-            submitted: '2016-11-26T20:33:35.393Z',
-            status: 'In Review',
-            memo:''
-        }
-
+        reviewInfo: {}
     };
 
     constructor(props) {
@@ -88,6 +49,9 @@ export default class ReviewManager extends React.Component {
         this.fetchSubmissions();
     }
 
+    componentWillReceiveProps(nextProps) {
+
+    }
     // =========== Flow Control =============
 
     goToPending = () => {
@@ -148,14 +112,7 @@ export default class ReviewManager extends React.Component {
                             <th className="review-button-heading"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <ReviewItem
-                            item={this.state.reviewItems[0]}
-                            updateItem={this.updateItem()}
-                            toggleArtworkPreview={this.toggleArtworkPreview}
-                            toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         />
-                    </tbody>
+
                 </table>
                 <div className="review-wrapper"
                     style={reviewWrapperStyle}>
@@ -167,7 +124,9 @@ export default class ReviewManager extends React.Component {
                                     return (
                                         <ReviewItem
                                             item={item}
-                                            updateItem={this.updateItem()}
+                                            approveArtwork={this.approveArtwork}
+                                            updateItem={this.updateItem}
+                                            updateReviewInfo={this.updateReviewInfo}
                                             toggleArtworkPreview={this.toggleArtworkPreview}
                                             toggleDescriptionPreview={this.toggleDescriptionPreview}
                                          />
@@ -255,7 +214,9 @@ export default class ReviewManager extends React.Component {
                     <tbody>
                         <ReviewItem
                             item={this.state.reviewItems[0]}
-                            updateItem={this.updateItem()}
+                            approveArtwork={this.approveArtwork}
+                            updateReviewInfo={this.updateReviewInfo}
+                            updateItem={this.updateItem}
                             toggleArtworkPreview={this.toggleArtworkPreview}
                             toggleDescriptionPreview={this.toggleDescriptionPreview}
                          />
@@ -300,20 +261,49 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
+
+    updateReviewInfo = (artist_uid,artwork_uid,description) =>{
+        let info = {
+            artwork_uid:artwork_uid,
+            artist_uid:artist_uid,
+            description:description
+        }
+        this.setState({reviewInfo:info});
+    }
+
+    
+    approveArtwork = (artwork,status,memo) =>{
+        console.log(artwork);
+        if (status == "Approved") {
+            console.log("approved..",artwork,status,memo);
+        }
+    }
+
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
      * firebase database. NOTE FIXME set the .indexOn rule in the firebase
      * rules for better performance.
+     * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
+        this.setState({reviewItems:[]});
         let submitRef = firebase.database().ref(`submissions`);
         submitRef.orderByChild('submitted').on("value", (snapshot)=>{
-            let data = snapshot.val();
-            console.log("Submit:",data.submitted);
+            let limit = 5; // pagination of some kind
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) { //ignore the placeholder in DB
+                    let submit = childSnap.val();
+                    limit--
+                    this.setState({reviewItems: this.state.reviewItems.concat([submit])});
+                    if (limit == 0) return true;
+                }
+            });
+
         });
     }
 
-    updateItem = () => {
+    updateItem = (a,b) => {
+        console.log(a,b);
 
     }
 
