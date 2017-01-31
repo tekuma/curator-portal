@@ -203,7 +203,7 @@ export default class PublicEdit extends React.Component {
                                 ref="bio"
                                 defaultValue={bio}
                                 maxLength="1500"
-                                onChange={this.setUnsaved}></textarea>
+                                onChange={this.setUnsaved}/>
                         </div>
                         <div
                             className={this.state.accordion.location ? "accordion-item open" : "accordion-item"}
