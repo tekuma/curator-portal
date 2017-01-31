@@ -102,7 +102,7 @@ export default class CurationHeader extends React.Component {
                                  onClick={this.handleProjectAdditionsOrDeletions}
                                  onTouchTap={this.handleProjectAdditionsOrDeletions}
                                 >
-                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/plus-pink.svg' : 'assets/images/icons/minus-pink.svg'} />
+                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add_project.svg' : 'assets/images/icons/remove_project.svg'} />
                              </div>
                         </OverlayTrigger>
                     </div>

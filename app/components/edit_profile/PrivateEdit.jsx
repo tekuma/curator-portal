@@ -55,9 +55,9 @@ export default class PrivateEdit extends React.Component {
 
         let age;
 
-        // if (this.props.userPrivate.dob) {
-        //     age = `${this.props.userPrivate.dob.split("-")[1]}-${this.props.userPrivate.dob.split("-")[0]}-${this.props.userPrivate.dob.split("-")[2]}`;
-        // }
+        if (this.props.user.private.dob) {
+            age = `${this.props.user.private.dob.split("-")[1]}-${this.props.user.private.dob.split("-")[0]}-${this.props.user.private.dob.split("-")[2]}`;
+        }
 
         const saveTooltip = (
             <Tooltip
@@ -95,7 +95,7 @@ export default class PrivateEdit extends React.Component {
                             className={this.state.accordion.legal_name ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"legal_name")}>
                             <h2 className="accordion-item-heading">Legal Name</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.private.legal_name != "" ? this.props.user.private.legal_name : "Unset"}</h3>
                         </div>
                         <div
                             id="legal-name-content"
@@ -103,7 +103,7 @@ export default class PrivateEdit extends React.Component {
                                 <input
                                 type="text"
                                 id="edit-legalname"
-                                defaultValue={"Afika Ayanda Nyati"}
+                                defaultValue={this.props.user.private.legal_name}
                                 ref="legalname"
                                 style={this.state.errorType.legalName ? errorStyle : null}
                                 onKeyPress={this.setUnsaved}
@@ -117,9 +117,9 @@ export default class PrivateEdit extends React.Component {
                         <div
                             className={this.state.accordion.email ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"email")}
-                            style={this.state.errorType.email ? errorStylePasswordAuth : null}>
+                            style={this.props.user.auth_provider == "password" ? (this.state.errorType.email ? errorStylePasswordAuth : null) : (this.state.errorType.email ? errorStyle : hideStyle)}>
                             <h2 className="accordion-item-heading">Email</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.private.email ? this.props.user.private.email : "Unset"}</h3>
                         </div>
                         <div
                             id="email-content"
@@ -130,7 +130,7 @@ export default class PrivateEdit extends React.Component {
                                     <input
                                         type="email"
                                         id="edit-email"
-                                        defaultValue={"afika@tekuma.io"}
+                                        defaultValue={this.props.user.private.email}
                                         ref="email"
                                         style={this.state.errorType.email ? errorStyle : null}
                                         onKeyPress={this.setUnsaved}
@@ -152,13 +152,15 @@ export default class PrivateEdit extends React.Component {
                         </div>
                         <div
                             className={this.state.accordion.emailVerified ? "accordion-item open" : "accordion-item"}
-                            onClick={this.toggleAccordion.bind({},"emailVerified")}>
+                            onClick={this.toggleAccordion.bind({},"emailVerified")}
+                            style={this.props.user.auth_provider == "password" ? null : hideStyle}>
                             <h2 className="accordion-item-heading">Email Verification</h2>
                             <h3 className="accordion-item-preview">{(firebase.auth().currentUser.emailVerified) ? "Verified" : "Unverified"}</h3>
                         </div>
                         <div
                             id="email-verified-content"
-                            className={this.state.accordion.emailVerified ? "accordion-content open" : "accordion-content"}>
+                            className={this.state.accordion.emailVerified ? "accordion-content open" : "accordion-content"}
+                            style={this.props.user.auth_provider == "password" ? null : hideStyle}>
                             {firebase.auth().currentUser.emailVerified ?
                                 <h3 className="email-verified-writing">
                                     Email Verified
@@ -173,14 +175,14 @@ export default class PrivateEdit extends React.Component {
                         <div
                             className={this.state.accordion.password ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"password")}
-                            style={this.state.errorType.email ? errorStylePasswordAuth : null}>
+                            style={this.props.user.auth_provider == "password" ? (this.state.errorType.email ? errorStylePasswordAuth : null) : (this.state.errorType.email ? errorStyle : hideStyle)}>
                             <h2 className="accordion-item-heading">Password</h2>
                             <h3 className="accordion-item-preview">&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;</h3>
                         </div>
                         <div
                             id="password-content"
                             className={this.state.accordion.password ? "accordion-content open" : "accordion-content"}
-                            style={this.state.errorType.email ? errorStylePasswordAuth : null}>
+                            style={this.props.user.auth_provider == "password" ? (this.state.errorType.email ? errorStylePasswordAuth : null) : (this.state.errorType.email ? errorStyle : hideStyle)}>
                             <ul>
                                 <li>
                                     <input
@@ -223,7 +225,7 @@ export default class PrivateEdit extends React.Component {
                             className={this.state.accordion.paypal ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"paypal")}>
                             <h2 className="accordion-item-heading">PayPal Email</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.private.paypal ? this.props.user.private.paypal : "Unset"}</h3>
                         </div>
                         <div
                             id="paypal-content"
@@ -231,7 +233,7 @@ export default class PrivateEdit extends React.Component {
                             <input
                                 type="email"
                                 id="edit-paypal"
-                                defaultValue={"afika@tekuma.io"}
+                                defaultValue={this.props.user.private.paypal}
                                 ref="paypal"
                                 style={this.state.errorType.paypal ? errorStyle : null}
                                 onKeyPress={this.setUnsaved}
@@ -243,7 +245,7 @@ export default class PrivateEdit extends React.Component {
                             className={this.state.accordion.age ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"age")}>
                             <h2 className="accordion-item-heading">Age</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.private.dob ? age : "Unset"}</h3>
                         </div>
                         <div
                             id="age-content"
@@ -255,7 +257,7 @@ export default class PrivateEdit extends React.Component {
                                         <select
                                             id="accordion-dob-month"
                                             className="dob"
-                                            defaultValue={"01"}
+                                            defaultValue={this.props.user.private.dob ? this.props.user.private.dob.split("-")[1] : null}
                                             onChange={this.setUnsaved}
                                             ref="dobMonth"
                                             style={this.state.errorType.month? errorStyle : null}>
@@ -278,7 +280,7 @@ export default class PrivateEdit extends React.Component {
                                         <input
                                             type="number"
                                             id="accordion-dob-day"
-                                            defaultValue={"26"}
+                                            defaultValue={this.props.user.private.dob ? this.props.user.private.dob.split("-")[0] : null}
                                             className="dob"
                                             ref="dobDay"
                                             style={this.state.errorType.day ? errorStyle : null}
@@ -293,7 +295,7 @@ export default class PrivateEdit extends React.Component {
                                         <input
                                             type="number"
                                             id="accordion-dob-year"
-                                            defaultValue={"1988"}
+                                            defaultValue={this.props.user.private.dob ? this.props.user.private.dob.split("-")[2] : null}
                                             className="dob"
                                             ref="dobYear"
                                             style={this.state.errorType.year ? errorStyle : null}
@@ -308,7 +310,7 @@ export default class PrivateEdit extends React.Component {
                                         type="checkbox"
                                         id="over-eighteen-checkbox"
                                         ref="overEighteen"
-                                        defaultChecked={false}
+                                        defaultChecked={this.props.user.private.over_eighteen}
                                         onChange={this.setUnsaved} />
                                         I confirm that I am 18+
                                 </label>
@@ -318,7 +320,7 @@ export default class PrivateEdit extends React.Component {
                             className={this.state.accordion.pronoun ? "accordion-item no-border-bottom open" : "accordion-item no-border-bottom"}
                             onClick={this.toggleAccordion.bind({},"pronoun")}>
                             <h2 className="accordion-item-heading">Preferred Gender Pronoun</h2>
-                            <h3 className="accordion-item-preview">{"Unset"}</h3>
+                            <h3 className="accordion-item-preview">{this.props.user.private.gender_pronoun ? this.props.user.private.gender_pronoun : "Unset"}</h3>
                         </div>
                         <div
                             id="pronoun-content"
@@ -332,7 +334,7 @@ export default class PrivateEdit extends React.Component {
                                     name="gender"
                                     className="reg-radio"
                                     defaultValue="She"
-                                    defaultChecked={false}
+                                    defaultChecked={this.props.user.private.gender_pronoun == "She"}
                                     onChange={this.setGender}
                                     required="" />
                                 She
@@ -346,7 +348,7 @@ export default class PrivateEdit extends React.Component {
                                   name="gender"
                                   className="reg-radio"
                                   defaultValue="He"
-                                  defaultChecked={false}
+                                  defaultChecked={this.props.user.private.gender_pronoun == "He"}
                                   onChange={this.setGender}
                                   required="" />
                               He
@@ -360,7 +362,7 @@ export default class PrivateEdit extends React.Component {
                                     name="gender"
                                     className="reg-radio"
                                     defaultValue="They"
-                                    defaultChecked={false}
+                                    defaultChecked={this.props.user.private.gender_pronoun == "They"}
                                     onChange={this.setGender}
                                     required="" />
                                 They
