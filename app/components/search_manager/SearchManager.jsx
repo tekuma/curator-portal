@@ -1434,7 +1434,7 @@ export default class SearchManager extends React.Component {
                                  this.state.searchColors.three.hex];
         }
         if (this.state.searchCategories.tag) {
-            fields.tag_list = this.state.tags;
+            fields.text_tag_list = this.state.tags;
         }
 
         if (general.length === 0 && fields === {})

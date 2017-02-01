@@ -103,8 +103,8 @@ if (cmd_q_string != null) {
             if (req.query.q_color_list) {
                 fields.color_list = req.query.q_color_list;
             }
-            if (req.query.q_tag_list) {
-                fields.tag_list = req.query.q_tag_list;
+            if (req.query.q_text_tag_list) {
+                fields.text_tag_list = req.query.q_text_tag_list;
             }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {
