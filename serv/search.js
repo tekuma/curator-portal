@@ -512,6 +512,7 @@ exports.q = (query, fields) => {
 
         var artworks_direct;
         var artists_direct;
+        var labels_direct;
 
         if (query === '' && fields.title === undefined) {
             artworks_direct = new Promise(function(resolve, reject) { resolve([]); });
@@ -571,8 +572,65 @@ exports.q = (query, fields) => {
             });
         }
 
-        return Promise.all([artworks_direct, artists_direct]).then(function (qrows) {
-            var rows = qrows[0];
+        if (query === '' && fields.text_tag_list === undefined) {
+            labels_direct = new Promise(function(resolve, reject) { resolve([]); });
+        } else {
+            // SELECT object_uid FROM associations WHERE (object_table = "artworks") AND (label_uid = "822ab8b1-6997-4eba-addf-10c3667c1791" OR label_uid = "693a04ad-f013-45e0-b2a4-41fbd860b3f3");
+            labels_direct = new Promise(function (resolve, reject) {
+                var qelems = [];
+                var sql_template = 'SELECT uid ' +
+                    'FROM labels ' +
+                    'WHERE (labeltype = "clarifai-text-tag") AND (';
+                if (query !== '') {
+                    sql_template += 'LOWER(val) LIKE ?';
+                    qelems[qelems.length] = '%'+query+'%';
+                }
+                if (fields.text_tag_list) {
+                    for (let j = 0; j < fields.text_tag_list.length; j++) {
+                        if (j > 0 || query !== '') {
+                            sql_template += ' OR ';
+                        }
+                        sql_template += 'LOWER(val) LIKE ?';
+                        qelems[qelems.length] = '%'+fields.text_tag_list[j].text+'%';
+                    }
+                }
+                sql_template += ')';
+                dbq(sql_template, qelems).then(function (rows) {
+                    if (rows.length === 0) {
+                        resolve([]);
+                        return;
+                    }
+
+                    var uid_exprs = rows.map((row) => 'label_uid = \''+String(row.uid) + '\'');
+                    var qelems = [];
+                    var sql_template = 'SELECT DISTINCT ' +
+                        'object_uid ' +
+                        'FROM associations ' +
+                        'WHERE (' + uid_exprs.join(' OR ') + ')';
+                    dbq(sql_template, qelems).then(function (rows) {
+                        if (rows.length === 0) {
+                            resolve([]);
+                            return;
+                        }
+
+                        var uid_exprs = rows.map((row) => 'uid = \''+String(row.object_uid) + '\'');
+
+                        var qelems = [];
+                        var sql_template = 'SELECT ' +
+                            'uid, title, artist_uid, description, origin, thumbnail_url ' +
+                            'FROM `artworks` ' +
+                            'WHERE (' + uid_exprs.join(' OR ') + ')';
+
+                        dbq(sql_template, qelems).then(function (rows) {
+                            resolve(rows);
+                        });
+                    });
+                });
+            });
+        }
+
+        return Promise.all([artworks_direct, artists_direct, labels_direct]).then(function (qrows) {
+            var rows = qrows[0].concat(qrows[2]);
 
             // If used search field that constrains which artist names are
             // matches, then prune other lists to only those artist matches.
