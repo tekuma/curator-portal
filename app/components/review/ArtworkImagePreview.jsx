@@ -52,18 +52,18 @@ export default class ArtworkImagePreview extends React.Component {
                         bodyClassName               ="review-artwork-body"
                         contentClassName            ="review-artwork-content" >
                         <div className="review-artwork-dialog">
-                            <div className="review-artwork-preview">
+                            <a
+                                className="review-artwork-preview"
+                                href={fullsize_url}
+                                target="_blank"
+                                title="Click to open fullsize artwork">
                                 <div className="review-artwork-image-wrapper">
                                     <div
                                         className="artwork-image"
                                         style={previewImage}>
                                     </div>
                                 </div>
-                                Fullsize (must have credentials): <a href={fullsize_url}
-                                             target="_blank">
-                                        {fullsize_url}</a>
-
-                            </div>
+                            </a>
                         </div>
                     </Dialog>
                 </MuiThemeProvider>
