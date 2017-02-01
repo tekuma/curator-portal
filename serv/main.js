@@ -93,7 +93,7 @@ if (cmd_q_string != null) {
         } else {
             // Manually extract named search fields from query to
             // resist injection-based attacks.
-            fields = {};
+            var fields = {};
             if (req.query.q_title) {
                 fields.title = req.query.q_title;
             }
