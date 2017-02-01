@@ -132,7 +132,8 @@ export default class ReviewItem extends React.Component {
     }
 
     // =========== Methods ==============
-    //
+
+    
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;
         this.props.deleteItem(id);

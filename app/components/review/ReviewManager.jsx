@@ -58,7 +58,7 @@ export default class ReviewManager extends React.Component {
     }
 
     componentWillUnmount() {
-        firebase.database().ref("submissions").off();
+        this.detachListeners();
     }
     // =========== Flow Control =============
 
@@ -128,6 +128,21 @@ export default class ReviewManager extends React.Component {
                                          />
                                     );
                                 })}
+                                <tr className="review-item">
+                                    <div>
+                                        <td className="review-item-tags"
+                                            onClick={this.prevPage}
+                                            onTouchTap={this.prevPage}>
+                                             Previous
+                                        </td>
+                                        <td>*</td>
+                                        <td className="review-item-submitted"
+                                            onClick={this.nextPage}
+                                            onTouchTap={this.nextPage}>
+                                            Next
+                                        </td>
+                                    </div>
+                                </tr>
                         </tbody>
                 	</table>
                 </div>
@@ -233,7 +248,15 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
-    deleteItem = (id) =>{
+    /**
+     * Detaches listeners from firebase database.
+     */
+    detachListeners = () => {
+        firebase.database().ref("submissions").off();
+        firebase.database().ref("approved").off();
+    }
+
+    deleteItem = (id,branch) =>{
         let subRef = firebase.database().ref(`submissions/${id}`);
         subRef.set(null).then( ()=>{
             console.log(id," was deleted.");
@@ -301,6 +324,17 @@ export default class ReviewManager extends React.Component {
         }
     }
 
+
+    nextPage = () => {
+        let pending = this.state.pendingScreen;
+        if(pending){
+            console.log("PENDING NEXT");
+        }
+    }
+
+    prevPage = () => {
+
+    }
 
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
