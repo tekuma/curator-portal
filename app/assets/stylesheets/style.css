@@ -4569,6 +4569,10 @@ label.age-confirm-label {
 
 }
 
+.artwork-colors {
+	text-align: center;
+}
+
 .artwork-reviewer {
 	text-align: right;
 	color: #e9217e;
@@ -5986,7 +5990,7 @@ font-weight: 100;
   background-color: #fff;
   border: 1px solid #ccc;
   border-top-color: #dddddd;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.42);
   box-sizing: border-box;
   margin-top: -1px;
   max-height: 200px;

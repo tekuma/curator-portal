@@ -305,7 +305,7 @@ export default class ReviewManager extends React.Component {
                 }
             }
 
-        } else if (status ==) {
+        } else {
             if (artwork.status != status || artwork.memo != memo) {
                 console.log("updating db...",artwork.artwork_uid);
                 let path = `submissions/${artwork.artwork_uid}`;

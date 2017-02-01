@@ -30,7 +30,6 @@ export default class ArtworkDetailBoxDialog extends React.Component {
               />
         ];
 
-        let oldArtwork  = this.props.artworkInfo;
         let tags        = [];
         for (var i = 0; i < this.props.artworkInfo.tags.length; i++) {
             let tag = this.props.artworkInfo.tags[i];
