@@ -19,7 +19,7 @@ export default class EditProfileDialog extends React.Component {
               <ConfirmButton
                 label="Close"
                 className="confirm-edit-profile"
-                onClick={this.props.closeProfileDialog}
+                onClick={this.props.toggleProfileDialog}
               />
         ];
 

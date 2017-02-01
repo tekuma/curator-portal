@@ -10,6 +10,7 @@ import Roles           from '../../constants/Roles';
  */
 export default class CurationHeader extends React.Component {
     state = {
+        display_tools: false,
     }
 
     constructor(props) {
@@ -56,11 +57,11 @@ export default class CurationHeader extends React.Component {
 
         return (
             <div>
-                <header className="black">
+                <header className={this.state.display_tools ? "light": "dark"}>
                 	<div
                         className="tekuma-logo"
-                        onClick={this.props.changeAppLayout.bind({}, Roles.MANAGE)}
-                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.MANAGE)} >
+                        onClick={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
+                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.SEARCH)} >
                         <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
                             <g>
                                 <g>
@@ -83,26 +84,36 @@ export default class CurationHeader extends React.Component {
                             </g>
                         </svg>
                 	</div>
-                  <div className="project-selector">
-                      <ProjectSelector
-                          addNewProject={this.props.addNewProject}
-                          role={this.props.role}
-                          currentProject={this.props.currentProject}
-                          changeProject={this.props.changeProject}
-                          projects={this.props.projects}
-                      />
-                  </div>
-
-                    <div className="header-icons">
+                {this.state.display_tools ?
+                    <div className="select-tools">
+                    <div className="project-selector">
+                        <ProjectSelector
+                            addNewProject={this.props.addNewProject}
+                            role={this.props.role}
+                            currentProject={this.props.currentProject}
+                            changeProject={this.props.changeProject}
+                            projects={this.props.projects}
+                        />
+                    </div>
+                    <div className="header-icons tools" >
                         <OverlayTrigger placement="bottom" overlay={this.props.role == Roles.SEARCH ? addArtworkTooltip : removeArtworkTooltip}>
                              <div
                                  className="header-icon curator add-remove"
                                  onClick={this.handleProjectAdditionsOrDeletions}
                                  onTouchTap={this.handleProjectAdditionsOrDeletions}
                                 >
-                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/plus-pink.svg' : 'assets/images/icons/minus-pink.svg'} />
+                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add_project.svg' : 'assets/images/icons/remove_project.svg'} />
                              </div>
                         </OverlayTrigger>
+                    </div>
+                    </div>
+
+                    :
+                    <div></div>
+                }
+
+
+                    <div className="header-icons">
                         {this.props.role == Roles.SEARCH || this.props.role == Roles.REVIEW || this.props.role == Roles.PROFILE ?
                             <OverlayTrigger placement="bottom" overlay={manageTooltip}>
                                  <div
@@ -136,7 +147,13 @@ export default class CurationHeader extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        //Pass
+        if (nextProps.artworkBuffer){
+            if (nextProps.artworkBuffer.length > 0) {
+                this.setState({display_tools:true});
+            } else {
+                this.setState({display_tools:false});
+            }
+        }
     }
 
     // ------------ METHODS -------------

@@ -1,10 +1,11 @@
 // Libs
 import React      from 'react';
-import Firebase   from 'firebase';
+import firebase   from 'firebase';
 import uuid       from 'node-uuid';
 // Files
 import ReviewItem from './ReviewItem';
-import { WithContext as ReactTags } from 'react-tag-input';
+import ArtworkImagePreview from './ArtworkImagePreview';
+import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
 
 /*  a Submission object looks like:
     -jd7Jd21ka: {
@@ -22,7 +23,10 @@ export default class ReviewManager extends React.Component {
     state = {
         pendingScreen: true,        // Will determine which screen user is in (pending or reviewed)
         reviewItems: [],
-        status_types: ["In Review", "Approved", "Held","Rejected"]
+        approvedItems:[],
+        artworkPreviewIsOpen: false,
+        artworkDescriptionIsOpen: false,
+        reviewInfo: {}
     };
 
     constructor(props) {
@@ -37,45 +41,39 @@ export default class ReviewManager extends React.Component {
         if (this.state.pendingScreen) {
             return this.goToPending();
         } else {
-            return this.goToReviewed();
+            return this.goToApproved();
         }
     }
 
     componentDidMount() {
         console.log("++++++ReviewManager");
         this.fetchSubmissions();
+        setTimeout( ()=>{//NOTE
+            this.fetchApproved();
+        }, 15);
     }
 
+    componentWillReceiveProps(nextProps) {
+
+    }
+
+    componentWillUnmount() {
+        firebase.database().ref("submissions").off();
+    }
     // =========== Flow Control =============
 
     goToPending = () => {
-
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 30,
             width: window.innerWidth - 40
-        }
-
+        };
         const tableWidth = {
             width: window.innerWidth - 40 - 20
-        }
+        };
 
         const itemTableWidth = {
             width: window.innerWidth - 40 - 40
-        }
-
-        let tags = [
-            {id: 1, text: "#art"},
-            {id: 2, text: "#impasto"},
-            {id: 3, text: "#night"},
-            {id: 4, text: "#stars"},
-            {id: 5, text: "#blue"},
-            {id: 6, text: "#sky"},
-            {id: 7, text: "#tree"}
-        ];
-
-        let artworkImage = {
-            backgroundImage: 'url(assets/starry.jpg)'
-        }
+        };
 
         return (
             <div>
@@ -88,7 +86,7 @@ export default class ReviewManager extends React.Component {
                     <div
                         className="review-section-reviewed"
                         onClick={this.toggleReviewScreen}>
-                        <h2>Reviewed</h2>
+                        <h2>Approved</h2>
                     </div>
                 </div>
                 <table
@@ -106,66 +104,7 @@ export default class ReviewManager extends React.Component {
                             <th className="review-button-heading"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr className="review-item">
-                            <td
-                                className="review-item-artwork">
-                                <div
-                                    className="review-item-artwork-image"
-                                    style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                            </td>
-                            <td className="review-item-details">
-                                <h3 className="review-item-title">Starry Night</h3>
-                                <h3 className="review-item-artist">Van Gogh</h3>
-                                <h3 className="review-item-year">1888</h3>
-                            </td>
-                            <td className="review-item-tags">
-                                <div className="review-item-tags-wrapper">
-                                    <ReactTags
-                                        tags={tags}
-                                        readOnly={true}
-                                        />
-                                </div>
-                            </td>
-                            <td className="review-item-description">
-                                <div
-                                    className="review-item-description-button">
-                                    Click<sup className="pink"> | </sup>Hover
-                                </div>
-                            </td>
-                            <td className="review-item-submitted">
-                                <h3>Mar 26, 2017</h3>
-                            </td>
-                            <td className="review-item-status">
-                                <select
-                                    className   ="edit-artwork-select"
-                                    ref         ="editAlbum"
-                                    value="In Review">
-                                    {this.state.status_types.map(type => {
-                                            return (
-                                                <option
-                                                    key     ={uuid.v4()}
-                                                    value   ={type}>
-                                                    {type}
-                                                </option>
-                                            );
-                                        })}
-                                </select>
-                            </td>
-                            <td className="review-item-note">
-                                <textarea
-                                    placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                    value       ={""}
-                                    maxLength   ="1500" />
-                            </td>
-                            <td className="review-item-review">
-                                <div
-                                    className="review-item-review-button">
-                                    Review
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+
                 </table>
                 <div className="review-wrapper"
                     style={reviewWrapperStyle}>
@@ -173,369 +112,35 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="review-item">
-                                <td
-                                    className="review-item-artwork">
-                                    <div
-                                        className="review-item-artwork-image"
-                                        style={{backgroundImage: 'url(assets/images/artwork-substitute.png)'}} />
-                                </td>
-                                <td className="review-item-details">
-                                    <h3 className="review-item-title">Starry Night</h3>
-                                    <h3 className="review-item-artist">Van Gogh</h3>
-                                    <h3 className="review-item-year">1888</h3>
-                                </td>
-                                <td className="review-item-tags">
-                                    <div className="review-item-tags-wrapper">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                </td>
-                                <td className="review-item-description">
-                                    <div
-                                        className="review-item-description-button">
-                                        Click<sup className="pink"> | </sup>Hover
-                                    </div>
-                                </td>
-                                <td className="review-item-submitted">
-                                    <h3>Mar 26, 2017</h3>
-                                </td>
-                                <td className="review-item-status">
-                                    <select
-                                        className   ="edit-artwork-select"
-                                        ref         ="editAlbum"
-                                        value="In Review">
-                                        {this.state.status_types.map(type => {
-                                                return (
-                                                    <option
-                                                        key     ={uuid.v4()}
-                                                        value   ={type}>
-                                                        {type}
-                                                    </option>
-                                                );
-                                            })}
-                                    </select>
-                                </td>
-                                <td className="review-item-note">
-                                    <textarea
-                                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                                        value       ={""}
-                                        maxLength   ="1500" />
-                                </td>
-                                <td className="review-item-review">
-                                    <div
-                                        className="review-item-review-button">
-                                        Review
-                                    </div>
-                                </td>
-                            </tr>
+                            {
+                                this.state.reviewItems.map(item => {
+
+                                    return (
+                                        <ReviewItem
+                                            mode={"Pending"}
+                                            item={item}
+                                            deleteItem={this.deleteItem}
+                                            approveArtwork={this.approveArtwork}
+                                            updateItem={this.updateItem}
+                                            updateReviewInfo={this.updateReviewInfo}
+                                            toggleArtworkPreview={this.toggleArtworkPreview}
+                                            toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                         />
+                                    );
+                                })}
                         </tbody>
                 	</table>
                 </div>
-                <div
-                    className="review-item-wrapper">
-                    {this.state.reviewItems.map(item => {
-                        return (
-                            <ReviewItem
-                                item={item}
-                                writeMemo={this.writeMemo}
-                                updateSubmissionStatus={this.updateSubmissionStatus}
-                             />
-                        );
-                    })}
-                </div>
+                <ArtworkImagePreview
+                    toggleArtworkPreview={this.toggleArtworkPreview}
+                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
+                    reviewInfo={this.state.reviewInfo}
+                 />
+                <ArtworkDescriptionPreview
+                     toggleDescriptionPreview={this.toggleDescriptionPreview}
+                     artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                     reviewInfo={this.state.reviewInfo}
+                  />
                 <div
                     onClick     ={this.props.toggleNav}
                     onTouchTap  ={this.props.toggleNav}
@@ -544,7 +149,18 @@ export default class ReviewManager extends React.Component {
         );
     }
 
-    goToReviewed = () => {
+    goToApproved = () => {
+        const reviewWrapperStyle = {
+            height: window.innerHeight - 140 - 30,
+            width : window.innerWidth - 40
+        };
+        const tableWidth = {
+            width: window.innerWidth - 40 - 20
+        };
+        const itemTableWidth = {
+            width: window.innerWidth - 40 - 40
+        };
+
         return (
             <div>
                 <div className="review-sections">
@@ -556,18 +172,57 @@ export default class ReviewManager extends React.Component {
                     <div
                         className="review-section-reviewed selected"
                         onClick={this.toggleReviewScreen}>
-                        <h2>Reviewed</h2>
+                        <h2>Approved</h2>
                     </div>
                 </div>
-                {this.state.reviewItems.map(item => {
-                    return (
-                        <ReviewItem
-                            item={item}
-                            writeMemo={this.writeMemo}
-                            updateSubmissionStatus={this.updateSubmissionStatus}
-                         />
-                    );
-                })}
+                <table
+                    className="review-headings-wrapper"
+                    style={reviewWrapperStyle}>
+                    <thead className="review-headings">
+                        <tr>
+                            <th className="review-artwork-heading">Artwork</th>
+                            <th className="review-details-heading">Details</th>
+                            <th className="review-tags-heading">Tags</th>
+                            <th className="review-description-heading">Description</th>
+                            <th className="review-submitted-heading">Submitted</th>
+                            <th className="review-status-heading">Status</th>
+                            <th className="review-note-heading">Review Note</th>
+                            <th className="review-button-heading"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div className="review-wrapper"
+                    style={reviewWrapperStyle}>
+                    <table
+                        className="review-table"
+                        style={tableWidth}>
+                        <tbody>
+                            {this.state.approvedItems.map(item => {
+                                return (
+                                    <ReviewItem
+                                        mode={"Approved"}
+                                        item={item}
+                                        approveArtwork={this.approveArtwork}
+                                        updateItem={this.updateItem}
+                                        updateReviewInfo={this.updateReviewInfo}
+                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                    />
+                                );
+                            })}
+                        </tbody>
+                	</table>
+                </div>
+                <ArtworkImagePreview
+                    toggleArtworkPreview={this.toggleArtworkPreview}
+                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
+                    reviewInfo={this.state.reviewInfo}
+                 />
+                <ArtworkDescriptionPreview
+                         toggleDescriptionPreview={this.toggleDescriptionPreview}
+                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                         reviewInfo={this.state.reviewInfo}
+                      />
                 <div
                     onClick     ={this.props.toggleNav}
                     onTouchTap  ={this.props.toggleNav}
@@ -578,32 +233,149 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
+    deleteItem = (id) =>{
+        let subRef = firebase.database().ref(`submissions/${id}`);
+        subRef.set(null).then( ()=>{
+            console.log(id," was deleted.");
+        })
+    }
+
+    /**
+     * [updateReviewInfo description]
+     * @param  {String} artist_uid  [description]
+     * @param  {String} artwork_uid [description]
+     * @param  {String} description [description]
+     */
+    updateReviewInfo = (artist_uid,artwork_uid,description) => {
+        let info = {
+            artwork_uid:artwork_uid,
+            artist_uid:artist_uid,
+            description:description
+        }
+        this.setState({reviewInfo:info});
+    }
+
+    /**
+     * This method first checks if the status has been changed to approve.
+     * If so, it updates the status and moves the obj from the submissions
+     * branch to the approved branch. Else, it updates the status/memo fields
+     * on the submissions branch.
+     * @param  {Object} artwork [artwork obj as in FB db]
+     * @param  {String} status  ["Approve", "In Review", ..]
+     * @param  {String} memo    []
+     */
+    approveArtwork = (artwork,status,memo) =>{
+        if (status == "Approved") {
+            console.log(artwork.artwork_uid);
+            artwork.status = status; // "Approved"
+            artwork.approved = new Date().toISOString();
+            let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
+            let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
+            aprRef.set(artwork).then(()=>{ // add to approved branch
+                subRef.set(null).then( ()=>{ //delete item
+                    console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
+                });
+            });
+            //Remove this artwork from the pending screen
+            for (var i = 0; i < this.state.reviewItems.length; i++) {
+                let item = this.state.reviewItems[i];
+                if (item.artwork_uid == artwork.artwork_uid) {
+                    let updates = this.state.reviewItems.concat([]); //deepcopy
+                    updates.splice(i,1);
+                    this.setState({reviewItems:updates});
+                    break;
+                }
+            }
+
+        } else {
+            if (artwork.status != status || artwork.memo != memo) {
+                console.log("updating db...",artwork.artwork_uid);
+                let path = `submissions/${artwork.artwork_uid}`;
+                let updates = {
+                    memo:memo,
+                    status:status
+                };
+                firebase.database().ref(path).update(updates);
+                console.log("updated");
+            }
+        }
+    }
+
+
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
      * firebase database. NOTE FIXME set the .indexOn rule in the firebase
      * rules for better performance.
+     * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
+        let pagLimit = 2;
         let submitRef = firebase.database().ref(`submissions`);
-        submitRef.orderByChild('submitted').on("value", (snapshot)=>{
-            let data = snapshot.val();
-            console.log("Submit:",data.submitted);
+        //NOTE random keys are chronologically sortable.
+        submitRef.orderByChild("submitted").limitToFirst(pagLimit).on("value", (snapshot)=>{
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) { //ignore the placeholder in DB
+                    let submit = childSnap.val();
+                    function isSame(elm) {
+                        return elm.artwork_uid == submit.artwork_uid
+                    }
+                    let index = this.state.reviewItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array
+                        updated = this.state.reviewItems.concat([]); //dont mutate state
+                        updated[index] = submit;
+                    } else {
+                        updated = this.state.reviewItems.concat([submit]);
+                    }
+                    this.setState({reviewItems:updated});
+                }
+            });
         });
     }
 
-    writeMemo = () => {
-
+    fetchApproved = () => {
+        let pagLimit = 10;
+        let appRef = firebase.database().ref(`approved`);
+        appRef.orderByChild("approved").limitToFirst(pagLimit).on("value", (snapshot)=>{
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) {
+                    let item = childSnap.val();
+                    function isSame(elm) {
+                        return elm.artwork_uid == item.artwork_uid
+                    }
+                    let index = this.state.approvedItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array
+                        updated = this.state.approvedItems.concat([]); //dont mutate state
+                        updated[index] = item;
+                    } else {
+                        updated = this.state.approvedItems.concat([item]);
+                    }
+                    this.setState({approvedItems:updated});
+                }
+            });
+        });
     }
 
-    updateSubmissionStatus = (status) => {
-        if (status === "Accepted" || status === "Deferred" || status === "Held") {
-
-        }
+    updateItem = (a,b) => {
+        // what is this
     }
 
     toggleReviewScreen = () => {
         this.setState({
             pendingScreen: !this.state.pendingScreen
+        });
+    }
+
+    toggleArtworkPreview = () => {
+        this.setState({
+            artworkPreviewIsOpen: !this.state.artworkPreviewIsOpen
+        });
+    }
+
+    toggleDescriptionPreview = () => {
+        this.setState({
+            artworkDescriptionIsOpen: !this.state.artworkDescriptionIsOpen
         });
     }
 

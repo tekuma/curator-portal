@@ -9,11 +9,13 @@ import injectTapEventPlugin from "react-tap-event-plugin";
 import CurationHeader from '../headers/CurationHeader';
 import SearchMain     from '../search_manager/SearchMain';
 import ManagerMain    from '../manage/ManagerMain';
-import ReviewManager    from '../review/ReviewManager';
+import ReviewManager  from '../review/ReviewManager';
 import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';
 import EditProfile    from '../edit_profile/EditProfile';
+import EditProfileDialog   from '../edit_profile/EditProfileDialog';
+import VerifyEmailDialog   from '../edit_profile/VerifyEmailDialog';
 
 
 
@@ -24,8 +26,10 @@ export default class PostAuth extends React.Component {
     state = {
         managerIsOpen: true,
         navIsOpen    : false,
+        editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
+        verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
         user         : {},
-        role         : Roles.MANAGE,
+        role         : Roles.SEARCH,
         projects     : [],
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
@@ -78,6 +82,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -117,6 +122,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -166,6 +172,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -197,6 +204,7 @@ export default class PostAuth extends React.Component {
                     changeAppLayout={this.changeAppLayout} />
                 <div className={this.state.navIsOpen ? "main-wrapper open" : "main-wrapper"}>
                     <CurationHeader
+                        artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
@@ -212,9 +220,16 @@ export default class PostAuth extends React.Component {
                     <div className="edit-profile-layout">
                         <EditProfile
                             user={this.state.user}
-                            toggleVerifyEmailDialog   ={this.props.toggleVerifyEmailDialog}
+                            toggleProfileDialog={this.toggleProfileDialog}
+                            toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
                             />
                     </div>
+                    <EditProfileDialog
+                    toggleProfileDialog={this.toggleProfileDialog}
+                    editProfileDialogIsOpen={this.state.editProfileDialogIsOpen} />
+                    <VerifyEmailDialog
+                    toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
+                    verifyEmailDialogIsOpen={this.state.verifyEmailDialogIsOpen} />
                     <div
                         onClick     ={this.props.toggleNav}
                         onTouchTap  ={this.props.toggleNav}
@@ -269,7 +284,7 @@ export default class PostAuth extends React.Component {
                 navIsOpen: false,
                 managerIsOpen: true,
                 role:role,
-                artworkBuffer: []
+                artworkBuffer   : []
             });
         } else {
             this.setState({
@@ -300,12 +315,14 @@ export default class PostAuth extends React.Component {
     fetchProjects = () => {
         let thisUID      = firebase.auth().currentUser.uid;
         let projectsPath = `users/${thisUID}/projects`;
+        //NOTE use 'on' so that fetchProjects fires every time there is an update
+        // which projects the user can see.
         firebase.database().ref(projectsPath).on('value', this.fetchProjectNames);
     }
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects.
+     * state.projects. This method has an async. for-loop
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {
@@ -320,7 +337,7 @@ export default class PostAuth extends React.Component {
 
                 // make calls
                 let path   = `projects/${projID}`;
-
+                //NOTE: Use once, not on. On is called in the parent method.
                 firebase.database().ref(path).once('value', (snapshot) => {
                     let data = snapshot.val()
                     let thisProj = [data.name,data.id];
@@ -454,7 +471,6 @@ export default class PostAuth extends React.Component {
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-                // console.log(node);
                 for (var key in node.artworks) { // obj -> array
                     if (node.artworks.hasOwnProperty(key)) {
                         art.push(node.artworks[key]);
@@ -542,6 +558,30 @@ export default class PostAuth extends React.Component {
 
     emptyBuffer = () => {
         this.setState({artworkBuffer:[]});
+    }
+
+    /**
+     * This method is used by the Edit Profile Layout page component
+     * to toggle the boolean value of this.state.editProfileDialogIsOpen
+     * to change the state of the the Edit Profile Dialog component
+     * from open to closed.
+     */
+    toggleProfileDialog = () => {
+        this.setState({
+            editProfileDialogIsOpen: !this.state.editProfileDialogIsOpen
+        });
+    }
+
+    /**
+     * This method is used by the Verify Email button the Private Edit Profile page component
+     * to toggle the boolean value of this.state.verifyEmailIsOpen
+     * to change the state of the the Verify Email Dialog component
+     * from open to closed.
+     */
+    toggleVerifyEmailDialog = () => {
+        this.setState({
+            verifyEmailDialogIsOpen: !this.state.verifyEmailDialogIsOpen
+        });
     }
 
 }//EOF
