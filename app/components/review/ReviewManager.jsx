@@ -23,6 +23,7 @@ export default class ReviewManager extends React.Component {
     state = {
         pendingScreen: true,        // Will determine which screen user is in (pending or reviewed)
         reviewItems: [],
+        approvedItems:[],
         artworkPreviewIsOpen: false,
         artworkDescriptionIsOpen: false,
         reviewInfo: {}
@@ -40,13 +41,16 @@ export default class ReviewManager extends React.Component {
         if (this.state.pendingScreen) {
             return this.goToPending();
         } else {
-            return this.goToReviewed();
+            return this.goToApproved();
         }
     }
 
     componentDidMount() {
         console.log("++++++ReviewManager");
         this.fetchSubmissions();
+        setTimeout( ()=>{//NOTE
+            this.fetchApproved();
+        }, 15);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -59,33 +63,17 @@ export default class ReviewManager extends React.Component {
     // =========== Flow Control =============
 
     goToPending = () => {
-
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 30,
             width: window.innerWidth - 40
-        }
-
+        };
         const tableWidth = {
             width: window.innerWidth - 40 - 20
-        }
+        };
 
         const itemTableWidth = {
             width: window.innerWidth - 40 - 40
-        }
-
-        let tags = [
-            {id: 1, text: "#art"},
-            {id: 2, text: "#impasto"},
-            {id: 3, text: "#night"},
-            {id: 4, text: "#stars"},
-            {id: 5, text: "#blue"},
-            {id: 6, text: "#sky"},
-            {id: 7, text: "#tree"}
-        ];
-
-        let artworkImage = {
-            backgroundImage: 'url(assets/starry.jpg)'
-        }
+        };
 
         return (
             <div>
@@ -98,7 +86,7 @@ export default class ReviewManager extends React.Component {
                     <div
                         className="review-section-reviewed"
                         onClick={this.toggleReviewScreen}>
-                        <h2>Reviewed</h2>
+                        <h2>Approved</h2>
                     </div>
                 </div>
                 <table
@@ -129,7 +117,9 @@ export default class ReviewManager extends React.Component {
 
                                     return (
                                         <ReviewItem
+                                            mode={"Pending"}
                                             item={item}
+                                            deleteItem={this.deleteItem}
                                             approveArtwork={this.approveArtwork}
                                             updateItem={this.updateItem}
                                             updateReviewInfo={this.updateReviewInfo}
@@ -147,10 +137,10 @@ export default class ReviewManager extends React.Component {
                     reviewInfo={this.state.reviewInfo}
                  />
                 <ArtworkDescriptionPreview
-                         toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
-                         reviewInfo={this.state.reviewInfo}
-                      />
+                     toggleDescriptionPreview={this.toggleDescriptionPreview}
+                     artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                     reviewInfo={this.state.reviewInfo}
+                  />
                 <div
                     onClick     ={this.props.toggleNav}
                     onTouchTap  ={this.props.toggleNav}
@@ -159,34 +149,17 @@ export default class ReviewManager extends React.Component {
         );
     }
 
-    goToReviewed = () => {
-
+    goToApproved = () => {
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 30,
-            width: window.innerWidth - 40
-        }
-
+            width : window.innerWidth - 40
+        };
         const tableWidth = {
             width: window.innerWidth - 40 - 20
-        }
-
+        };
         const itemTableWidth = {
             width: window.innerWidth - 40 - 40
-        }
-
-        let tags = [
-            {id: 1, text: "#art"},
-            {id: 2, text: "#impasto"},
-            {id: 3, text: "#night"},
-            {id: 4, text: "#stars"},
-            {id: 5, text: "#blue"},
-            {id: 6, text: "#sky"},
-            {id: 7, text: "#tree"}
-        ];
-
-        let artworkImage = {
-            backgroundImage: 'url(assets/starry.jpg)'
-        }
+        };
 
         return (
             <div>
@@ -199,7 +172,7 @@ export default class ReviewManager extends React.Component {
                     <div
                         className="review-section-reviewed selected"
                         onClick={this.toggleReviewScreen}>
-                        <h2>Reviewed</h2>
+                        <h2>Approved</h2>
                     </div>
                 </div>
                 <table
@@ -217,16 +190,6 @@ export default class ReviewManager extends React.Component {
                             <th className="review-button-heading"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <ReviewItem
-                            item={this.state.reviewItems[0]}
-                            approveArtwork={this.approveArtwork}
-                            updateReviewInfo={this.updateReviewInfo}
-                            updateItem={this.updateItem}
-                            toggleArtworkPreview={this.toggleArtworkPreview}
-                            toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         />
-                    </tbody>
                 </table>
                 <div className="review-wrapper"
                     style={reviewWrapperStyle}>
@@ -234,16 +197,19 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-                            {this.state.reviewItems.map(item => {
-                                    return (
-                                        <ReviewItem
-                                            item={item}
-                                            updateItem={this.updateItem()}
-                                            toggleArtworkPreview={this.toggleArtworkPreview}
-                                            toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                         />
-                                    );
-                                })}
+                            {this.state.approvedItems.map(item => {
+                                return (
+                                    <ReviewItem
+                                        mode={"Approved"}
+                                        item={item}
+                                        approveArtwork={this.approveArtwork}
+                                        updateItem={this.updateItem}
+                                        updateReviewInfo={this.updateReviewInfo}
+                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                    />
+                                );
+                            })}
                         </tbody>
                 	</table>
                 </div>
@@ -267,7 +233,19 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
+    deleteItem = (id) =>{
+        let subRef = firebase.database().ref(`submissions/${id}`);
+        subRef.set(null).then( ()=>{
+            console.log(id," was deleted.");
+        })
+    }
 
+    /**
+     * [updateReviewInfo description]
+     * @param  {String} artist_uid  [description]
+     * @param  {String} artwork_uid [description]
+     * @param  {String} description [description]
+     */
     updateReviewInfo = (artist_uid,artwork_uid,description) => {
         let info = {
             artwork_uid:artwork_uid,
@@ -290,18 +268,22 @@ export default class ReviewManager extends React.Component {
         if (status == "Approved") {
             console.log(artwork.artwork_uid);
             artwork.status = status; // "Approved"
+            artwork.approved = new Date().toISOString();
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
-            aprRef.set(artwork).then(()=>{
-                subRef.set(null).then( ()=>{
+            aprRef.set(artwork).then(()=>{ // add to approved branch
+                subRef.set(null).then( ()=>{ //delete item
                     console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
                 });
             });
+            //Remove this artwork from the pending screen
             for (var i = 0; i < this.state.reviewItems.length; i++) {
                 let item = this.state.reviewItems[i];
                 if (item.artwork_uid == artwork.artwork_uid) {
                     let updates = this.state.reviewItems.concat([]); //deepcopy
-                    this.setState({reviewItems:updates})
+                    updates.splice(i,1);
+                    this.setState({reviewItems:updates});
+                    break;
                 }
             }
 
@@ -319,6 +301,7 @@ export default class ReviewManager extends React.Component {
         }
     }
 
+
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
      * firebase database. NOTE FIXME set the .indexOn rule in the firebase
@@ -326,22 +309,56 @@ export default class ReviewManager extends React.Component {
      * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
+        let pagLimit = 2;
         let submitRef = firebase.database().ref(`submissions`);
-        submitRef.orderByChild('submitted').on("value", (snapshot)=>{
+        //NOTE random keys are chronologically sortable.
+        submitRef.orderByChild("submitted").limitToFirst(pagLimit).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();
-                    let updated = this.state.reviewItems.concat([submit]);
+                    function isSame(elm) {
+                        return elm.artwork_uid == submit.artwork_uid
+                    }
+                    let index = this.state.reviewItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array
+                        updated = this.state.reviewItems.concat([]); //dont mutate state
+                        updated[index] = submit;
+                    } else {
+                        updated = this.state.reviewItems.concat([submit]);
+                    }
                     this.setState({reviewItems:updated});
                 }
             });
+        });
+    }
 
+    fetchApproved = () => {
+        let pagLimit = 10;
+        let appRef = firebase.database().ref(`approved`);
+        appRef.orderByChild("approved").limitToFirst(pagLimit).on("value", (snapshot)=>{
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) {
+                    let item = childSnap.val();
+                    function isSame(elm) {
+                        return elm.artwork_uid == item.artwork_uid
+                    }
+                    let index = this.state.approvedItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array
+                        updated = this.state.approvedItems.concat([]); //dont mutate state
+                        updated[index] = item;
+                    } else {
+                        updated = this.state.approvedItems.concat([item]);
+                    }
+                    this.setState({approvedItems:updated});
+                }
+            });
         });
     }
 
     updateItem = (a,b) => {
-        console.log(a,b);
-
+        // what is this
     }
 
     toggleReviewScreen = () => {

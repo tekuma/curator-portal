@@ -15,6 +15,7 @@ import uuid       from 'node-uuid';
 export default class ReviewItem extends React.Component {
     state = {
         status_types: ["In Review", "Approved", "Held","Rejected"],
+        status:""
     };
 
     constructor(props) {
@@ -93,11 +94,22 @@ export default class ReviewItem extends React.Component {
                          />
                 </td>
                 <td className="review-item-review">
-                    <div
-                        className="review-item-review-button"
-                        onClick={this.handleReviewButton}>
-                        Update
-                    </div>
+
+                    {this.props.mode === "Pending" ?
+                        <div>
+                        <div
+                            className="review-item-review-button"
+                            onClick={this.handleReviewButton}>
+                            Update
+                        </div>
+                        <div
+                            className="review-item-review-button"
+                            onClick={this.handleDelete}>
+                            Delete
+                        </div>
+                        </div>
+                    :
+                <div></div> }
                 </td>
             </tr>
         );
@@ -105,16 +117,26 @@ export default class ReviewItem extends React.Component {
 
     componentDidMount() {
         console.log("++++++ReviewItem");
+        console.log(this.props.item.status);
         this.setState({
             status:this.props.item.status
         })
     }
 
     componentWillReceiveProps(nextProps) {
-
+        if (nextProps.item.status) {
+            this.setState({
+                status:nextProps.item.status
+            })
+        }
     }
 
     // =========== Methods ==============
+    //
+    handleDelete = (e) =>{
+        let id = this.props.item.artwork_uid;
+        this.props.deleteItem(id);
+    }
 
     handleSelect = (e) => {
         let status = this.refs.review_status.value;
@@ -126,6 +148,9 @@ export default class ReviewItem extends React.Component {
         let status = this.refs.review_status.value;
         let memo   = this.refs.memo.value;
         this.props.approveArtwork(this.props.item,status,memo);
+        this.setState({
+            status:status
+        })
     }
 
     handleArtworkPreview = () => {
