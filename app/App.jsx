@@ -145,10 +145,23 @@ export default class App extends React.Component {
             uid         : user.uid,
             projects    : projects,
             public      : {
-                display_name: "Unset"
+                display_name: "Unset",
+                social_media   : {
+                    facebook    : "",
+                    twitter     : "",
+                    instagram   : "",
+                    pinterest   : "",
+                    behance     : ""
+                },
+                bio             : "",
+                location        : "",
+                portfolio       : "",
+                display_name    : "",
+                avatar          : ""
+
             },
             private     : {
-                legal_name: "Unset"
+                legal_name: ""
             }
         };
         const userPath = `users/${user.uid}`;

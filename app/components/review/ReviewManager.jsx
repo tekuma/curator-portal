@@ -67,7 +67,7 @@ export default class ReviewManager extends React.Component {
 
     goToPending = () => {
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 30,
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
             width: window.innerWidth - 40
         };
         const tableWidth = {
@@ -131,23 +131,23 @@ export default class ReviewManager extends React.Component {
                                          />
                                     );
                                 })}
-                                <tr className="review-item">
-                                    <div>
-                                        <td className="review-item-tags"
-                                            onClick={this.changePage.bind({},false)}
-                                            onTouchTap={this.changePage.bind({},false)}>
-                                             Previous
-                                        </td>
-                                        <td>*</td>
-                                        <td className="review-item-submitted"
-                                            onClick={this.changePage.bind({},true)}
-                                            onTouchTap={this.changePage.bind({},true)}>
-                                            Next
-                                        </td>
-                                    </div>
-                                </tr>
                         </tbody>
                 	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
                 </div>
                 <ArtworkImagePreview
                     toggleArtworkPreview={this.toggleArtworkPreview}
@@ -169,7 +169,7 @@ export default class ReviewManager extends React.Component {
 
     goToApproved = () => {
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 30,
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
             width : window.innerWidth - 40
         };
         const tableWidth = {
@@ -228,23 +228,23 @@ export default class ReviewManager extends React.Component {
                                     />
                                 );
                             })}
-                            <tr className="review-item">
-                                <div>
-                                    <td className="review-item-tags"
-                                        onClick={this.changePage.bind({},false)}
-                                        onTouchTap={this.changePage.bind({},false)}>
-                                         Previous
-                                    </td>
-                                    <td>*</td>
-                                    <td className="review-item-submitted"
-                                        onClick={this.changePage.bind({},true)}
-                                        onTouchTap={this.changePage.bind({},true)}>
-                                        Next
-                                    </td>
-                                </div>
-                            </tr>
                         </tbody>
                 	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
                 </div>
                 <ArtworkImagePreview
                     toggleArtworkPreview={this.toggleArtworkPreview}
@@ -306,10 +306,16 @@ export default class ReviewManager extends React.Component {
      * @param  {String} memo    []
      */
     saveReviewChanges = (artwork,status,memo) =>{
-        if (status == "Approved") {
+
+
+        if (!memo) {
+            let message = "Review failed. Write a review note to the artist explaining the artwork's review status."
+            this.props.sendToSnackbar(message);
+        } else if (status == "Approved") {
             console.log(artwork.artwork_uid);
             artwork.status = status; // "Approved"
             artwork.approved = new Date().getTime();
+            artwork.memo = memo;
             artwork.new_message = true;
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
@@ -328,7 +334,8 @@ export default class ReviewManager extends React.Component {
                     break;
                 }
             }
-
+            let message = "Artwork has been approved, and the artist has been notified."
+            this.props.sendToSnackbar(message);
         } else if (artwork.status != status || artwork.memo != memo) {
             console.log("updating db...",artwork.artwork_uid);
             artwork.status = status;
@@ -337,6 +344,8 @@ export default class ReviewManager extends React.Component {
             let path = `submissions/${artwork.artwork_uid}`;
             firebase.database().ref(path).set(artwork);
             console.log("updated");
+            let message = "Artwork status has been updated."
+            this.props.sendToSnackbar(message);
         }
     }
 

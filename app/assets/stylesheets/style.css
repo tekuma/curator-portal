@@ -2412,6 +2412,12 @@ login-button.left {
 	color: rgb(236, 22, 124);
 }
 
+.registration-error > div {
+	margin: 20px !important;
+	height: auto !important;
+	line-height: 1.5em !important;
+}
+
 .edit-user-error h2 {
 	color: #ec167c;
 	font-size: 1em;
@@ -5028,10 +5034,24 @@ label.age-confirm-label {
 	color: #ffffff;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	cursor: pointer;
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-ms-transition: all 0.3s;
+	transition: box-shadow 0.3s;
+	-webkit-transition: box-shadow 0.3s;
+	-moz-transition: box-shadow 0.3s;
+	-ms-transition: box-shadow 0.3s;
+}
+
+.review-item-review-button.pending {
+	padding: 10px;
+}
+
+.review-item-review-button.pending.top {
+	position: relative;
+	top: -8px;
+}
+
+.review-item-review-button.pending.bottom {
+	position: relative;
+	top: 8px;
 }
 
 .review-item-description-button{
@@ -5081,10 +5101,6 @@ label.age-confirm-label {
 .review-item-review-button  {
 	width: 90px;
 	margin: 0 auto;
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-ms-transition: all 0.3s;
 }
 
 .review-item-review-button:hover {
@@ -5096,10 +5112,6 @@ label.age-confirm-label {
 	background: -ms-linear-gradient(top, #e73827 0%, #ec167e 100%);
 	background: linear-gradient(to bottom, #e73827 0%, #ec167e 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e73827', endColorstr='#ec167e', GradientType=0 );
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-ms-transition: all 0.3s;
 }
 
 .review-artwork-content,
@@ -5225,6 +5237,50 @@ label.age-confirm-label {
 	margin: 0;
 	color: rgba(0,0,0,0.87);
 	padding: 30px;
+}
+
+/*========================================== */
+
+/* Confirmation Styles */
+
+.confirm-main {
+	font-size: 1.2em;
+}
+
+.confirm-secondary {
+	margin-top: 20px;
+	color: #ec167e;
+	font-size: 0.8em;
+	font-weight: 300;
+}
+
+/*========================================== */
+
+/* Pagination */
+
+.pagination-wrapper {
+	position: absolute;
+	bottom: 30px;
+	height: 54px;
+	width: 100%;
+	text-align: center;
+}
+
+.pagination-arrow {
+	display: inline-block;
+	margin: 0 50px;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+	padding: 15px;
+	background: #222222;
+	cursor: pointer;
+}
+
+.pagination-arrow:hover {
+	box-shadow: 0 5px 7px rgba(0,0,0,0.12), 0 3px 7px rgba(0,0,0,0.24);
+}
+
+.pagination-arrow img {
+	height: 35px;
 }
 
 /*========================================== */

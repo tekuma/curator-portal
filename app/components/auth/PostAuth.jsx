@@ -17,8 +17,6 @@ import EditProfile    from '../edit_profile/EditProfile';
 import EditProfileDialog   from '../edit_profile/EditProfileDialog';
 import VerifyEmailDialog   from '../edit_profile/VerifyEmailDialog';
 
-
-
 /**
  * Component Rendered following successful log in.
  */
@@ -36,6 +34,7 @@ export default class PostAuth extends React.Component {
         projectArtworks: [],
         projectDetails : {},
         command        : "",  // used for controlling artworks
+        currentError  : ""
     };
 
     constructor(props) {
@@ -92,6 +91,7 @@ export default class PostAuth extends React.Component {
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
+                        sendToSnackbar={this.sendToSnackbar}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -103,12 +103,20 @@ export default class PostAuth extends React.Component {
                         managerIsOpen={this.state.managerIsOpen}
                         navIsOpen={this.state.navIsOpen}
                         toggleManager={this.toggleManager}
+                        toggleNav={this.toggleNav}
                         currentProject={this.state.currentProject}
                         changeProject={this.changeProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                         addArtworksToProject={this.addArtworksToProject}  />
                 </div>
+                <MuiThemeProvider muiTheme={getMuiTheme()}>
+                    <Snackbar
+                        className="registration-error"
+                        open={this.state.currentError.length > 0}
+                        message={this.state.currentError}
+                        autoHideDuration={4000} />
+                </MuiThemeProvider>
             </div>
         );
     }
@@ -132,6 +140,7 @@ export default class PostAuth extends React.Component {
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
+                        sendToSnackbar={this.sendToSnackbar}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -160,6 +169,13 @@ export default class PostAuth extends React.Component {
                         emptyBuffer={this.emptyBuffer}
                         changeAppLayout={this.changeAppLayout}  />
                 </div>
+                <MuiThemeProvider muiTheme={getMuiTheme()}>
+                    <Snackbar
+                        className="registration-error"
+                        open={this.state.currentError.length > 0}
+                        message={this.state.currentError}
+                        autoHideDuration={4000} />
+                </MuiThemeProvider>
             </div>
         );
     }
@@ -183,6 +199,7 @@ export default class PostAuth extends React.Component {
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
+                        sendToSnackbar={this.sendToSnackbar}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -190,8 +207,16 @@ export default class PostAuth extends React.Component {
                     <ReviewManager
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen}
+                        sendToSnackbar={this.sendToSnackbar}
                          />
                 </div>
+                <MuiThemeProvider muiTheme={getMuiTheme()}>
+                    <Snackbar
+                        className="registration-error"
+                        open={this.state.currentError.length > 0}
+                        message={this.state.currentError}
+                        autoHideDuration={4000} />
+                </MuiThemeProvider>
             </div>
         );
     }
@@ -215,6 +240,7 @@ export default class PostAuth extends React.Component {
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
+                        sendToSnackbar={this.sendToSnackbar}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -233,10 +259,17 @@ export default class PostAuth extends React.Component {
                     toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
                     verifyEmailDialogIsOpen={this.state.verifyEmailDialogIsOpen} />
                     <div
-                        onClick     ={this.props.toggleNav}
-                        onTouchTap  ={this.props.toggleNav}
+                        onClick     ={this.toggleNav}
+                        onTouchTap  ={this.toggleNav}
                         className   ={this.state.navIsOpen ? "site-overlay open" : "site-overlay"} />
                 </div>
+                <MuiThemeProvider muiTheme={getMuiTheme()}>
+                    <Snackbar
+                        className="registration-error"
+                        open={this.state.currentError.length > 0}
+                        message={this.state.currentError}
+                        autoHideDuration={4000} />
+                </MuiThemeProvider>
             </div>
         );
     }
@@ -588,6 +621,19 @@ export default class PostAuth extends React.Component {
         this.setState({
             verifyEmailDialogIsOpen: !this.state.verifyEmailDialogIsOpen
         });
+    }
+
+    sendToSnackbar = (message) => {
+
+        this.setState({
+            currentError: message
+        });
+
+        setTimeout(() => {
+            this.setState({
+                currentError: ""
+            });
+        }, 4500);   // Clear error once it has been shown
     }
 
 }//EOF

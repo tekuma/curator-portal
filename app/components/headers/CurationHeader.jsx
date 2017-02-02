@@ -164,8 +164,13 @@ export default class CurationHeader extends React.Component {
      */
     handleProjectAdditionsOrDeletions = () => {
         if (this.props.role == Roles.SEARCH) {
+            let message = "Artwork/s have been added to project";
+            this.props.sendToSnackbar(message);
             this.props.addArtworksToProject();
+
         } else {
+            let message = "Artwork/s have been removed from project";
+            this.props.sendToSnackbar(message);
             this.props.deleteArtworksFromProject();
         }
     }
