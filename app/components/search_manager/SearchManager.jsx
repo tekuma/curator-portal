@@ -24,7 +24,7 @@ export default class SearchManager extends React.Component {
             color  : false
         },
         accordion: {
-            general : true,
+            general : false,
             artist  : false,
             tag     : false,
             title   : false,
@@ -1432,9 +1432,6 @@ export default class SearchManager extends React.Component {
             fields.color_list = [this.state.searchColors.one.hex,
                                  this.state.searchColors.two.hex,
                                  this.state.searchColors.three.hex];
-        }
-        if (this.state.searchCategories.tag) {
-            fields.text_tag_list = this.state.tags;
         }
 
         if (general.length === 0 && fields === {})
