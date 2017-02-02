@@ -7,6 +7,8 @@ import ReviewItem from './ReviewItem';
 import ArtworkImagePreview from './ArtworkImagePreview';
 import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
 
+// Global Variables
+const pg_size = 2;
 /*  a Submission object looks like:
     -jd7Jd21ka: {
         artwork_uid:"-jd7Jd21ka",
@@ -324,29 +326,83 @@ export default class ReviewManager extends React.Component {
         }
     }
 
-
     nextPage = () => {
         let pending = this.state.pendingScreen;
-        if(pending){
+        let last = this.state.reviewItems[this.state.reviewItems.length -1].submitted;
+        if (pending){
             console.log("PENDING NEXT");
+            this.detachListeners();
+            this.setState({reviewItems:[]});
+            let submitRef = firebase.database().ref(`submissions`);
+            // first/last in context of an ascending num list.
+            let limit = 2;
+            submitRef.orderByChild("submitted").startAt(last).limitToFirst(limit).on("value", (snapshot)=>{
+                snapshot.forEach( (childSnap)=>{
+                    if (childSnap.key != 0) { //ignore the placeholder in DB
+                        let submit = childSnap.val();
+                        function isSame(elm) {
+                            return elm.artwork_uid == submit.artwork_uid
+                        }
+                        let index = this.state.reviewItems.findIndex(isSame);
+                        let updated;
+                        if (index != -1) { // already in array
+                            updated = this.state.reviewItems.concat([]); //dont mutate state
+                            updated[index] = submit;
+                        } else {
+                            updated = this.state.reviewItems.concat([submit]);
+                        }
+                        this.setState({reviewItems:updated});
+                    }
+                });
+            });
         }
     }
 
     prevPage = () => {
-
+        if (this.state.reviewItems){
+            let pending = this.state.pendingScreen;
+            let first = this.state.reviewItems[0].submitted;
+            if (pending) {
+                console.log("PENDING prev");
+                this.detachListeners();
+                this.setState({reviewItems:[]});
+                let submitRef = firebase.database().ref(`submissions`);
+                // first/last in context of an ascending num list.
+                let limit = 2;
+                submitRef.orderByChild("submitted").endAt(first).limitToLast(limit).on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let submit = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == submit.artwork_uid
+                            }
+                            let index = this.state.reviewItems.findIndex(isSame);
+                            let updated;
+                            if (index != -1) { // already in array
+                                updated = this.state.reviewItems.concat([]); //dont mutate state
+                                updated[index] = submit;
+                            } else {
+                                updated = this.state.reviewItems.concat([submit]);
+                            }
+                            this.setState({reviewItems:updated});
+                        }
+                    });
+                });
+            }
+        } else {
+            //fetch?
+        }
     }
 
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
      * firebase database. NOTE FIXME set the .indexOn rule in the firebase
      * rules for better performance.
-     * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
-        let pagLimit = 2;
         let submitRef = firebase.database().ref(`submissions`);
-        //NOTE random keys are chronologically sortable.
-        submitRef.orderByChild("submitted").limitToFirst(pagLimit).on("value", (snapshot)=>{
+        //NOTE submitted is #(seconds since 1970) sorted ascendingly
+        submitRef.orderByChild("submitted").limitToFirst(pg_size).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();
