@@ -340,7 +340,7 @@ export default class ReviewManager extends React.Component {
                     break;
                 }
             }
-            let message = "Artwork has been approved, and the artist has been notified."
+            let message = "Artwork has been approved and the artist has been notified."
             this.props.sendToSnackbar(message);
         } else if (artwork.status != status || artwork.memo != memo) {
             console.log("updating db...",artwork.artwork_uid);
