@@ -48,7 +48,6 @@ export default class SearchMain extends React.Component {
                 thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
             }
         ],  // current list of search results
-        command       : "",  // used for controlling artworks
         detailBoxIsOpen: false, // whether popup is open or not
         infoArtwork   : null,  // uid of displayed artworkInfo
         /*
@@ -96,7 +95,7 @@ export default class SearchMain extends React.Component {
             <SearchArtworkManager
                 detailArtwork={this.detailArtwork}
                 toggleDetailBox={this.toggleDetailBox}
-                command={this.state.command}
+                command={this.props.command}
                 results={this.state.results}
                 managerIsOpen={this.props.managerIsOpen}
                 addArtworkToBuffer={this.props.addArtworkToBuffer}
@@ -164,15 +163,6 @@ export default class SearchMain extends React.Component {
         setTimeout( ()=>{
             this.setState({results: data.rows});
         }, 25);
-    }
-
-    addToProject = () => {
-        this.props.addArtworksToProject();
-        this.setState({command:"deselect"});
-        setTimeout( ()=>{
-            this.setState({command:""});
-        }, 50);
-        this.props.emptyBuffer();
     }
 
     /**

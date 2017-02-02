@@ -34,7 +34,8 @@ export default class PostAuth extends React.Component {
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
         projectArtworks: [],
-        projectDetails : {}
+        projectDetails : {},
+        command        : "",  // used for controlling artworks
     };
 
     constructor(props) {
@@ -96,6 +97,7 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <SearchMain
+                        command={this.state.command}
                         role={this.state.role}
                         projects={this.state.projects}
                         managerIsOpen={this.state.managerIsOpen}
@@ -112,7 +114,6 @@ export default class PostAuth extends React.Component {
     }
 
     goToManage = () => {
-
         return(
             <div>
                 <HiddenNav
@@ -136,6 +137,7 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ManagerMain
+                        command={this.state.command}
                         user={this.state.user}
                         artworkBuffer={this.state.artworkBuffer}
                         projectDetails={this.state.projectDetails}
@@ -402,7 +404,6 @@ export default class PostAuth extends React.Component {
             });
         } else {
             let theProj = [newName.label,newName.id];
-            console.log(theProj, "kdkddkkdkdkdkdkdkdk");
             this.setState({currentProject:theProj});
             setTimeout( ()=>{ // wait for state to update
                 this.fetchProjectDetails();
@@ -531,6 +532,7 @@ export default class PostAuth extends React.Component {
             return node;
         },()=>{
             console.log(">>Project Updated successfully");
+            this.emptyBuffer();
         });
     }
 
@@ -557,6 +559,10 @@ export default class PostAuth extends React.Component {
     }
 
     emptyBuffer = () => {
+        this.setState({command:"deselect"});
+        setTimeout( ()=>{
+            this.setState({command:""});
+        }, 50);
         this.setState({artworkBuffer:[]});
     }
 

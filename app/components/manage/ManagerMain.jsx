@@ -12,7 +12,6 @@ import ManageNotesDialog   from './ManageNotesDialog';
 
 export default class ManagerMain extends React.Component {
     state = {
-        command        : "", // for sending actions down to Artworks
         detailBoxIsOpen: false, // whether artwork detail box is open or not
         manageNotesIsOpen: false, // whether popup is open or not
         artworkInfo   : {  // TODO: remove placeholder info
@@ -43,7 +42,7 @@ export default class ManagerMain extends React.Component {
         return(
             <div>
                 <ProjectArtworkManager
-                      command={this.state.command}
+                      command={this.props.command}
                       projectArtworks={this.props.projectArtworks}
                       managerIsOpen={this.props.managerIsOpen}
                       addArtworkToBuffer={this.props.addArtworkToBuffer}
