@@ -49,6 +49,7 @@ exports.translate_from_tekuma_firebase = (filename) => {
             let artwork = {
                 uid: firebase_db[artist_uid].artworks[artwork_ref].id,
                 title: firebase_db[artist_uid].artworks[artwork_ref].title || '',
+                description: firebase_db[artist_uid].artworks[artwork_ref].description || '',
                 artist_uid: artist_uid,
                 thumbnail_url: ('https://storage.googleapis.com/art-uploads/portal/'
                                 +artist_uid+'/thumb128/'

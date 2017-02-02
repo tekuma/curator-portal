@@ -352,9 +352,10 @@ exports.consolidate_all_labels = () => {
 exports.insert_artwork = (artwork, update) => {
     update = update || false;
     var new_insert = (function () {
-        return dbq('INSERT INTO artworks (uid, title, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?)',
+        return dbq('INSERT INTO artworks (uid, title, description, artist_uid, thumbnail_url) VALUES (?, ?, ?, ?, ?)',
                    [artwork.uid,
                     artwork.title,
+                    artwork.description || null,
                     artwork.artist_uid || null,
                     artwork.thumbnail_url || null], false);
     });
@@ -365,8 +366,9 @@ exports.insert_artwork = (artwork, update) => {
                     if (rows.length === 0) {
                         return new_insert();
                     } else {
-                        return dbq('UPDATE artworks SET title = ?, artist_uid = ?, thumbnail_url = ? WHERE uid = ?',
+                        return dbq('UPDATE artworks SET title = ?, description = ?, artist_uid = ?, thumbnail_url = ? WHERE uid = ?',
                                    [artwork.title,
+                                    artwork.description || null,
                                     artwork.artist_uid || null,
                                     artwork.thumbnail_url || null,
                                     artwork.uid], false).then(resolve);
