@@ -93,16 +93,18 @@ if (cmd_q_string != null) {
         } else {
             // Manually extract named search fields from query to
             // resist injection-based attacks.
-            fields = {};
+            var fields = {};
             if (req.query.q_title) {
                 fields.title = req.query.q_title;
             }
             if (req.query.q_artist) {
                 fields.artist = req.query.q_artist;
             }
-            if (req.query.q_w3c_color_list) {
-                console.log('color list:', req.query.q_w3c_color_list);
-                fields.w3c_color_list = req.query.q_w3c_color_list;
+            if (req.query.q_color_list) {
+                fields.color_list = req.query.q_color_list;
+            }
+            if (req.query.q_text_tag_list) {
+                fields.text_tag_list = req.query.q_text_tag_list;
             }
 
             firebase.auth().verifyIdToken(req.query.auth).then(function(decodedToken) {

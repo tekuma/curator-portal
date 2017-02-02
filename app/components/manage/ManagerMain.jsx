@@ -12,22 +12,11 @@ import ManageNotesDialog   from './ManageNotesDialog';
 
 export default class ManagerMain extends React.Component {
     state = {
-        detailBoxIsOpen: false, // whether artwork detail box is open or not
-        manageNotesIsOpen: false, // whether popup is open or not
-        artworkInfo   : {  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            reviewer     : "Kun Qian",
-            review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-            title        : "Starry Night",
-            artist       : "Vincent Van Gogh",
-            album        : "Impressionism",
-            year         : 1888,
-            tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-        },
-        users:[],
-        projectNotes:[],
+        manageNotesIsOpen:false, // whether popup is open or not
+        detailBoxIsOpen  :false, // whether artwork detail box is open or not
+        projectNotes     :[],  // gathered notes
+        artworkInfo      :{},  // Information display by more info pop-up
+        users            :[],  // list of [name,uid] pairs to populate collaborators
     }
 
     constructor(props) {
@@ -95,15 +84,21 @@ export default class ManagerMain extends React.Component {
     componentDidMount() {
         console.log("+++++ManagerMain");
         this.fetchAllUsers();
-
     }
 
     componentWillReceiveProps(nextProps){
     }
 
+    componentWillUnmount() {
+
+    }
+
     // =============== Methods =====================
 
-
+    /**
+     *
+     * @param {Object} notes [description]
+     */
     addNote = (notes) => {
         let publicNote = notes.collab;
         let privateNote = notes.personal;
@@ -129,8 +124,10 @@ export default class ManagerMain extends React.Component {
 
     }
 
+    /**
+     * Sets this.state.users to be [uid,name] pairs.
+     */
     fetchAllUsers = () => {
-        console.log("fetch");
         let users = [];
         firebase.database().ref('users').once("value", (snapshot)=>{
             snapshot.forEach((childSnap)=>{
@@ -165,21 +162,27 @@ export default class ManagerMain extends React.Component {
         this.props.emptyBuffer();
     }
 
+    /**
+     * [deleteProject description]
+     * @param  {HTML Element} e [description]
+     */
     deleteProject = (e) => {
         e.stopPropagation();
-
         confirm('Are you sure you want to delete this project?').then(
             () => {
                 // Proceed Callback
                 this.props.deleteCurrentProject();
-            },
-            () => {
+            }, () => {
                 // Cancel Callback
                 return;
             }
         );
     }
 
+    /**
+     * [detailArtwork description]
+     * @param  {String} uid [description]
+     */
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
             payload.auth = idToken;

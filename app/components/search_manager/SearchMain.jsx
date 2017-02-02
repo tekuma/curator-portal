@@ -7,78 +7,31 @@ import CurationHeader       from '../headers/CurationHeader';
 import SearchManager        from './SearchManager';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
+/*
+## SCHEMA SKETCH
+{
+artist: String
+title: String
+description: String
+album: String
+date: String of the form YYYY-MM-DD  // date of uploading
+creation_year: Integer
+thumbnail_url: String
+tags: Array of Objects
+    {
+        rgb_colors: Array of Integer triples
+        labels: Array of Strings
+    }
+}
+ */
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [
-            {  // TODO: remove placeholder info
-                description  : "Much art. Very nice.",
-                reviewer     : "Kun Qian",
-                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-                title        : "Starry Night",
-                artist       : "Vincent Van Gogh",
-                album        : "Impressionism",
-                year         : 1888,
-                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-            },
-            {  // TODO: remove placeholder info
-                description  : "Much art. Very nice.",
-                reviewer     : "Kun Qian",
-                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-                title        : "Starry Night",
-                artist       : "Vincent Van Gogh",
-                album        : "Impressionism",
-                year         : 1888,
-                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-            },
-            {  // TODO: remove placeholder info
-                description  : "Much art. Very nice.",
-                reviewer     : "Kun Qian",
-                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-                title        : "Starry Night",
-                artist       : "Vincent Van Gogh",
-                album        : "Impressionism",
-                year         : 1888,
-                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-            }
-        ],  // current list of search results
         detailBoxIsOpen: false, // whether popup is open or not
-        infoArtwork   : null,  // uid of displayed artworkInfo
-        /*
-        ## SCHEMA SKETCH
-        {
-        artist: String
-        title: String
-        description: String
-        album: String
-        date: String of the form YYYY-MM-DD  // date of uploading
-        creation_year: Integer
-        thumbnail_url: String
-        tags: Array of Objects
-            {
-                rgb_colors: Array of Integer triples
-                labels: Array of Strings
-            }
-        }
-         */
-        artworkInfo   : {  // TODO: remove placeholder info
-            description  : "Much art. Very nice.",
-            reviewer     : "Kun Qian",
-            review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
-            title        : "Starry Night",
-            artist       : "Vincent Van Gogh",
-            album        : "Impressionism",
-            year         : 1888,
-            tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
-            colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
-            thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
-        }
+        infoArtwork    : null,  // uid of displayed artworkInfo
+        results        :[],// current list of search results
+        command        : "",  // used for controlling artworks
+        artworkInfo    : {uid: null, found: false}
     }
 
     constructor(props) {
@@ -129,7 +82,10 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            payload.auth = idToken;
+            var payload = {
+                auth: idToken,
+                uid: uid
+            };
             $.ajax({
                 url: 'detail',
                 data: payload,
@@ -141,10 +97,7 @@ export default class SearchMain extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        this.setState({ infoArtwork:{} });
-        setTimeout( ()=>{
-            this.setState({results: data.rows});
-        }, 25);
+        this.setState({artworkInfo: data});
     }
 
     toggleDetailBox = () => {
@@ -190,6 +143,9 @@ export default class SearchMain extends React.Component {
         }
         if (fields.color_list) {
             payload.q_color_list = fields.color_list;
+        }
+        if (fields.text_tag_list) {
+            payload.q_text_tag_list = fields.text_tag_list;
         }
 
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{

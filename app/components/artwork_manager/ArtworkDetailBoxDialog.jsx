@@ -30,18 +30,42 @@ export default class ArtworkDetailBoxDialog extends React.Component {
               />
         ];
 
+        if (this.props.artworkInfo.found) {
+            var artwork_details = this.props.artworkInfo;
+        } else {
+            var artwork_details = {
+                found: false,
+                artist: null,
+                title: null,
+                album: null,
+                year: null,
+                reviewer: null,
+                review_note: null,
+                tags: { labels: [], w3c_rgb_colors: [] },
+                thumbnail512_url: ""
+            };
+        }
+
         let tags        = [];
-        for (var i = 0; i < this.props.artworkInfo.tags.length; i++) {
-            let tag = this.props.artworkInfo.tags[i];
+        for (var i = 0; i < artwork_details.tags.labels.length; i++) {
+            let tag = artwork_details.tags.labels[i];
             tags.push({id:i, text:tag});
         }
 
         let colors = [];
-        for (let colr of this.props.artworkInfo.colors) {
-            colors.push({background:colr});
+        for (let colr of artwork_details.tags.w3c_rgb_colors) {
+            let color_string = '#';
+            for (let j = 0; j < 3; j++) {
+                let cbyte = Number(colr[j]).toString(16);
+                if (cbyte.length < 2) {
+                    cbyte = '0'+cbyte;
+                }
+                color_string += cbyte;
+            }
+            colors.push({background: color_string});
         }
 
-        let image = this.props.artworkInfo.thumbnail_url;
+        let image = artwork_details.thumbnail512_url;
 
         let previewImage = {
             backgroundImage: 'url(' + image + ')'
@@ -71,15 +95,15 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                 <div className="artwork-details">
                                     <div
                                         className="artwork-title">
-                                        {this.props.artworkInfo.title}
+                                        {artwork_details.title}
                                     </div>
                                     <div
                                         className="artwork-artist">
-                                        {this.props.artworkInfo.artist}
+                                        {artwork_details.artist}
                                     </div>
                                     <div
                                         className="artwork-date">
-                                        {this.props.artworkInfo.year}
+                                        {artwork_details.year}
                                     </div>
                                 </div>
                                 <div className="other-artwork-details">
@@ -88,15 +112,15 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                     </h4>
                                     <div
                                         className="artwork-review">
-                                        &#8220;{this.props.artworkInfo.review_note}&#8221;
-                                        <div className="artwork-reviewer">{this.props.artworkInfo.reviewer}</div>
+                                        &#8220;{artwork_details.review_note}&#8221;
+                                        <div className="artwork-reviewer">{artwork_details.reviewer}</div>
                                     </div>
                                     <h4 className="artwork-album-heading">
                                         Album
                                     </h4>
                                     <div
                                         className="artwork-album">
-                                        {this.props.artworkInfo.album}
+                                        {artwork_details.album}
                                     </div>
                                     <h4 className="artwork-tags-heading">
                                         Tags
@@ -113,7 +137,7 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                     </h4>
                                     <div
                                         className="artwork-description">
-                                        {this.props.artworkInfo.description}
+                                        {artwork_details.description || ""}
                                     </div>
                                     <h4
                                         className="artwork-colors-heading">
