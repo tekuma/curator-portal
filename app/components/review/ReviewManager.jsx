@@ -7,6 +7,8 @@ import ReviewItem from './ReviewItem';
 import ArtworkImagePreview from './ArtworkImagePreview';
 import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
 
+// Global Variables
+const pg_size = 2;
 /*  a Submission object looks like:
     -jd7Jd21ka: {
         artwork_uid:"-jd7Jd21ka",
@@ -59,12 +61,13 @@ export default class ReviewManager extends React.Component {
 
     componentWillUnmount() {
         firebase.database().ref("submissions").off();
+        firebase.database().ref("approved").off();
     }
     // =========== Flow Control =============
 
     goToPending = () => {
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 30,
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
             width: window.innerWidth - 40
         };
         const tableWidth = {
@@ -120,7 +123,7 @@ export default class ReviewManager extends React.Component {
                                             mode={"Pending"}
                                             item={item}
                                             deleteItem={this.deleteItem}
-                                            approveArtwork={this.approveArtwork}
+                                            saveReviewChanges={this.saveReviewChanges}
                                             updateItem={this.updateItem}
                                             updateReviewInfo={this.updateReviewInfo}
                                             toggleArtworkPreview={this.toggleArtworkPreview}
@@ -130,6 +133,21 @@ export default class ReviewManager extends React.Component {
                                 })}
                         </tbody>
                 	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
                 </div>
                 <ArtworkImagePreview
                     toggleArtworkPreview={this.toggleArtworkPreview}
@@ -151,7 +169,7 @@ export default class ReviewManager extends React.Component {
 
     goToApproved = () => {
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 30,
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
             width : window.innerWidth - 40
         };
         const tableWidth = {
@@ -202,7 +220,7 @@ export default class ReviewManager extends React.Component {
                                     <ReviewItem
                                         mode={"Approved"}
                                         item={item}
-                                        approveArtwork={this.approveArtwork}
+                                        saveReviewChanges={this.saveReviewChanges}
                                         updateItem={this.updateItem}
                                         updateReviewInfo={this.updateReviewInfo}
                                         toggleArtworkPreview={this.toggleArtworkPreview}
@@ -212,6 +230,21 @@ export default class ReviewManager extends React.Component {
                             })}
                         </tbody>
                 	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
                 </div>
                 <ArtworkImagePreview
                     toggleArtworkPreview={this.toggleArtworkPreview}
@@ -233,11 +266,19 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
-    deleteItem = (id) =>{
+    /**
+     * Detaches listeners from firebase database.
+     */
+    detachListeners = () => {
+        firebase.database().ref("submissions").off();
+        firebase.database().ref("approved").off();
+    }
+
+    deleteItem = (id,branch) =>{
         let subRef = firebase.database().ref(`submissions/${id}`);
         subRef.set(null).then( ()=>{
             console.log(id," was deleted.");
-        })
+        });
     }
 
     /**
@@ -264,11 +305,18 @@ export default class ReviewManager extends React.Component {
      * @param  {String} status  ["Approve", "In Review", ..]
      * @param  {String} memo    []
      */
-    approveArtwork = (artwork,status,memo) =>{
-        if (status == "Approved") {
+    saveReviewChanges = (artwork,status,memo) =>{
+
+
+        if (!memo) {
+            let message = "Review failed. Write a review note to the artist explaining the artwork's review status."
+            this.props.sendToSnackbar(message);
+        } else if (status == "Approved") {
             console.log(artwork.artwork_uid);
             artwork.status = status; // "Approved"
-            artwork.approved = new Date().toISOString();
+            artwork.approved = new Date().getTime();
+            artwork.memo = memo;
+            artwork.new_message = true;
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
             aprRef.set(artwork).then(()=>{ // add to approved branch
@@ -286,33 +334,145 @@ export default class ReviewManager extends React.Component {
                     break;
                 }
             }
-
-        } else {
-            if (artwork.status != status || artwork.memo != memo) {
-                console.log("updating db...",artwork.artwork_uid);
-                let path = `submissions/${artwork.artwork_uid}`;
-                let updates = {
-                    memo:memo,
-                    status:status
-                };
-                firebase.database().ref(path).update(updates);
-                console.log("updated");
-            }
+            let message = "Artwork has been approved, and the artist has been notified."
+            this.props.sendToSnackbar(message);
+        } else if (artwork.status != status || artwork.memo != memo) {
+            console.log("updating db...",artwork.artwork_uid);
+            artwork.status = status;
+            artwork.memo = memo;
+            artwork.new_message = true;
+            let path = `submissions/${artwork.artwork_uid}`;
+            firebase.database().ref(path).set(artwork);
+            console.log("updated");
+            let message = "Artwork status has been updated."
+            this.props.sendToSnackbar(message);
         }
     }
 
+    changePage = (forward) => {
+        let pending = this.state.pendingScreen;
+        let list,first,last,db_ref,query;
+        console.log(pending,forward);
+        if (pending && !forward) { // pending previous
+            list  = this.state.reviewItems.concat([]);//copy
+            first = list[0].submitted;
+            db_ref = firebase.database().ref(`submissions`);
+            db_ref.off();
+            query = db_ref.orderByChild("submitted").endAt(first).limitToLast(pg_size);
+            this.setState({reviewItems:[]});
+            query.on("value", (snapshot)=>{
+                snapshot.forEach( (childSnap)=>{
+                    if (childSnap.key != 0) { //ignore the placeholder in DB
+                        let data = childSnap.val();
+                        function isSame(elm) {
+                            return elm.artwork_uid == data.artwork_uid
+                        }
+                        let index = this.state.reviewItems.findIndex(isSame);
+                        let list;
+                        if (index != -1) { // already in array
+                            list  = this.state.reviewItems.concat([]);//copy
+                            list[index] = data;
+                        } else {
+                            list  = this.state.reviewItems.concat([data]);//copy
+                        }
+                        console.log(list);
+                        this.setState({reviewItems:list});
+                    }
+                });
+            });
+        } else if (!pending && !forward) { // approve previous
+            list  = this.state.approvedItems.concat([]);//copy
+            first = list[0].approved;
+            db_ref = firebase.database().ref(`approved`);
+            db_ref.off();
+            query  = db_ref.orderByChild("approved").endAt(first).limitToLast(pg_size);
+            this.setState({approvedItems:[]});
+            query.on("value", (snapshot)=>{
+                snapshot.forEach( (childSnap)=>{
+                    if (childSnap.key != 0) { //ignore the placeholder in DB
+                        let data = childSnap.val();
+                        function isSame(elm) {
+                            return elm.artwork_uid == data.artwork_uid
+                        }
+                        let index = this.state.approvedItems.findIndex(isSame);
+                        let list;
+                        if (index != -1) { // already in array
+                            list  = this.state.approvedItems.concat([]);//copy
+                            list[index] = data;
+                        } else {
+                            list  = this.state.approvedItems.concat([data]);//copy
+                        }
+                        console.log(list);
+                        this.setState({approvedItems:list});
+                    }
+                });
+            });
+        } else if (pending && forward) {
+            list = this.state.reviewItems.concat([]);//copy
+            last = list[list.length -1].submitted;
+            db_ref = firebase.database().ref(`submissions`);
+            db_ref.off();
+            query = db_ref.orderByChild("submitted").startAt(last).limitToFirst(pg_size);
+            this.setState({reviewItems:[]});
+            query.on("value", (snapshot)=>{
+                snapshot.forEach( (childSnap)=>{
+                    if (childSnap.key != 0) { //ignore the placeholder in DB
+                        let data = childSnap.val();
+                        function isSame(elm) {
+                            return elm.artwork_uid == data.artwork_uid
+                        }
+                        let index = this.state.reviewItems.findIndex(isSame);
+                        let list;
+                        if (index != -1) { // already in array
+                            list  = this.state.reviewItems.concat([]);//copy
+                            list[index] = data;
+                        } else {
+                            list  = this.state.reviewItems.concat([data]);//copy
+                        }
+                        console.log(list);
+                        this.setState({reviewItems:list});
+                    }
+                });
+            });
+        } else if (!pending && forward) {
+            list = this.state.approvedItems.concat([]);//copy
+            last = list[list.length -1].approved;
+            db_ref = firebase.database().ref(`approved`);
+            db_ref.off();
+            query = db_ref.orderByChild("approved").startAt(last).limitToFirst(pg_size);
+            this.setState({approvedItems:[]});
+            query.on("value", (snapshot)=>{
+                snapshot.forEach( (childSnap)=>{
+                    if (childSnap.key != 0) { //ignore the placeholder in DB
+                        let data = childSnap.val();
+                        function isSame(elm) {
+                            return elm.artwork_uid == data.artwork_uid
+                        }
+                        let index = this.state.approvedItems.findIndex(isSame);
+                        let list;
+                        if (index != -1) { // already in array
+                            list  = this.state.approvedItems.concat([]);//copy
+                            list[index] = data;
+                        } else {
+                            list  = this.state.approvedItems.concat([data]);//copy
+                        }
+                        console.log(list);
+                        this.setState({approvedItems:list});
+                    }
+                });
+            });
+        }
+    }
 
     /**
      * Fetches submissions from the `submissions` branch of the curator-tekuma
      * firebase database. NOTE FIXME set the .indexOn rule in the firebase
      * rules for better performance.
-     * FIXME: Handle pagination. Do not just request every submission.
      */
     fetchSubmissions = () => {
-        let pagLimit = 2;
         let submitRef = firebase.database().ref(`submissions`);
-        //NOTE random keys are chronologically sortable.
-        submitRef.orderByChild("submitted").limitToFirst(pagLimit).on("value", (snapshot)=>{
+        //NOTE submitted is #(seconds since 1970) sorted ascendingly
+        submitRef.orderByChild("submitted").limitToFirst(pg_size).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();

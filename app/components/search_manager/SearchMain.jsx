@@ -10,8 +10,45 @@ import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog'
 
 export default class SearchMain extends React.Component {
     state = {
-        results       : [],  // current list of search results
         command       : "",  // used for controlling artworks
+        results       : [
+            {  // TODO: remove placeholder info
+                description  : "Much art. Very nice.",
+                reviewer     : "Kun Qian",
+                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
+                title        : "Starry Night",
+                artist       : "Vincent Van Gogh",
+                album        : "Impressionism",
+                year         : 1888,
+                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
+                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+            },
+            {  // TODO: remove placeholder info
+                description  : "Much art. Very nice.",
+                reviewer     : "Kun Qian",
+                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
+                title        : "Starry Night",
+                artist       : "Vincent Van Gogh",
+                album        : "Impressionism",
+                year         : 1888,
+                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
+                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+            },
+            {  // TODO: remove placeholder info
+                description  : "Much art. Very nice.",
+                reviewer     : "Kun Qian",
+                review_note  : "This is a good picture with many intricacies and lots of moving color. I like it a lot.",
+                title        : "Starry Night",
+                artist       : "Vincent Van Gogh",
+                album        : "Impressionism",
+                year         : 1888,
+                tags         : ["#art", "impressionistic", "#impasto", "#europe", "#stars", "#tree", "#night"],
+                colors       : ["#00ff00", "#ff00ff","#333300","#88a7ae","#dead19"],
+                thumbnail_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1280px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg"
+            }
+        ],  // current list of search results
         detailBoxIsOpen: false, // whether popup is open or not
         artworkInfo   : {uid: null, found: false}
     }
@@ -30,7 +67,7 @@ export default class SearchMain extends React.Component {
             <SearchArtworkManager
                 detailArtwork={this.detailArtwork}
                 toggleDetailBox={this.toggleDetailBox}
-                command={this.state.command}
+                command={this.props.command}
                 results={this.state.results}
                 managerIsOpen={this.props.managerIsOpen}
                 addArtworkToBuffer={this.props.addArtworkToBuffer}
@@ -98,15 +135,6 @@ export default class SearchMain extends React.Component {
         setTimeout( ()=>{
             this.setState({results: data.rows});
         }, 25);
-    }
-
-    addToProject = () => {
-        this.props.addArtworksToProject();
-        this.setState({command:"deselect"});
-        setTimeout( ()=>{
-            this.setState({command:""});
-        }, 50);
-        this.props.emptyBuffer();
     }
 
     /**

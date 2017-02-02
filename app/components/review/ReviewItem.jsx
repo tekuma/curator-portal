@@ -3,14 +3,9 @@ import React      from 'react';
 import Firebase   from 'firebase';
 import {WithContext as ReactTags} from 'react-tag-input';
 import uuid       from 'node-uuid';
+
 // Files
-
-
-/*  this.props.item  looks like
-
-
-
- */
+import confirm    from '../confirm_dialog/ConfirmFunction';
 
 export default class ReviewItem extends React.Component {
     state = {
@@ -98,18 +93,23 @@ export default class ReviewItem extends React.Component {
                     {this.props.mode === "Pending" ?
                         <div>
                         <div
-                            className="review-item-review-button"
+                            className="review-item-review-button pending top"
                             onClick={this.handleReviewButton}>
-                            Update
+                            Review
                         </div>
                         <div
-                            className="review-item-review-button"
+                            className="review-item-review-button pending bottom"
                             onClick={this.handleDelete}>
                             Delete
                         </div>
                         </div>
                     :
-                <div></div> }
+                    <div
+                        className="review-item-review-button"
+                        onClick={this.handleReviewButton}>
+                        Update
+                    </div>
+                }
                 </td>
             </tr>
         );
@@ -132,10 +132,20 @@ export default class ReviewItem extends React.Component {
     }
 
     // =========== Methods ==============
-    //
+
+
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;
-        this.props.deleteItem(id);
+        confirm("Are you sure you want to delete this review item?").then(
+                () => {
+                    // Proceed Callback
+                    this.props.deleteItem(id);
+                },
+                () => {
+                    // Cancel Callback
+                    return;
+                }
+            );
     }
 
     handleSelect = (e) => {
@@ -147,7 +157,7 @@ export default class ReviewItem extends React.Component {
     handleReviewButton = () => {
         let status = this.refs.review_status.value;
         let memo   = this.refs.memo.value;
-        this.props.approveArtwork(this.props.item,status,memo);
+        this.props.saveReviewChanges(this.props.item,status,memo);
         this.setState({
             status:status
         })
