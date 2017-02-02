@@ -148,7 +148,7 @@ export default class ReviewItem extends React.Component {
     handleReviewButton = () => {
         let status = this.refs.review_status.value;
         let memo   = this.refs.memo.value;
-        this.props.approveArtwork(this.props.item,status,memo);
+        this.props.saveReviewChanges(this.props.item,status,memo);
         this.setState({
             status:status
         })
