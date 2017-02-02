@@ -24,7 +24,7 @@ export default class SearchManager extends React.Component {
             color  : false
         },
         accordion: {
-            general : false,
+            general : true,
             artist  : false,
             tag     : false,
             title   : false,

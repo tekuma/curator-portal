@@ -308,8 +308,16 @@ export default class ReviewManager extends React.Component {
     saveReviewChanges = (artwork,status,memo) =>{
 
 
-        if (!memo) {
-            let message = "Review failed. Write a review note to the artist explaining the artwork's review status."
+        if (!memo || status == "In Review") {
+            let message;
+            if (!memo && status == "In Review") {
+                message = "Review failed. Write a review note to the artist explaining the artwork's review status and edit its review status."
+            } else if (!memo) {
+                message = "Review failed. Write a review note to the artist explaining the artwork's review status."
+            } else {
+                message = "Review failed. Edit the review status of the review item."
+            }
+
             this.props.sendToSnackbar(message);
         } else if (status == "Approved") {
             console.log(artwork.artwork_uid);
