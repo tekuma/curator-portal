@@ -26,15 +26,15 @@ export default class PostAuth extends React.Component {
         navIsOpen    : false,
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
-        user         : {},
-        role         : Roles.SEARCH,
-        projects     : [],
+        user           : {},
+        role           : Roles.SEARCH,
+        projects       : [],
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
         projectArtworks: [],
         projectDetails : {},
-        command        : "",  // used for controlling artworks
-        currentError  : ""
+        command        : "", // used for controlling artworks
+        currentError   : ""
     };
 
     constructor(props) {

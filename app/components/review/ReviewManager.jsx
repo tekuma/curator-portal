@@ -8,7 +8,7 @@ import ArtworkImagePreview from './ArtworkImagePreview';
 import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
 
 // Global Variables
-const pg_size = 2;
+const pg_size = 3;
 /*  a Submission object looks like:
     -jd7Jd21ka: {
         artwork_uid:"-jd7Jd21ka",
@@ -306,8 +306,6 @@ export default class ReviewManager extends React.Component {
      * @param  {String} memo    []
      */
     saveReviewChanges = (artwork,status,memo) =>{
-
-
         if (!memo) {
             let message = "Review failed. Write a review note to the artist explaining the artwork's review status."
             this.props.sendToSnackbar(message);
