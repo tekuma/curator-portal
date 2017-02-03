@@ -108,7 +108,8 @@ export default class PostAuth extends React.Component {
                         changeProject={this.changeProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
-                        addArtworksToProject={this.addArtworksToProject}  />
+                        addArtworksToProject={this.addArtworksToProject}
+                        sendToSnackbar={this.sendToSnackbar}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
@@ -205,6 +206,7 @@ export default class PostAuth extends React.Component {
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ReviewManager
+                        user={this.state.user}
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen}
                         sendToSnackbar={this.sendToSnackbar}

@@ -36,7 +36,7 @@ export default class ManageNotesDialog extends React.Component {
                 onClick   ={this.props.addNote.bind({},this.state.my_notes)} />,
 
             <ConfirmButton
-                label     ={"Cancel"}
+                label     ={"Close"}
                 className ="edit-artwork-no"
                 onClick   ={this.props.toggleManageNotes} />
         ];
@@ -69,18 +69,26 @@ export default class ManageNotesDialog extends React.Component {
                         contentClassName            ="manage-notes-content" >
                         <div className="manage-notes-dialog">
                             <div className="manage-notes-group-notes-wrapper">
-                                <div className="manage-notes-group-notes">
-                                    {public_notes.map(note => {
-                                        return (
-                                            <div
-                                                key={uuid.v4()}
-                                                className="group-note">
-                                                    &#8220;{note.note}&#8221;
-                                                    <div className="artwork-reviewer">{note.curator}</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                {public_notes.length == 0 ?
+                                    <div className="manage-notes-group-notes">
+                                        <div className="no-manage-notes">
+                                            <p>No Collaborative Notes</p>
+                                        </div>
+                                    </div>
+                                    :
+                                    <div className="manage-notes-group-notes">
+                                        {public_notes.map(note => {
+                                            return (
+                                                <div
+                                                    key={uuid.v4()}
+                                                    className="group-note">
+                                                        &#8220;{note.note}&#8221;
+                                                        <div className="artwork-reviewer">{note.curator}</div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                }
                             </div>
                             <div className="manage-notes-textarea-wrapper">
                                 <div className="manage-notes-textarea">
@@ -126,7 +134,7 @@ export default class ManageNotesDialog extends React.Component {
     componentWillReceiveProps(nextProps) {
         let uid = firebase.auth().currentUser.uid;
 
-        if (nextProps.projectDetails.notes) {
+        if (nextProps.projectDetails.notes && nextProps.projectDetails.notes[uid]) {
             let private_note = nextProps.projectDetails.notes[uid].private;
 
             let update = this.state.my_notes;

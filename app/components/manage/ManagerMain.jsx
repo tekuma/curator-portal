@@ -45,6 +45,7 @@ export default class ManagerMain extends React.Component {
                   <ProjectManager
                       artworkBuffer={this.props.artworkBuffer}
                       projectDetails={this.props.projectDetails}
+                      user={this.props.user}
                       users={this.state.users}
                       selectAllArt={this.selectAllArt}
                       deselectAllArt={this.deselectAllArt}
@@ -116,6 +117,8 @@ export default class ManagerMain extends React.Component {
             if (!data) {
                 data = {};
                 data[uid] = {}
+            } else if (!data[uid]) {
+                data[uid] = {}
             }
             data[uid]["public"] = full_note;
             data[uid]["private"] = privateNote;
@@ -185,7 +188,11 @@ export default class ManagerMain extends React.Component {
      */
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            payload.auth = idToken;
+            let payload = {
+                auth: idToken,
+                uid: uid
+            };
+            
             $.ajax({
                 url: 'detail',
                 data: payload,

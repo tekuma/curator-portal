@@ -1442,5 +1442,8 @@ export default class SearchManager extends React.Component {
 
         console.log('Megasearch: ', general, fields);
         this.props.doQuery(general, fields);
+
+        let message = "Performing your search. Results will arrive shortly...";
+        this.props.sendToSnackbar(message);
     }
 }

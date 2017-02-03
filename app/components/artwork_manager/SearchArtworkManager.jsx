@@ -48,7 +48,7 @@ export default class ArtworkManager extends React.Component {
         };
 
         let styleManagerOpen = {
-            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            width: window.innerWidth * 0.6,  // Album Manager is 30% of Screen
             height: window.innerHeight - 60
         };
 
@@ -74,9 +74,9 @@ export default class ArtworkManager extends React.Component {
         return (
             <div
                 style={this.props.managerIsOpen ?
-                            (window.innerWidth * 0.3 > 440) ?
+                            (window.innerWidth * 0.4 > 440) ?
                                 styleLargeScreen :
-                                (window.innerWidth * 0.3 > 250) ?
+                                (window.innerWidth * 0.4 > 250) ?
                                     styleManagerOpen :
                                     (window.innerWidth > 410) ?
                                         styleSmallScreen :
@@ -120,7 +120,7 @@ export default class ArtworkManager extends React.Component {
         };
 
         let styleManagerOpen = {
-            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            width: window.innerWidth * 0.6,  // Album Manager is 30% of Screen
             height: window.innerHeight - 60
         };
 
@@ -142,17 +142,27 @@ export default class ArtworkManager extends React.Component {
         return (
             <div
                 style={this.props.managerIsOpen ?
-                            (window.innerWidth * 0.3 > 440) ?
+                            (window.innerWidth * 0.4 > 440) ?
                                 styleLargeScreen :
-                                (window.innerWidth * 0.3 > 250) ?
+                                (window.innerWidth * 0.4 > 250) ?
                                     styleManagerOpen :
                                     (window.innerWidth > 410) ?
                                         styleSmallScreen :
                                         fixedWidth
                                 : styleManagerClosed}
                 className   ="empty-search-box">
-                <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-left-gradient.svg"/>
-                <h3 className="empty-search-writing medium">Search Using Interface on the Right</h3>
+                {this.props.noResults ?
+                    <img id="empty-search-arrow-icon" className="no-results" src="assets/images/icons/sad-gradient.svg"/>
+                    :
+                    <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-left-gradient.svg"/>
+                }
+                <h3 className="empty-search-writing medium">
+                    {this.props.noResults ?
+                        "No search results matching your search were found."
+                        :
+                        "Search Using Interface on the Right"
+                    }
+                </h3>
             </div>
         );
     }
