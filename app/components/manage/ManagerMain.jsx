@@ -125,6 +125,8 @@ export default class ManagerMain extends React.Component {
             return data;
         });
 
+        let message = "Your notes have been updated.";
+        this.props.sendToSnackbar(message);
     }
 
     /**
@@ -192,7 +194,7 @@ export default class ManagerMain extends React.Component {
                 auth: idToken,
                 uid: uid
             };
-            
+
             $.ajax({
                 url: 'detail',
                 data: payload,
