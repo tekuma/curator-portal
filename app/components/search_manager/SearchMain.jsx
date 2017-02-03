@@ -31,7 +31,8 @@ export default class SearchMain extends React.Component {
         infoArtwork    : null,  // uid of displayed artworkInfo
         results        :[],// current list of search results
         command        : "",  // used for controlling artworks
-        artworkInfo    : {uid: null, found: false}
+        artworkInfo    : {uid: null, found: false},
+        no_results: false
     }
 
     constructor(props) {
@@ -53,11 +54,13 @@ export default class SearchMain extends React.Component {
                 managerIsOpen={this.props.managerIsOpen}
                 addArtworkToBuffer={this.props.addArtworkToBuffer}
                 removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
+                noResults={this.state.no_results}
             />
             <SearchManager
                 managerIsOpen={this.props.managerIsOpen}
                 toggleManager={this.props.toggleManager}
                 doQuery={this.doQuery}
+                sendToSnackbar={this.props.sendToSnackbar}
              />
             <ArtworkDetailBoxDialog
                 toggleDetailBox={this.toggleDetailBox}
@@ -82,7 +85,7 @@ export default class SearchMain extends React.Component {
 
     detailArtwork = (uid) => {
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
-            var payload = {
+            let payload = {
                 auth: idToken,
                 uid: uid
             };
@@ -113,9 +116,17 @@ export default class SearchMain extends React.Component {
      */
     updateResults = (data) => {
         this.setState({ results:[] });
-        setTimeout( ()=>{
-            this.setState({results: data.rows});
-        }, 25);
+
+        if (data.length == 0) {
+            this.setState({no_results: true});
+        } else {
+            setTimeout( ()=>{
+                this.setState({
+                    results: data.rows,
+                    no_results: false
+                });
+            }, 25);
+        }
     }
 
     /**

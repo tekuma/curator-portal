@@ -315,7 +315,7 @@ export default class ProjectManager extends React.Component {
      * - in user branch
      */
     addCollaborator = () => {
-        if (this.state.collabBuffer != "") {
+        if (this.state.collabBuffer != "" && this.state.collabBuffer[1] != this.props.user.public.display_name) {
             // console.log(this.props.currentProject[1]);
             let project_id = this.props.currentProject[1];
             let projPath = `projects/${project_id}/collaborators`;

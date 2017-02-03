@@ -95,15 +95,27 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                 <div className="artwork-details">
                                     <div
                                         className="artwork-title">
-                                        {artwork_details.title}
+                                        {!artwork_details.title || artwork_details.title == "" ?
+                                            "Untitled Artwork"
+                                            :
+                                            artwork_details.title
+                                        }
                                     </div>
                                     <div
                                         className="artwork-artist">
-                                        {artwork_details.artist}
+                                        {!artwork_details.artist || artwork_details.artist == "" ?
+                                            "Untitled Artist"
+                                            :
+                                            artwork_details.artist
+                                        }
                                     </div>
                                     <div
                                         className="artwork-date">
-                                        {artwork_details.year}
+                                        {!artwork_details.year || artwork_details.year == "" ?
+                                            "No year specified"
+                                            :
+                                            artwork_details.year
+                                        }
                                     </div>
                                 </div>
                                 <div className="other-artwork-details">
@@ -112,48 +124,73 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                     </h4>
                                     <div
                                         className="artwork-review">
-                                        &#8220;{artwork_details.review_note}&#8221;
+                                        &#8220;{artwork_details.memo}&#8221;
                                         <div className="artwork-reviewer">{artwork_details.reviewer}</div>
                                     </div>
-                                    <h4 className="artwork-album-heading">
-                                        Album
-                                    </h4>
-                                    <div
-                                        className="artwork-album">
-                                        {artwork_details.album}
-                                    </div>
-                                    <h4 className="artwork-tags-heading">
-                                        Tags
-                                    </h4>
-                                    <div className="artwork-tags">
-                                        <ReactTags
-                                            tags={tags}
-                                            readOnly={true}
-                                            />
-                                    </div>
-                                    <h4
-                                        className="artwork-description-heading">
-                                        Description
-                                    </h4>
-                                    <div
-                                        className="artwork-description">
-                                        {artwork_details.description || ""}
-                                    </div>
-                                    <h4
-                                        className="artwork-colors-heading">
-                                        Colors
-                                    </h4>
-                                    <div className="artwork-colors">
-                                        {colors.map(color => {
-                                            return (
-                                                <div
-                                                    key     ={uuid.v4()}
-                                                    className="color-box"
-                                                    style={color}>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                    {!artwork_details.album || artwork_details.album == "" ?
+                                        null
+                                        :
+                                        <div>
+                                            <h4 className="artwork-album-heading">
+                                                Album
+                                            </h4>
+                                            <div
+                                                className="artwork-album">
+                                                {artwork_details.album}
+                                            </div>
+                                        </div>
+                                    }
+                                    {tags.length == 0 ?
+                                        null
+                                        :
+                                        <div>
+                                            <h4 className="artwork-tags-heading">
+                                                Tags
+                                            </h4>
+                                            <div className="artwork-tags">
+                                                <ReactTags
+                                                    tags={tags}
+                                                    readOnly={true}
+                                                    />
+                                            </div>
+                                        </div>
+                                    }
+                                    {!artwork_details.description || artwork_details.description == "" ?
+                                        null
+                                        :
+                                        <div>
+                                            <h4
+                                                className="artwork-description-heading">
+                                                Description
+                                            </h4>
+                                            <div
+                                                className="artwork-description">
+                                                {artwork_details.description || ""}
+                                            </div>
+                                        </div>
+                                    }
+                                    {colors.length == 0 ?
+                                        null
+                                        :
+                                        <div>
+                                            <h4
+                                                className="artwork-colors-heading">
+                                                Colors
+                                            </h4>
+                                            <div className="artwork-colors">
+                                                {colors.map(color => {
+                                                    return (
+                                                        <div
+                                                            key     ={uuid.v4()}
+                                                            className="color-box"
+                                                            style={color}>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    }
+
                                 </div>
                             </div>
                         </div>

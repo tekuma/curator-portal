@@ -139,13 +139,15 @@ export default class ReviewManager extends React.Component {
                     <div
                         className="pagination-arrow"
                         onClick={this.changePage.bind({},false)}
-                        onTouchTap={this.changePage.bind({},false)}>
+                        onTouchTap={this.changePage.bind({},false)}
+                        title="Previous">
                         <img src="assets/images/icons/pagination-left.svg" />
                     </div>
                     <div
                         className="pagination-arrow"
                         onClick={this.changePage.bind({},true)}
-                        onTouchTap={this.changePage.bind({},true)}>
+                        onTouchTap={this.changePage.bind({},true)}
+                        title="Next">
                         <img src="assets/images/icons/pagination-right.svg" />
                     </div>
                 </div>
@@ -318,11 +320,16 @@ export default class ReviewManager extends React.Component {
 
             this.props.sendToSnackbar(message);
         } else if (status == "Approved") {
+            let newApproval = false;
             console.log(artwork.artwork_uid);
             artwork.status = status; // "Approved"
-            artwork.approved = new Date().getTime();
+            if (!artwork.approved) {
+                artwork.approved = new Date().getTime();
+                newApproval = true;
+            }
             artwork.memo = memo;
             artwork.new_message = true;
+            artwork.reviewer = this.props.user.public.display_name;
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
             aprRef.set(artwork).then(()=>{ // add to approved branch
@@ -340,7 +347,13 @@ export default class ReviewManager extends React.Component {
                     break;
                 }
             }
-            let message = "Artwork has been approved and the artist has been notified."
+            let message = "";
+            if (newApproval) {
+                message = "Artwork has been approved and the artist has been notified.";
+            } else {
+                message = "Artwork status has been updated.";
+            }
+
             this.props.sendToSnackbar(message);
         } else if (artwork.status != status || artwork.memo != memo) {
             console.log("updating db...",artwork.artwork_uid);

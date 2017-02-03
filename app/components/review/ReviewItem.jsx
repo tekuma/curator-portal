@@ -64,7 +64,7 @@ export default class ReviewItem extends React.Component {
                 </td>
                 <td className="review-item-status">
                     <select
-                        className   ="edit-artwork-select"
+                        className   ="review-item-select"
                         ref         ="review_status"
                         value={this.state.status}
                         onChange ={this.handleSelect}
@@ -164,8 +164,14 @@ export default class ReviewItem extends React.Component {
     }
 
     handleArtworkPreview = () => {
-        this.props.updateReviewInfo(this.props.item.artist_uid,this.props.item.artwork_uid,null)
-        this.props.toggleArtworkPreview();
+        this.props.updateReviewInfo(this.props.item.artist_uid,this.props.item.artwork_uid,null);
+
+        if(window.innerWidth > 934) {
+            this.props.toggleArtworkPreview();
+        } else {
+            
+        }
+
     }
 
     handleDescriptionPreview = () => {
