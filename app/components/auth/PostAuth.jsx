@@ -168,7 +168,8 @@ export default class PostAuth extends React.Component {
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                         fillBuffer={this.fillBuffer}
                         emptyBuffer={this.emptyBuffer}
-                        changeAppLayout={this.changeAppLayout}  />
+                        changeAppLayout={this.changeAppLayout}
+                        sendToSnackbar={this.sendToSnackbar}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
