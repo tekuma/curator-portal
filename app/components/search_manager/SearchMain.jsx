@@ -117,7 +117,7 @@ export default class SearchMain extends React.Component {
     updateResults = (data) => {
         this.setState({ results:[] });
 
-        if (data.length == 0) {
+        if (data.rows.length == 0) {
             this.setState({no_results: true});
         } else {
             setTimeout( ()=>{

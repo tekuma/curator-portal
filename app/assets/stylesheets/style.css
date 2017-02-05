@@ -4340,7 +4340,7 @@ label.age-confirm-label {
 
 .collaborator-thumb {
 	position: relative;
-	background: #bbbbbb;
+	background: #888888;
 	width: 100%;
 	padding: 10px;
 	margin-top: 10px;
@@ -4507,6 +4507,7 @@ label.age-confirm-label {
 	overflow: scroll;
 	padding: 30px;
 	background: #ffffff;
+	vertical-align: top;
 }
 
 .artwork-image-wrapper {
