@@ -160,7 +160,7 @@ export default class ArtworkManager extends React.Component {
                     {this.props.noResults ?
                         "No search results matching your search were found."
                         :
-                        "Search Using Interface on the Right"
+                        "Search for Artworks"
                     }
                 </h3>
             </div>
