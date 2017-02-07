@@ -1,0 +1,15 @@
+services:
+  - mysql
+
+language: node_js
+node_js:
+  - "6"
+
+install:
+  - export NODE_ENV=debug
+  - export TEKUMA_TEST_DB=mysql
+  - cp tests/ci-testdbconf.json tests/testdbconf.json
+  - npm install
+
+script:
+  - npm run testserv
