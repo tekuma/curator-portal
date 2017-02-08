@@ -8,8 +8,8 @@ node_js:
 install:
   - export NODE_ENV=debug
   - export TEKUMA_TEST_DB=mysql
-  - cp tests/ci-testdbconf.json tests/testdbconf.json
   - npm install
 
 script:
+  - cp ${TRAVIS_BUILD_DIR}/tests/ci-testdbconf.json ${TRAVIS_BUILD_DIR}/tests/testdbconf.json
   - npm run testserv
