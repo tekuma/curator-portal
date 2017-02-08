@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="48px" height="48px" viewBox="0 0 48 48" enable-background="new 0 0 48 48" xml:space="preserve">
-<path fill="none" d="M0,0h48v48H0V0z"/>
-<path fill="#FFFFFF" d="M34.42,18L25.66,4.88C25.28,4.32,24.64,4.04,24,4.04s-1.28,0.28-1.66,0.86L13.58,18H4c-1.1,0-2,0.9-2,2
-	c0,0.18,0.02,0.36,0.08,0.54l5.08,18.54C7.62,40.76,9.16,42,11,42h26c1.84,0,3.38-1.24,3.86-2.92l5.08-18.54L46,20c0-1.1-0.9-2-2-2
-	H34.42z M18,18l6-8.8l6,8.8H18z M16.414,28.893h15.2v1.94H16.386L16.414,28.893z"/>
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="48px" height="48px" viewBox="976 0 48 48" enable-background="new 976 0 48 48" xml:space="preserve">
+<title>Add to project button</title>
+<path fill="#FFFFFF" d="M978.604,42.442V6.332h13.079l8.014,11.519c0.152,0.205,0.393,0.325,0.648,0.324l0,0l21.047,0v24.268
+	H978.604z M1021.439,11.761v3.825h-20.191l-2.869-3.887h23.06V11.761z M997.238,9.218l-3.763-5.136l0,0l-0.247-0.293H976V45h48.043
+	V9.203h-27.805L997.238,9.218z M1007.54,28.997v2.807h-15.038v-2.807H1007.54z"/>
 </svg>

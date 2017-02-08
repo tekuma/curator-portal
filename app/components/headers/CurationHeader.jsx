@@ -2,7 +2,6 @@
 import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 // Files
-import ProjectSelector from './ProjectSelector';
 import Roles           from '../../constants/Roles';
 
 /**
@@ -86,15 +85,6 @@ export default class CurationHeader extends React.Component {
                 	</div>
                 {this.state.display_tools ?
                     <div className="select-tools">
-                    <div className="project-selector">
-                        <ProjectSelector
-                            addNewProject={this.props.addNewProject}
-                            role={this.props.role}
-                            currentProject={this.props.currentProject}
-                            changeProject={this.props.changeProject}
-                            projects={this.props.projects}
-                        />
-                    </div>
                     <div className="header-icons tools" >
                         <OverlayTrigger placement="bottom" overlay={this.props.role == Roles.SEARCH ? addArtworkTooltip : removeArtworkTooltip}>
                              <div

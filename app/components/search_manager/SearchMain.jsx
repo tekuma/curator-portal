@@ -61,6 +61,10 @@ export default class SearchMain extends React.Component {
                 toggleManager={this.props.toggleManager}
                 doQuery={this.doQuery}
                 sendToSnackbar={this.props.sendToSnackbar}
+                currentProject={this.props.currentProject}
+                addNewProject={this.props.addNewProject}
+                changeProject={this.props.changeProject}
+                projects={this.props.projects}
              />
             <ArtworkDetailBoxDialog
                 toggleDetailBox={this.toggleDetailBox}

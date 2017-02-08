@@ -105,6 +105,7 @@ export default class PostAuth extends React.Component {
                         toggleManager={this.toggleManager}
                         toggleNav={this.toggleNav}
                         currentProject={this.state.currentProject}
+                        addNewProject={this.addNewProject}
                         changeProject={this.changeProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
@@ -158,10 +159,10 @@ export default class PostAuth extends React.Component {
                         managerIsOpen={this.state.managerIsOpen}
                         toggleManager={this.toggleManager}
                         toggleNav={this.toggleNav}
-                        addNewProject={this.addNewProject}
                         currentProject={this.state.currentProject}
-                        projectArtworks={this.state.projectArtworks}
+                        addNewProject={this.addNewProject}
                         changeProject={this.changeProject}
+                        projectArtworks={this.state.projectArtworks}
                         renameCurrentProject={this.renameCurrentProject}
                         deleteCurrentProject={this.deleteCurrentProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
@@ -408,7 +409,7 @@ export default class PostAuth extends React.Component {
      */
     addNewProject = () => {
         let projectID   = this.props.createNewProject();
-        let defaultName = "New Project";
+        let defaultName = "Untitled Project";
         // give user access to project
         let path = `users/${firebase.auth().currentUser.uid}/projects`;
         firebase.database().ref(path).transaction((data)=>{
@@ -424,6 +425,9 @@ export default class PostAuth extends React.Component {
             // onComplete: update current project to be the new project
             let theProject = {label:defaultName, id:projectID};
             this.changeProject(theProject);
+
+            let message = "New project created";
+            this.sendToSnackbar(message);
         });
     }
 

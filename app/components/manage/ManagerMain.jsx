@@ -52,14 +52,14 @@ export default class ManagerMain extends React.Component {
                       deleteCurrentProject={this.props.deleteCurrentProject}
                       renameCurrentProject={this.props.renameCurrentProject}
                       currentProject={this.props.currentProject}
+                      addNewProject={this.props.addNewProject}
+                      changeProject={this.props.changeProject}
                       managerIsOpen={this.props.managerIsOpen}
                       manageNotesIsOpen={this.state.manageNotesIsOpen}
                       toggleManager={this.props.toggleManager}
                       toggleManageNotes={this.toggleManageNotes}
-                      changeProject={this.props.changeProject}
                       doQuery={this.doQuery}
                       projects={this.props.projects}
-                      addNewProject={this.props.addNewProject}
                       onDelete={this.deleteProject}
                    />
                    <ArtworkDetailBoxDialog

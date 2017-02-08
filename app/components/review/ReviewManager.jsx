@@ -6,9 +6,10 @@ import uuid       from 'node-uuid';
 import ReviewItem from './ReviewItem';
 import ArtworkImagePreview from './ArtworkImagePreview';
 import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
+import reviewTabs from '../../constants/reviewTabs';
 
 // Global Variables
-const pg_size = 3;
+const pg_size = 5;
 /*  a Submission object looks like:
     -jd7Jd21ka: {
         artwork_uid:"-jd7Jd21ka",
@@ -23,7 +24,7 @@ const pg_size = 3;
 
 export default class ReviewManager extends React.Component {
     state = {
-        pendingScreen: true,        // Will determine which screen user is in (pending or reviewed)
+        currentTab: reviewTabs.PENDING,        // Will determine which screen user is in (pending or reviewed)
         reviewItems: [],
         approvedItems:[],
         artworkPreviewIsOpen: false,
@@ -40,10 +41,14 @@ export default class ReviewManager extends React.Component {
     }
 
     render() {
-        if (this.state.pendingScreen) {
+        if (this.state.currentTab == reviewTabs.PENDING) {
             return this.goToPending();
-        } else {
+        } else if (this.state.currentTab == reviewTabs.APPROVED) {
             return this.goToApproved();
+        } else if (this.state.currentTab == reviewTabs.HELD) {
+            return this.goToHeld();
+        } else {
+            return this.goToDeclined();
         }
     }
 
@@ -82,14 +87,24 @@ export default class ReviewManager extends React.Component {
             <div>
                 <div className="review-sections">
                     <div
-                        className="review-section-pending selected"
-                        onClick={this.toggleReviewScreen}>
+                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
                         <h2>Pending</h2>
                     </div>
                     <div
-                        className="review-section-reviewed"
-                        onClick={this.toggleReviewScreen}>
+                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
                         <h2>Approved</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                        <h2>Held</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                        <h2>Declined</h2>
                     </div>
                 </div>
                 <table
@@ -185,14 +200,24 @@ export default class ReviewManager extends React.Component {
             <div>
                 <div className="review-sections">
                     <div
-                        className="review-section-pending"
-                        onClick={this.toggleReviewScreen}>
+                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
                         <h2>Pending</h2>
                     </div>
                     <div
-                        className="review-section-reviewed selected"
-                        onClick={this.toggleReviewScreen}>
+                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
                         <h2>Approved</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                        <h2>Held</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                        <h2>Declined</h2>
                     </div>
                 </div>
                 <table
@@ -266,6 +291,64 @@ export default class ReviewManager extends React.Component {
         );
     }
 
+    goToHeld = () => {
+        return (
+            <div>
+                <div className="review-sections">
+                    <div
+                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                        <h2>Pending</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                        <h2>Approved</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                        <h2>Held</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                        <h2>Declined</h2>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    goToDeclined = () => {
+        return (
+            <div>
+                <div className="review-sections">
+                    <div
+                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                        <h2>Pending</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                        <h2>Approved</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                        <h2>Held</h2>
+                    </div>
+                    <div
+                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                        <h2>Declined</h2>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     // =========== Methods ==============
 
     /**
@@ -304,13 +387,13 @@ export default class ReviewManager extends React.Component {
      * branch to the approved branch. Else, it updates the status/memo fields
      * on the submissions branch.
      * @param  {Object} artwork [artwork obj as in FB db]
-     * @param  {String} status  ["Approve", "In Review", ..]
+     * @param  {String} status  ["Approve", "Pending", ..]
      * @param  {String} memo    []
      */
     saveReviewChanges = (artwork,status,memo) =>{
-        if (!memo || status == "In Review") {
+        if (!memo || status == "Pending") {
             let message;
-            if (!memo && status == "In Review") {
+            if (!memo && status == "Pending") {
                 message = "Review failed. Write a review note to the artist explaining the artwork's review status and edit its review status."
             } else if (!memo) {
                 message = "Review failed. Write a review note to the artist explaining the artwork's review status."
@@ -369,10 +452,10 @@ export default class ReviewManager extends React.Component {
     }
 
     changePage = (forward) => {
-        let pending = this.state.pendingScreen;
+        let currentTab = this.state.currentTab;
         let list,first,last,db_ref,query;
-        console.log(pending,forward);
-        if (pending && !forward) { // pending previous
+        console.log(currentTab,forward);
+        if (currentTab == reviewTabs.PENDING && !forward) { // pending previous
             list  = this.state.reviewItems.concat([]);//copy
             first = list[0].submitted;
             db_ref = firebase.database().ref(`submissions`);
@@ -399,7 +482,7 @@ export default class ReviewManager extends React.Component {
                     }
                 });
             });
-        } else if (!pending && !forward) { // approve previous
+        } else if (currentTab == reviewTabs.APPROVED && !forward) { // approve previous
             list  = this.state.approvedItems.concat([]);//copy
             first = list[0].approved;
             db_ref = firebase.database().ref(`approved`);
@@ -426,7 +509,7 @@ export default class ReviewManager extends React.Component {
                     }
                 });
             });
-        } else if (pending && forward) {
+        } else if (currentTab == reviewTabs.PENDING && forward) {
             list = this.state.reviewItems.concat([]);//copy
             last = list[list.length -1].submitted;
             db_ref = firebase.database().ref(`submissions`);
@@ -453,7 +536,7 @@ export default class ReviewManager extends React.Component {
                     }
                 });
             });
-        } else if (!pending && forward) {
+        } else if (currentTab == reviewTabs.APPROVED && forward) {
             list = this.state.approvedItems.concat([]);//copy
             last = list[list.length -1].approved;
             db_ref = firebase.database().ref(`approved`);
@@ -540,9 +623,9 @@ export default class ReviewManager extends React.Component {
         // what is this
     }
 
-    toggleReviewScreen = () => {
+    changeReviewScreen = (newTab) => {
         this.setState({
-            pendingScreen: !this.state.pendingScreen
+            currentTab: newTab
         });
     }
 

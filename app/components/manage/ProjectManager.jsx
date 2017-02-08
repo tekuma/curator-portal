@@ -6,7 +6,7 @@ import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 import update                       from 'react-addons-update';
 
 // Files
-import ManageAccordion              from './ManageAccordion';
+import ProjectSelector              from './ProjectSelector';
 import ManageProjectName            from './ManageProjectName';
 import ManageToggler                from './ManageToggler';
 import Select                       from 'react-select';
@@ -51,7 +51,7 @@ export default class ProjectManager extends React.Component {
         }
 
         const managerFunctionHeight = {
-            height: window.innerHeight - 60 - 60 - 60 // Minus 60px for Header, Project Name, and SelectButtons
+            height: window.innerHeight - 60 - 60 - 60 - 60 // Minus 60px for Header, Project Selector, Project Name, and SelectButtons
         }
 
         const openManager = {
@@ -114,8 +114,13 @@ export default class ProjectManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="project-manager-container">
+                    <ProjectSelector
+                        addNewProject={this.props.addNewProject}
+                        currentProject={this.props.currentProject}
+                        changeProject={this.props.changeProject}
+                        projects={this.props.projects} />
                     {this.props.projects.length == 0 ?
-                        <div></div>
+                        null
                         :
                         <ManageProjectName
                             renameCurrentProject={this.props.renameCurrentProject}
@@ -202,18 +207,20 @@ export default class ProjectManager extends React.Component {
 
                                 </div>
                                 <p>Add Collaborator</p>
-                                <Select
-                                    className="add-collaborator-selector"
-                                    ref="searchArtist"
-                                    inputProps={{id: 'search-artist'}}
-                                    autofocus
-                                    onChange={this.collaboratorChange}
-                                    options={options}
-                                    clearable={false}
-                                    name="artist-search"
-                                    value={this.state.collabBuffer[0]}
-                                    placeholder="Name..."
-                                    />
+                                <div className="collaborator-select-container">
+                                    <Select
+                                        className="add-collaborator-selector"
+                                        ref="searchArtist"
+                                        inputProps={{id: 'search-artist'}}
+                                        autofocus
+                                        onChange={this.collaboratorChange}
+                                        options={options}
+                                        clearable={false}
+                                        name="artist-search"
+                                        value={this.state.collabBuffer[0]}
+                                        placeholder="Name..."
+                                        />
+                                </div>
                                 <div
                                     onClick={this.addCollaborator}
                                     onTouchTap={this.addCollaborator}

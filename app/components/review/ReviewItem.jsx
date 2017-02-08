@@ -9,7 +9,7 @@ import confirm    from '../confirm_dialog/ConfirmFunction';
 
 export default class ReviewItem extends React.Component {
     state = {
-        status_types: ["In Review", "Approved", "Held","Rejected"],
+        status_types: ["Pending", "Approved", "Held","Declined"],
         status:""
     };
 
@@ -169,7 +169,7 @@ export default class ReviewItem extends React.Component {
         if(window.innerWidth > 934) {
             this.props.toggleArtworkPreview();
         } else {
-            
+
         }
 
     }
