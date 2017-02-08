@@ -4087,7 +4087,7 @@ label.age-confirm-label {
 	background: #111111;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.12),
 	0 3px 3px rgba(0,0,0,0.24);
-	padding: 0 20px;
+	padding: 0 20px 0 0px;
 	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
 	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
   	display: -ms-flexbox;  /* TWEENER - IE 10 */

@@ -38,7 +38,8 @@ export default class ProjectSelector extends React.Component {
 
 
         const selectorContainerWidth = {
-            width   : window.innerWidth * 0.4 - 40 - 60 - 20 // 40px = toggler, 60px = edit button, 20px = padding
+            width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
+            maxWidth: "340px"
         }
 
         const selectorWidth = {
