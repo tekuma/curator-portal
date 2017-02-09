@@ -1321,6 +1321,9 @@ export default class SearchManager extends React.Component {
             });
 
             this.props.doQuery(general);
+
+            let message = "Performing your search. Results will arrive shortly...";
+            this.props.sendToSnackbar(message);
         }
     }
 

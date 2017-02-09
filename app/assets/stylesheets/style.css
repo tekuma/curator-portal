@@ -1324,10 +1324,6 @@ main, .artworks {
 	height: auto;
 }
 
-.artwork-image.search:hover {
-		cursor: pointer;
-}
-
 .artwork-image img {
        width: 100%;
 }
@@ -1502,6 +1498,7 @@ input[type=checkbox].search-artwork-checkbox {
 	border-radius: 2px;
 	transform: translateX(10px);
 	opacity: 0;
+	cursor: pointer;
 	transition: all 0.5s;
   	-webkit-transition: all 0.5s;
   	-moz-transition: all 0.5s;
@@ -4914,11 +4911,11 @@ label.age-confirm-label {
 }
 
 .Select-option.is-selected {
-  background-color: #e73827;
+  background-color: #ec167e;
   color: #fff;
 }
 .Select-option.is-focused {
-  background-color: #ec167e;
+  background-color: #aaaaaa;
   color: #fff;
 }
 .Select-option.is-disabled {

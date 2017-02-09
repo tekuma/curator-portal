@@ -38,19 +38,27 @@ export default class Artwork extends React.Component {
         let artistUID = this.props.result.artist_uid || "(unknown)";;
 
         // Tooltips
-        const selectTooltip = (
+        const addTooltip = (
             <Tooltip
                 id="select-artwork-tooltip"
                 className="tooltip">
-                Click to select artwork
+                Add artwork to project
             </Tooltip>
         );
 
-        const detailTooltip = (
+        const removeTooltip = (
             <Tooltip
                 id="select-artwork-tooltip"
                 className="tooltip">
-                Click to view artwork details
+                Remove artwork from project
+            </Tooltip>
+        );
+
+        const infoTooltip = (
+            <Tooltip
+                id="select-artwork-tooltip"
+                className="tooltip">
+                See more info
             </Tooltip>
         );
 
@@ -80,16 +88,20 @@ export default class Artwork extends React.Component {
                                 }
                             </h4>
                         </div>
-                        <figure
-                            className="overlay-info-project-button"
-                            >
-                            <p>i</p>
-                        </figure>
-                        <aside
-                            className="overlay-add-project-button"
-                            >
-                            <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add-project-white.svg' : 'assets/images/icons/remove-project-white.svg'} />
-                        </aside>
+                        <OverlayTrigger placement="right" overlay={infoTooltip} >
+                            <figure
+                                className="overlay-info-project-button"
+                                >
+                                <p>i</p>
+                            </figure>
+                        </OverlayTrigger>
+                        <OverlayTrigger placement="right" overlay={(this.props.role == Roles.SEARCH) ? addTooltip : removeTooltip} >
+                            <aside
+                                className="overlay-add-project-button"
+                                >
+                                <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add-project-white.svg' : 'assets/images/icons/remove-project-white.svg'} />
+                            </aside>
+                        </OverlayTrigger>
                     </div>
                 </div>
             </article>
@@ -112,7 +124,7 @@ export default class Artwork extends React.Component {
 
     handleClick = (e) => {
         console.log(e.target.tagName);
-        if (e.target.tagName == "FIGURE") {
+        if (e.target.tagName == "FIGURE" || e.target.tagName == "P") {
             this.props.detailArtwork(this.props.result.uid);
             this.props.toggleDetailBox();
         } else if (e.target.tagName == "IMG" || e.target.tagName == "ASIDE") {
