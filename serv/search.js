@@ -55,7 +55,7 @@ function start_transaction(fcn) {
 
 function commit_transaction(fcn) {
     if (db_provider === 'mysql') {
-        db.commit(fcn);
+        return db.commit(fcn);
     } else {  // === 'sqlite'
         //db.all('COMMIT TRANSACTION', [], fcn);
         fcn();
@@ -275,54 +275,47 @@ exports.apply_label = (artwork_uid, label, try_use_existing) => {
                                        artwork_uid];
                          db.query(sql_template, qelems, function (err) {
                              assert.ifError(err);
-                             commit_transaction(function (err) {
-                                 assert.ifError(err);
-                                 resolve();
-                             });
+                             resolve();
                          });
                      }
                  });
         });
-        start_transaction(function (err) {
-            assert.ifError(err);
-            var insert_label = (function (err) {
-                logger.debug('Inserting new label:', [label_uid, label.val, label.type, label_origin]);
-                dbq('INSERT INTO labels ' +
-                    '(uid, val, labeltype, origin) ' +
-                    'VALUES (?, ?, ?, ?)',
-                    [label_uid,
-                     label.val,
-                     label.type,
-                     label_origin],
-                    add_assoc);
-            });
-
-            if (try_use_existing) {
-                logger.debug('Checking for matching label of ',
-                             {val: label.val, labeltype: label.type, origin: label_origin});
-                dbq('SELECT uid, val, labeltype, origin ' +
-                    'FROM labels ' +
-                    'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
-                    [label.val, label.type, label_origin],
-                    function (err, rows) {
-                        if (rows.length === 0) {
-                            if (label_uid === null) {
-                                label_uid = uuid.v4();
-                            }
-                            insert_label();
-                        } else {
-                            logger.debug('Found existing label match:', rows[0]);
-                            label_uid = rows[0].uid;
-                            add_assoc();
-                        }
-                    });
-            } else {
-                if (label_uid === null) {
-                    label_uid = uuid.v4();
-                }
-                insert_label();
-            }
+        var insert_label = (function (err) {
+            logger.debug('Inserting new label:', [label_uid, label.val, label.type, label_origin]);
+            dbq('INSERT INTO labels ' +
+                '(uid, val, labeltype, origin) ' +
+                'VALUES (?, ?, ?, ?)',
+                [label_uid,
+                 label.val,
+                 label.type,
+                 label_origin],
+                false).then(add_assoc);
         });
+
+        if (try_use_existing) {
+            logger.debug('Checking for matching label of ',
+                         {val: label.val, labeltype: label.type, origin: label_origin});
+            dbq('SELECT uid, val, labeltype, origin ' +
+                'FROM labels ' +
+                'WHERE (val = ?) AND (labeltype = ?) AND (origin = ?)',
+                [label.val, label.type, label_origin]).then(function (rows) {
+                    if (rows.length === 0) {
+                        if (label_uid === null) {
+                            label_uid = uuid.v4();
+                        }
+                        insert_label();
+                    } else {
+                        logger.debug('Found existing label match:', rows[0]);
+                        label_uid = rows[0].uid;
+                        add_assoc();
+                    }
+                });
+        } else {
+            if (label_uid === null) {
+                label_uid = uuid.v4();
+            }
+            insert_label();
+        }
     });
 }
 
