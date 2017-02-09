@@ -7,10 +7,12 @@ node_js:
 
 install:
   - export NODE_ENV=debug
-  - export TEKUMA_TEST_DB=mysql
   - npm install
   - mysql -u root --host=127.0.0.1 --port=3306 -e 'CREATE DATABASE IF NOT EXISTS Tekuma_artworkdb'
 
 script:
+  - export TEKUMA_TEST_DB=sqlite
+  - npm run testserv
+  - export TEKUMA_TEST_DB=mysql
   - cp ${TRAVIS_BUILD_DIR}/tests/ci-testdbconf.json ${TRAVIS_BUILD_DIR}/tests/testdbconf.json
   - npm run testserv
