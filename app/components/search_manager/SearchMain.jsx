@@ -55,12 +55,20 @@ export default class SearchMain extends React.Component {
                 addArtworkToBuffer={this.props.addArtworkToBuffer}
                 removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
                 noResults={this.state.no_results}
+                deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                addArtworksToProject={this.props.addArtworksToProject}
+                sendToSnackbar={this.props.sendToSnackbar}
+                role={this.props.role}
             />
             <SearchManager
                 managerIsOpen={this.props.managerIsOpen}
                 toggleManager={this.props.toggleManager}
                 doQuery={this.doQuery}
                 sendToSnackbar={this.props.sendToSnackbar}
+                currentProject={this.props.currentProject}
+                addNewProject={this.props.addNewProject}
+                changeProject={this.props.changeProject}
+                projects={this.props.projects}
              />
             <ArtworkDetailBoxDialog
                 toggleDetailBox={this.toggleDetailBox}
@@ -117,7 +125,7 @@ export default class SearchMain extends React.Component {
     updateResults = (data) => {
         this.setState({ results:[] });
 
-        if (data.length == 0) {
+        if (data.rows.length == 0) {
             this.setState({no_results: true});
         } else {
             setTimeout( ()=>{

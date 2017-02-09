@@ -178,7 +178,7 @@ export default class App extends React.Component {
         let projectID   =  projectRef.key;
         let project = {
             id     : projectID,
-            name   : "New Project",
+            name   : "Untitled Project",
             curator: firebase.auth().currentUser.uid,
             created: new Date().toISOString()
         };

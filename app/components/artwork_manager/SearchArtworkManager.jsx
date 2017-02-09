@@ -103,7 +103,10 @@ export default class ArtworkManager extends React.Component {
                                  command={this.props.command}
                                  addArtworkToBuffer={this.props.addArtworkToBuffer}
                                  removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
-                                 result={result} />
+                                 result={result}
+                                 deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                                 addArtworksToProject={this.props.addArtworksToProject}
+                                 sendToSnackbar={this.props.sendToSnackbar} />
                          );
                      })
                      : "No artworks matched your search query."}
@@ -160,7 +163,7 @@ export default class ArtworkManager extends React.Component {
                     {this.props.noResults ?
                         "No search results matching your search were found."
                         :
-                        "Search Using Interface on the Right"
+                        "Search for Artworks"
                     }
                 </h3>
             </div>

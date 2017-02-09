@@ -38,7 +38,8 @@ export default class ProjectSelector extends React.Component {
 
 
         const selectorContainerWidth = {
-            width: window.innerWidth * 0.2 + 36
+            width   : window.innerWidth * 0.4 - 40 - 60 - 20, // 40px = toggler, 60px = edit button, 20px = padding
+            maxWidth: "340px"
         }
 
         const selectorWidth = {
@@ -54,25 +55,12 @@ export default class ProjectSelector extends React.Component {
             </Tooltip>
         );
         return (
-            <div>
+            <div
+                className="project-selector-container">
                 <div
-                    id="project-selector"
+                    className="project-selector"
                     style={selectorContainerWidth}>
-                    <OverlayTrigger
-                        placement   ="bottom"
-                        overlay     ={addProjectTooltip}
-                        >
-
-                        <div
-                            className="add-project-button"
-                            onClick={this.handleAddProject}
-                            onTouchTap={this.handleAddProject}
-                            >
-                            <img src='assets/images/icons/plus-white.svg' />
-                        </div>
-                    </OverlayTrigger>
                     <Select
-                        className="project-select"
                         style={selectorWidth}
                         options={options}
                         name="project-select"
@@ -81,6 +69,20 @@ export default class ProjectSelector extends React.Component {
                         onChange={this.props.changeProject}
                         clearable="true"
                     />
+                </div>
+                <div
+                    className="project-edit-button-container"
+                    onClick     ={this.props.addNewProject}
+                    onTouchTap  ={this.props.addNewProject}
+                    >
+                  <OverlayTrigger
+                      placement   ="bottom"
+                      overlay     ={addProjectTooltip}>
+                      <img
+                          className   ="project-edit-button"
+                          src         ='assets/images/icons/plus-white.svg'
+                      />
+                  </OverlayTrigger>
                 </div>
             </div>
         );

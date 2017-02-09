@@ -27,7 +27,7 @@ export default class PostAuth extends React.Component {
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
         user           : {},
-        role           : Roles.SEARCH,
+        role           : Roles.MANAGE,
         projects       : [],
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
@@ -46,10 +46,10 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        if (this.state.role == Roles.SEARCH) {
-            return this.goToSearch();
-        } else if (this.state.role == Roles.MANAGE) {
+        if (this.state.role == Roles.MANAGE) {
             return this.goToManage();
+        } else if (this.state.role == Roles.SEARCH) {
+            return this.goToSearch();
         } else if (this.state.role == Roles.REVIEW) {
             return this.goToReview();
         } else if (this.state.role == Roles.PROFILE) {
@@ -84,14 +84,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -105,11 +101,14 @@ export default class PostAuth extends React.Component {
                         toggleManager={this.toggleManager}
                         toggleNav={this.toggleNav}
                         currentProject={this.state.currentProject}
+                        addNewProject={this.addNewProject}
                         changeProject={this.changeProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                         addArtworksToProject={this.addArtworksToProject}
-                        sendToSnackbar={this.sendToSnackbar}  />
+                        sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
@@ -134,14 +133,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -158,10 +153,10 @@ export default class PostAuth extends React.Component {
                         managerIsOpen={this.state.managerIsOpen}
                         toggleManager={this.toggleManager}
                         toggleNav={this.toggleNav}
-                        addNewProject={this.addNewProject}
                         currentProject={this.state.currentProject}
-                        projectArtworks={this.state.projectArtworks}
+                        addNewProject={this.addNewProject}
                         changeProject={this.changeProject}
+                        projectArtworks={this.state.projectArtworks}
                         renameCurrentProject={this.renameCurrentProject}
                         deleteCurrentProject={this.deleteCurrentProject}
                         addArtworkToBuffer={this.addArtworkToBuffer}
@@ -169,7 +164,10 @@ export default class PostAuth extends React.Component {
                         fillBuffer={this.fillBuffer}
                         emptyBuffer={this.emptyBuffer}
                         changeAppLayout={this.changeAppLayout}
-                        sendToSnackbar={this.sendToSnackbar}  />
+                        sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                        role={this.state.role}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
@@ -194,14 +192,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -236,14 +230,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -408,7 +398,7 @@ export default class PostAuth extends React.Component {
      */
     addNewProject = () => {
         let projectID   = this.props.createNewProject();
-        let defaultName = "New Project";
+        let defaultName = "Untitled Project";
         // give user access to project
         let path = `users/${firebase.auth().currentUser.uid}/projects`;
         firebase.database().ref(path).transaction((data)=>{
@@ -424,6 +414,9 @@ export default class PostAuth extends React.Component {
             // onComplete: update current project to be the new project
             let theProject = {label:defaultName, id:projectID};
             this.changeProject(theProject);
+
+            let message = "New project created";
+            this.sendToSnackbar(message);
         });
     }
 
@@ -436,7 +429,9 @@ export default class PostAuth extends React.Component {
             console.log("Received Null");
             this.setState({
                 currentProject:"",
-                projectArtworks  :[]
+                projectArtworks  :[],
+                projects: [],
+                projectDetails: {}
             });
         } else {
             let theProj = [newName.label,newName.id];
@@ -488,6 +483,9 @@ export default class PostAuth extends React.Component {
             } else {
                 this.changeProject(null);
             }
+
+            let message = "Project successfully deleted";
+            this.sendToSnackbar(message);
         });
 
 

@@ -15,7 +15,7 @@ export default class ManagerMain extends React.Component {
         manageNotesIsOpen:false, // whether popup is open or not
         detailBoxIsOpen  :false, // whether artwork detail box is open or not
         projectNotes     :[],  // gathered notes
-        artworkInfo      :{},  // Information display by more info pop-up
+        artworkInfo      :{uid: null, found: false},  // Information display by more info pop-up
         users            :[],  // list of [name,uid] pairs to populate collaborators
     }
 
@@ -41,6 +41,10 @@ export default class ManagerMain extends React.Component {
                       addNewProject={this.props.addNewProject}
                       detailArtwork={this.detailArtwork}
                       toggleDetailBox={this.toggleDetailBox}
+                      deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                      addArtworksToProject={this.props.addArtworksToProject}
+                      sendToSnackbar={this.props.sendToSnackbar}
+                      role={this.props.role}
                   />
                   <ProjectManager
                       artworkBuffer={this.props.artworkBuffer}
@@ -52,14 +56,14 @@ export default class ManagerMain extends React.Component {
                       deleteCurrentProject={this.props.deleteCurrentProject}
                       renameCurrentProject={this.props.renameCurrentProject}
                       currentProject={this.props.currentProject}
+                      addNewProject={this.props.addNewProject}
+                      changeProject={this.props.changeProject}
                       managerIsOpen={this.props.managerIsOpen}
                       manageNotesIsOpen={this.state.manageNotesIsOpen}
                       toggleManager={this.props.toggleManager}
                       toggleManageNotes={this.toggleManageNotes}
-                      changeProject={this.props.changeProject}
                       doQuery={this.doQuery}
                       projects={this.props.projects}
-                      addNewProject={this.props.addNewProject}
                       onDelete={this.deleteProject}
                    />
                    <ArtworkDetailBoxDialog
@@ -203,6 +207,10 @@ export default class ManagerMain extends React.Component {
                 success: this.updateInfoArtwork
             });
         });
+    }
+
+    updateInfoArtwork = (data) => {
+        this.setState({artworkInfo: data});
     }
 
     toggleDetailBox = () => {

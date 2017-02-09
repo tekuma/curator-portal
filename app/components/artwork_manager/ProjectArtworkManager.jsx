@@ -110,7 +110,10 @@ export default class ProjectArtworkManager extends React.Component {
                             command = {this.props.command}
                             addArtworkToBuffer={this.props.addArtworkToBuffer}
                             removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
-                            result={result} />
+                            result={result}
+                            deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                            addArtworksToProject={this.props.addArtworksToProject}
+                            sendToSnackbar={this.props.sendToSnackbar} />
                     );
                 })}
                 </Masonry>
@@ -211,7 +214,7 @@ export default class ProjectArtworkManager extends React.Component {
                     src="assets/images/icons/plus-pink.svg" />
                 <h2
                     className="empty-project-writing medium"
-                    >Create First Project</h2>
+                    >Click to Create First Project</h2>
             </div>
         );
     }

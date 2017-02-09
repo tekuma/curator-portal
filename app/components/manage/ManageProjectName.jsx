@@ -89,7 +89,7 @@ export default class ManageProjectName extends React.Component {
                       overlay     ={editTooltip}>
                       <img
                           className   ="project-edit-button"
-                          src         ='assets/images/icons/edit-white.svg'
+                          src         ='assets/images/icons/edit-black.svg'
                       />
                   </OverlayTrigger>
                 </div>
@@ -131,7 +131,7 @@ export default class ManageProjectName extends React.Component {
                       overlay     ={editTooltip}>
                       <img
                           className   ="project-edit-button"
-                          src         ='assets/images/icons/edit-white.svg'
+                          src         ='assets/images/icons/edit-black.svg'
                       />
                   </OverlayTrigger>
                 </div>

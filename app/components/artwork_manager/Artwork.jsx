@@ -4,6 +4,8 @@ import firebase from 'firebase';
 import {DragSource, DropTarget}  from 'react-dnd';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 
+// Files
+import Roles from '../../constants/Roles.js';
 
 
 export default class Artwork extends React.Component {
@@ -25,30 +27,38 @@ export default class Artwork extends React.Component {
         if (this.props.result.thumbnail_url){
             imageURL = this.props.result.thumbnail_url;
         } else {
-            imageURL = "assets/images/artwork-substitute-mini.png";
+            imageURL = "assets/images/artwork-substitute.png";
         }
         if (this.props.result.title) {
             imageName = this.props.result.title;
         } else {
-            imageName = "(no title)";
+            imageName = "Untitled Artwork";
         }
         let imageUID = this.props.result.uid || "(unknown)";
         let artistUID = this.props.result.artist_uid || "(unknown)";;
 
         // Tooltips
-        const selectTooltip = (
+        const addTooltip = (
             <Tooltip
                 id="select-artwork-tooltip"
                 className="tooltip">
-                Click to select artwork
+                Add artwork to project
             </Tooltip>
         );
 
-        const detailTooltip = (
+        const removeTooltip = (
             <Tooltip
                 id="select-artwork-tooltip"
                 className="tooltip">
-                Click to view artwork details
+                Remove artwork from project
+            </Tooltip>
+        );
+
+        const infoTooltip = (
+            <Tooltip
+                id="select-artwork-tooltip"
+                className="tooltip">
+                See more info
             </Tooltip>
         );
 
@@ -56,22 +66,44 @@ export default class Artwork extends React.Component {
             <article
                 htmlFor={imageUID}
                 className={ this.state.selected ? "artwork search selected": "artwork search"}>
-                <OverlayTrigger placement="top" overlay={selectTooltip}>
-                    <div
-                        onClick={this.toggleArtworkSelection}
-                        className="artwork-image search">
-                        <img src={imageURL} />
+                <div
+                    onClick={this.handleClick}
+                    onTap={this.handleClick}
+                    className="artwork-image search">
+                    <img src={imageURL} />
+                    <div className="artwork-overlay">
+                        <div className="artwork-overlay-info">
+                            <h3 className="artwork-overlay-title">
+                                    {!this.props.result.title || this.props.result.title == "" ?
+                                        "Untitled Artwork"
+                                        :
+                                        this.props.result.title
+                                    }
+                                </h3>
+                            <h4 className="artwork-overlay-artist">
+                                {!this.props.result.artist || this.props.result.artist == "" ?
+                                    "Untitled Artist"
+                                    :
+                                    this.props.result.artist
+                                }
+                            </h4>
+                        </div>
+                        <OverlayTrigger placement="right" overlay={infoTooltip} >
+                            <figure
+                                className="overlay-info-project-button"
+                                >
+                                <p>i</p>
+                            </figure>
+                        </OverlayTrigger>
+                        <OverlayTrigger placement="right" overlay={(this.props.role == Roles.SEARCH) ? addTooltip : removeTooltip} >
+                            <aside
+                                className="overlay-add-project-button"
+                                >
+                                <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add-project-white.svg' : 'assets/images/icons/remove-project-white.svg'} />
+                            </aside>
+                        </OverlayTrigger>
                     </div>
-                </OverlayTrigger>
-
-                <OverlayTrigger placement="bottom" overlay={detailTooltip}>
-                    <div
-                        onClick={this.handleArtworkDetailBox}
-                        className="artwork-info review">
-                        <h3 className="artwork-name review"> {imageName} </h3>
-                    </div>
-                </OverlayTrigger>
-
+                </div>
             </article>
         );
     }
@@ -90,25 +122,46 @@ export default class Artwork extends React.Component {
     // ========= Methods ===========
     //
 
-    handleArtworkDetailBox = () => {
-        console.log(this.props);
-        this.props.detailArtwork(this.props.result.uid);
-        this.props.toggleDetailBox();
-    }
+    handleClick = (e) => {
+        console.log(e.target.tagName);
+        if (e.target.tagName == "FIGURE" || e.target.tagName == "P") {
+            this.props.detailArtwork(this.props.result.uid);
+            this.props.toggleDetailBox();
+        } else if (e.target.tagName == "IMG" || e.target.tagName == "ASIDE") {
+            if (this.props.role == Roles.SEARCH) {
+                let message = "Artwork/s have been added to project";
+                this.props.sendToSnackbar(message);
 
+                if (!this.state.selected) {
+                    this.props.addArtworkToBuffer(this.props.result);
+                }
 
+                setTimeout( ()=>{
+                    this.props.addArtworksToProject();
+                }, 50);
+            } else {
+                let message = "Artwork/s have been removed from project";
+                this.props.sendToSnackbar(message);
 
-    toggleArtworkSelection = () => {
+                if (!this.state.selected) {
+                    this.props.addArtworkToBuffer(this.props.result);
+                }
 
-        // Add to addition or deletion buffer if originally false, else remove it addition/deletion buffer
-        if (!this.state.selected) {
-            this.props.addArtworkToBuffer(this.props.result);
+                setTimeout( ()=>{
+                    this.props.deleteArtworksFromProject();
+                }, 50);
+            }
         } else {
-            this.props.removeArtworkFromBuffer(this.props.result);
-        }
+            // Add to addition or deletion buffer if originally false, else remove it addition/deletion buffer
+            if (!this.state.selected) {
+                this.props.addArtworkToBuffer(this.props.result);
+            } else {
+                this.props.removeArtworkFromBuffer(this.props.result);
+            }
 
-        this.setState({
-            selected: !this.state.selected
-        });
+            this.setState({
+                selected: !this.state.selected
+            });
+        }
     }
 }

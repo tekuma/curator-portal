@@ -9,6 +9,7 @@ import update                       from 'react-addons-update';
 import SearchAccordion              from './SearchAccordion.jsx';
 import SearchHints                  from './SearchHints.jsx';
 import SearchToggler                from './SearchToggler.jsx';
+import ProjectSelector              from '../manage/ProjectSelector.jsx';
 
 /**
  * TODO
@@ -1116,6 +1117,11 @@ export default class SearchManager extends React.Component {
                 <div
                     style={containerWidth}
                     className="search-manager-container">
+                    <ProjectSelector
+                        addNewProject={this.props.addNewProject}
+                        currentProject={this.props.currentProject}
+                        changeProject={this.props.changeProject}
+                        projects={this.props.projects} />
                     <SearchHints
                         searchCategories={this.state.searchCategories} />
                     <SearchAccordion
@@ -1315,6 +1321,9 @@ export default class SearchManager extends React.Component {
             });
 
             this.props.doQuery(general);
+
+            let message = "Performing your search. Results will arrive shortly...";
+            this.props.sendToSnackbar(message);
         }
     }
 

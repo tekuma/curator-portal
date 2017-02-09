@@ -2,7 +2,6 @@
 import React     from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 // Files
-import ProjectSelector from './ProjectSelector';
 import Roles           from '../../constants/Roles';
 
 /**
@@ -60,8 +59,8 @@ export default class CurationHeader extends React.Component {
                 <header className={this.state.display_tools ? "light": "dark"}>
                 	<div
                         className="tekuma-logo"
-                        onClick={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
-                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.SEARCH)} >
+                        onClick={this.props.changeAppLayout.bind({}, Roles.MANAGE)}
+                        onTouchTap={this.props.changeAppLayout.bind({}, Roles.MANAGE)} >
                         <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
                             <g>
                                 <g>
@@ -86,15 +85,6 @@ export default class CurationHeader extends React.Component {
                 	</div>
                 {this.state.display_tools ?
                     <div className="select-tools">
-                    <div className="project-selector">
-                        <ProjectSelector
-                            addNewProject={this.props.addNewProject}
-                            role={this.props.role}
-                            currentProject={this.props.currentProject}
-                            changeProject={this.props.changeProject}
-                            projects={this.props.projects}
-                        />
-                    </div>
                     <div className="header-icons tools" >
                         <OverlayTrigger placement="bottom" overlay={this.props.role == Roles.SEARCH ? addArtworkTooltip : removeArtworkTooltip}>
                              <div
@@ -102,14 +92,14 @@ export default class CurationHeader extends React.Component {
                                  onClick={this.handleProjectAdditionsOrDeletions}
                                  onTouchTap={this.handleProjectAdditionsOrDeletions}
                                 >
-                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add_project.svg' : 'assets/images/icons/remove_project.svg'} />
+                                 <img src={this.props.role == Roles.SEARCH ? 'assets/images/icons/add-project-white.svg' : 'assets/images/icons/remove-project-white.svg'} />
                              </div>
                         </OverlayTrigger>
                     </div>
                     </div>
 
                     :
-                    <div></div>
+                    null
                 }
 
 

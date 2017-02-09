@@ -26,7 +26,7 @@ export default class SearchAccordion extends React.Component {
 
     render() {
         let wrapperHeight = {
-            height: window.innerHeight - 4*60 // - Header Height (60px) - Search Tools Height (60px) - Search Button Height (60px) - Search Hints Height (60px)
+            height: window.innerHeight - 5*60 // - Header Height (60px) - Project Selector (60px) - Search Hints Height (60px) - Search Tools Height (60px) - Search Button Height (60px) 
         }
 
         let options = this.props.artistNames.map(function(artist){
