@@ -273,10 +273,7 @@ exports.apply_label = (artwork_uid, label, try_use_existing) => {
                              '(label_uid, object_uid, object_table) VALUES (?, ?, "artworks")';
                          var qelems = [label_uid,
                                        artwork_uid];
-                         db.query(sql_template, qelems, function (err) {
-                             assert.ifError(err);
-                             resolve();
-                         });
+                         dbq(sql_template, qelems, false).then(resolve);
                      }
                  });
         });
