@@ -1439,6 +1439,7 @@ input[type=checkbox].search-artwork-checkbox {
 
 .artwork-overlay-info {
 	position: absolute;
+	left: 0;
 	bottom: 0;
 	padding: 20px;
 	padding-bottom: 10px;
