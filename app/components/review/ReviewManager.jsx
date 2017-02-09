@@ -122,7 +122,6 @@ export default class ReviewManager extends React.Component {
                             <th className="review-button-heading"></th>
                         </tr>
                     </thead>
-
                 </table>
                 <div className="review-wrapper"
                     style={reviewWrapperStyle}>
@@ -292,6 +291,19 @@ export default class ReviewManager extends React.Component {
     }
 
     goToHeld = () => {
+        const reviewWrapperStyle = {
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
+            width : window.innerWidth - 40
+        };
+
+        const tableWidth = {
+            width: window.innerWidth - 40 - 20
+        };
+        const itemTableWidth = {
+            width: window.innerWidth - 40 - 40
+        };
+
+
         return (
             <div>
                 <div className="review-sections">
@@ -316,11 +328,79 @@ export default class ReviewManager extends React.Component {
                         <h2>Declined</h2>
                     </div>
                 </div>
+                <table
+                    className="review-headings-wrapper"
+                    style={reviewWrapperStyle}>
+                    <thead className="review-headings">
+                        <tr>
+                            <th className="review-artwork-heading">Artwork</th>
+                            <th className="review-details-heading">Details</th>
+                            <th className="review-tags-heading">Tags</th>
+                            <th className="review-description-heading">Description</th>
+                            <th className="review-submitted-heading">Submitted</th>
+                            <th className="review-status-heading">Status</th>
+                            <th className="review-note-heading">Review Note</th>
+                            <th className="review-button-heading"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div className="review-wrapper"
+                    style={reviewWrapperStyle}>
+                    <table
+                        className="review-table"
+                        style={tableWidth}>
+                        <tbody>
+
+                        </tbody>
+                	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
+                </div>
+                <ArtworkImagePreview
+                    toggleArtworkPreview={this.toggleArtworkPreview}
+                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
+                    reviewInfo={this.state.reviewInfo}
+                 />
+                <ArtworkDescriptionPreview
+                         toggleDescriptionPreview={this.toggleDescriptionPreview}
+                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                         reviewInfo={this.state.reviewInfo}
+                      />
+                <div
+                    onClick     ={this.props.toggleNav}
+                    onTouchTap  ={this.props.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
             </div>
         );
     }
 
     goToDeclined = () => {
+        const reviewWrapperStyle = {
+            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
+            width : window.innerWidth - 40
+        };
+
+        const tableWidth = {
+            width: window.innerWidth - 40 - 20
+        };
+        const itemTableWidth = {
+            width: window.innerWidth - 40 - 40
+        };
+
+
         return (
             <div>
                 <div className="review-sections">
@@ -345,6 +425,61 @@ export default class ReviewManager extends React.Component {
                         <h2>Declined</h2>
                     </div>
                 </div>
+                <table
+                    className="review-headings-wrapper"
+                    style={reviewWrapperStyle}>
+                    <thead className="review-headings">
+                        <tr>
+                            <th className="review-artwork-heading">Artwork</th>
+                            <th className="review-details-heading">Details</th>
+                            <th className="review-tags-heading">Tags</th>
+                            <th className="review-description-heading">Description</th>
+                            <th className="review-submitted-heading">Submitted</th>
+                            <th className="review-status-heading">Status</th>
+                            <th className="review-note-heading">Review Note</th>
+                            <th className="review-button-heading"></th>
+                        </tr>
+                    </thead>
+                </table>
+                <div className="review-wrapper"
+                    style={reviewWrapperStyle}>
+                    <table
+                        className="review-table"
+                        style={tableWidth}>
+                        <tbody>
+
+                        </tbody>
+                	</table>
+                </div>
+                <div
+                    className="pagination-wrapper">
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},false)}
+                        onTouchTap={this.changePage.bind({},false)}>
+                        <img src="assets/images/icons/pagination-left.svg" />
+                    </div>
+                    <div
+                        className="pagination-arrow"
+                        onClick={this.changePage.bind({},true)}
+                        onTouchTap={this.changePage.bind({},true)}>
+                        <img src="assets/images/icons/pagination-right.svg" />
+                    </div>
+                </div>
+                <ArtworkImagePreview
+                    toggleArtworkPreview={this.toggleArtworkPreview}
+                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
+                    reviewInfo={this.state.reviewInfo}
+                 />
+                <ArtworkDescriptionPreview
+                         toggleDescriptionPreview={this.toggleDescriptionPreview}
+                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                         reviewInfo={this.state.reviewInfo}
+                      />
+                <div
+                    onClick     ={this.props.toggleNav}
+                    onTouchTap  ={this.props.toggleNav}
+                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
             </div>
         );
     }

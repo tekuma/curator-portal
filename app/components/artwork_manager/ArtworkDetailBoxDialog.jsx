@@ -110,7 +110,7 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                         }
                                     </div>
                                     <div
-                                        className="artwork-date">
+                                        className="artwork-year">
                                         {!artwork_details.year || artwork_details.year == "" ?
                                             "No year specified"
                                             :

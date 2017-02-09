@@ -5126,7 +5126,7 @@ animation
 	margin-bottom: 10px;
 }
 
-.artwork-date {
+.artwork-year {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: rgba(0,0,0,0.54);
 	font-size: 0.9em;
@@ -5990,6 +5990,29 @@ animation
 		height: 200px;
 	}
 
+	.artwork-preview {
+		display: none;
+	}
+
+	.artwork-info-wrapper {
+		width: 592px;
+	}
+
+	.artwork-title,
+	.artwork-artist,
+	.artwork-year,
+	.artwork-album {
+		text-align: center;
+	}
+
+	.artwork-album-heading,
+	.artwork-tags-heading,
+	.artwork-description-heading,
+	.artwork-colors-heading,
+	.artwork-review-heading {
+		text-align: center;
+	}
+
 	.manage-notes-group-notes-wrapper {
 		width: 296px;
 	}
@@ -6135,6 +6158,10 @@ animation
 		width: 100px;
 	}
 
+	.artwork-info-wrapper {
+		width: 542px;
+	}
+
 	.manage-notes-group-notes-wrapper,
 	.manage-notes-textarea-wrapper {
 		display: block;
@@ -6271,6 +6298,10 @@ animation
 		width: 368px !important;
 	}
 
+	.artwork-info-wrapper {
+		width: 368px;
+	}
+
 	.artwork-preview-colors {
 		display: none;
 	}
@@ -6376,11 +6407,6 @@ animation
 		display: none;
 	}
 
-	.edit-artwork-body {
-		width: 270px;
-		margin: 0 auto;
-	}
-
 	.edit-album-hint {
 		margin-top: 20px;
 	}
@@ -6433,8 +6459,12 @@ animation
 	}
 
 	.edit-artwork-body {
-		width: 250px;
+		width: 310px !important;
 		padding: 0 !important;
+	}
+
+	.artwork-info-wrapper {
+		width: 310px;
 	}
 }
 
