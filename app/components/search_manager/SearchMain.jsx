@@ -55,6 +55,10 @@ export default class SearchMain extends React.Component {
                 addArtworkToBuffer={this.props.addArtworkToBuffer}
                 removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
                 noResults={this.state.no_results}
+                deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                addArtworksToProject={this.props.addArtworksToProject}
+                sendToSnackbar={this.props.sendToSnackbar}
+                role={this.props.role}
             />
             <SearchManager
                 managerIsOpen={this.props.managerIsOpen}

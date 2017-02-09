@@ -84,14 +84,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -110,7 +106,9 @@ export default class PostAuth extends React.Component {
                         addArtworkToBuffer={this.addArtworkToBuffer}
                         removeArtworkFromBuffer={this.removeArtworkFromBuffer}
                         addArtworksToProject={this.addArtworksToProject}
-                        sendToSnackbar={this.sendToSnackbar}  />
+                        sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
@@ -135,14 +133,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -170,7 +164,10 @@ export default class PostAuth extends React.Component {
                         fillBuffer={this.fillBuffer}
                         emptyBuffer={this.emptyBuffer}
                         changeAppLayout={this.changeAppLayout}
-                        sendToSnackbar={this.sendToSnackbar}  />
+                        sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
+                        role={this.state.role}  />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
@@ -195,14 +192,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}
@@ -237,14 +230,10 @@ export default class PostAuth extends React.Component {
                     <CurationHeader
                         artworkBuffer={this.state.artworkBuffer}
                         role={this.state.role}
-                        currentProject={this.state.currentProject}
-                        changeProject={this.changeProject}
-                        addNewProject={this.addNewProject}
-                        projects={this.state.projects}
-                        deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}
                         changeAppLayout={this.changeAppLayout}
                         sendToSnackbar={this.sendToSnackbar}
+                        deleteArtworksFromProject={this.deleteArtworksFromProject}
+                        addArtworksToProject={this.addArtworksToProject}
                     />
                     <HamburgerIcon
                         toggleNav={this.toggleNav}

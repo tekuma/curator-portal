@@ -1283,15 +1283,15 @@ main, .artworks {
 }
 
 .artworks.no-margin {
-	margin: 0;
+	margin: 10px;
 }
 
 .artwork {
 	display: inline-block;
 	width: 28%;
-	max-width: 128px;
-	min-width: 128px;
-	margin: 18px;
+	max-width: 275px;
+	min-width: 165px;
+	margin: 12px;
 	background: #ffffff;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.12),
 	0 1px 2px rgba(0,0,0,0.24);
@@ -1320,7 +1320,7 @@ main, .artworks {
 
 .artwork-image {
 	display: block;
-	width: 128px;
+	width: 100%;
 	height: auto;
 }
 
@@ -1329,7 +1329,7 @@ main, .artworks {
 }
 
 .artwork-image img {
-       width: 128px;
+       width: 100%;
 }
 
 .artwork-info {
@@ -1401,6 +1401,153 @@ main, .artworks {
 input[type=checkbox].search-artwork-checkbox {
 		margin: 0;
 }
+
+.artwork-image .artwork-overlay {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  opacity: 0;
+}
+
+.artwork-image:hover .artwork-overlay {
+  opacity: 1;
+}
+
+.artwork-overlay {
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+	display: -ms-flexbox;  /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+	display: flex;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+	position: absolute;
+  	z-index: 11;
+	background: rgba(0,0,0,0.6);
+	opacity: 0.2;
+  	overflow: hidden;
+	padding: 15px;
+	height: 100%;
+  	transition: all 0.3s;
+  	-webkit-transition: all 0.3s;
+  	-moz-transition: all 0.3s;
+  	-ms-transition: all 0.3s;
+}
+
+.artwork-overlay-info {
+	position: absolute;
+	bottom: 0;
+	padding: 20px;
+	padding-bottom: 10px;
+	width: 100%;
+}
+
+.artwork-overlay-artist,
+.artwork-overlay-title {
+	color: #ffffff;
+	font-size: 1.2em;
+	font-weight: 600;
+	transform: translateY(10px);
+	opacity: 0;
+	transition: all 0.5s;
+  	-webkit-transition: all 0.5s;
+  	-moz-transition: all 0.5s;
+  	-ms-transition: all 0.5s;
+}
+
+.artwork-overlay-artist {
+	font-size: 0.9em;
+	font-weight: 300;
+}
+
+.artwork-image:hover .artwork-overlay .artwork-overlay-artist,
+.artwork-image:hover .artwork-overlay .artwork-overlay-title {
+	transform: translateY(0px);
+	opacity: 1;
+	transition: all 0.3s;
+  	-webkit-transition: all 0.3s;
+  	-moz-transition: all 0.3s;
+  	-ms-transition: all 0.3s;
+}
+
+.overlay-add-project-button,
+.overlay-info-project-button {
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+	display: -ms-flexbox;  /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+	display: flex;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-justify-content: center;
+    -moz-justify-content: center;
+    justify-content: center;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	height: 30px;
+	width: 30px;
+	background: #bbbbbb;
+	z-index: 12;
+	border-radius: 2px;
+	transform: translateX(10px);
+	opacity: 0;
+	transition: all 0.5s;
+  	-webkit-transition: all 0.5s;
+  	-moz-transition: all 0.5s;
+  	-ms-transition: all 0.5s;
+}
+
+.artwork-image:hover .artwork-overlay .overlay-info-project-button,
+.artwork-image:hover .artwork-overlay .overlay-add-project-button {
+	transform: translateX(0px);
+	opacity: 1;
+	transition: all 0.3s;
+  	-webkit-transition: all 0.3s;
+  	-moz-transition: all 0.3s;
+  	-ms-transition: all 0.3s;
+}
+
+.overlay-info-project-button {
+	top: 45px;
+}
+
+.overlay-add-project-button:hover,
+.overlay-info-project-button:hover {
+	background: #e73827;
+    background: -moz-linear-gradient(top, #e73827 0%, #ec167e 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, #e73827), color-stop(100%, #ec167e));
+    background: -webkit-linear-gradient(top, #e73827 0%, #ec167e 100%);
+    background: -o-linear-gradient(top, #e73827 0%, #ec167e 100%);
+    background: -ms-linear-gradient(top, #e73827 0%, #ec167e 100%);
+    background: linear-gradient(to bottom, #e73827 0%, #ec167e 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e73827', endColorstr='#ec167e', GradientType=0 );
+	transition: all 0.3s;
+  	-webkit-transition: all 0.3s;
+  	-moz-transition: all 0.3s;
+  	-ms-transition: all 0.3s;
+}
+
+
+.overlay-add-project-button img {
+	width: 20px;
+}
+
+.overlay-info-project-button p {
+	margin: 0;
+	color: #ffffff;
+}
+
 
 /*========================================== */
 
@@ -2882,37 +3029,6 @@ login-button.left {
 	border-radius: 5px;
 }
 
-.overlay {
-	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
-	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-	display: -ms-flexbox;  /* TWEENER - IE 10 */
-	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
-	display: flex;
-    -webkit-align-items: center;
-    -ms-align-items: center;
-    -moz-align-items: center;
-    align-items: center;
-    -webkit-justify-content: center;
-    -ms-justify-content: center;
-    -moz-justify-content: center;
-    justify-content: center;
-	position: absolute;
-  	z-index: 11;
-  	background: rgba(0, 0, 0, 0.6);
-  	border-radius: 5px;
-  	overflow: hidden;
-	padding: 15px;
-	height: 100%;
-  	transition: all 0.5s;
-  	-webkit-transition: all 0.5s;
-  	-moz-transition: all 0.5s;
-  	-ms-transition: all 0.5s;
-}
-
-.overlay div {
-	width: 100%;
-}
-
 /* Handles Overlay Effect */
 
 .dropzone-image-preview-container .overlay {
@@ -4083,11 +4199,12 @@ label.age-confirm-label {
 .project-selector-container {
 	position: relative;
 	width: 100%;
+	min-width: 130px;
 	height: 60px;
 	background: #111111;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.12),
 	0 3px 3px rgba(0,0,0,0.24);
-	padding: 0 20px 0 0px;
+	padding: 0 20px;
 	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
 	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
   	display: -ms-flexbox;  /* TWEENER - IE 10 */
@@ -4482,6 +4599,10 @@ label.age-confirm-label {
   position: relative;
   width: 100%;
   margin: 0 auto;
+}
+
+.project-selector {
+  min-width: 130px;
 }
 
 .project-selector .Select {

@@ -41,6 +41,10 @@ export default class ManagerMain extends React.Component {
                       addNewProject={this.props.addNewProject}
                       detailArtwork={this.detailArtwork}
                       toggleDetailBox={this.toggleDetailBox}
+                      deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                      addArtworksToProject={this.props.addArtworksToProject}
+                      sendToSnackbar={this.props.sendToSnackbar}
+                      role={this.props.role}
                   />
                   <ProjectManager
                       artworkBuffer={this.props.artworkBuffer}
