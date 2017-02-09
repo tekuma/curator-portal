@@ -27,7 +27,7 @@ export default class PostAuth extends React.Component {
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
         user           : {},
-        role           : Roles.SEARCH,
+        role           : Roles.MANAGE,
         projects       : [],
         artworkBuffer  : [], // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
@@ -46,10 +46,10 @@ export default class PostAuth extends React.Component {
     }
 
     render() {
-        if (this.state.role == Roles.SEARCH) {
-            return this.goToSearch();
-        } else if (this.state.role == Roles.MANAGE) {
+        if (this.state.role == Roles.MANAGE) {
             return this.goToManage();
+        } else if (this.state.role == Roles.SEARCH) {
+            return this.goToSearch();
         } else if (this.state.role == Roles.REVIEW) {
             return this.goToReview();
         } else if (this.state.role == Roles.PROFILE) {
@@ -429,7 +429,9 @@ export default class PostAuth extends React.Component {
             console.log("Received Null");
             this.setState({
                 currentProject:"",
-                projectArtworks  :[]
+                projectArtworks  :[],
+                projects: [],
+                projectDetails: {}
             });
         } else {
             let theProj = [newName.label,newName.id];
@@ -481,6 +483,9 @@ export default class PostAuth extends React.Component {
             } else {
                 this.changeProject(null);
             }
+
+            let message = "Project successfully deleted";
+            this.sendToSnackbar(message);
         });
 
 

@@ -4243,6 +4243,7 @@ label.age-confirm-label {
 .project-name {
 	margin: 0;
 	color: rgba(0,0,0,0.87);
+	min-width: 130px;
 }
 
 .edit-project-name {
@@ -6329,6 +6330,10 @@ animation
   .tekuma-logo{
 	  width: 120px
   }
+
+  .review-sections h2 {
+	  font-size: 1em;
+  }
 }
 
 @media (max-height: 570px) {
@@ -6490,9 +6495,6 @@ animation
 }
 
 @media (max-width: 338px) {
-	.pagination-wrapper {
-		bottom: 23px;
-	}
 
 	.pagination-arrow {
 		margin: 10px;
@@ -6503,8 +6505,13 @@ animation
 		width: 30px;
 	}
 
-	.review-wrapper {
-		top: 172px;
+	.review-sections h2 {
+		font-size: 0.9em;
+		margin: 15px;
+	}
+
+	.review-headings-wrapper .review-headings th {
+		font-size: 0.9em;
 	}
 }
 

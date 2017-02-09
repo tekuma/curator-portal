@@ -54,6 +54,10 @@ export default class ProjectManager extends React.Component {
             height: window.innerHeight - 60 - 60 - 60 - 60 // Minus 60px for Header, Project Selector, Project Name, and SelectButtons
         }
 
+        const managerFunctionHeightLong = {
+            height: window.innerHeight - 60 - 60 - 60 // Minus 60px for Header, Project Selector, and SelectButtons
+        }
+
         const openManager = {
             height: window.innerHeight - 60,
             right: 0
@@ -128,7 +132,7 @@ export default class ProjectManager extends React.Component {
                             />
                     }
                     <div
-                        style={managerFunctionHeight}
+                        style={this.props.projects.length == 0 ? managerFunctionHeightLong: managerFunctionHeight}
                         className={this.props.projects.length == 0 ? "manager-function-wrapper centering" : "manager-function-wrapper"}>
                         <div
                             className="manager-function"
