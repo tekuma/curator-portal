@@ -119,14 +119,20 @@ export default class ArtworkDetailBoxDialog extends React.Component {
                                     </div>
                                 </div>
                                 <div className="other-artwork-details">
-                                    <h4 className="artwork-review-heading">
-                                        Review Notes
-                                    </h4>
-                                    <div
-                                        className="artwork-review">
-                                        &#8220;{artwork_details.memo}&#8221;
-                                        <div className="artwork-reviewer">{artwork_details.reviewer}</div>
-                                    </div>
+                                    {!artwork_details.memo || artwork_details.memo == "" ?
+                                        null
+                                        :
+                                        <div>
+                                            <h4 className="artwork-review-heading">
+                                                Review Notes
+                                            </h4>
+                                            <div
+                                                className="artwork-review">
+                                                &#8220;{artwork_details.memo}&#8221;
+                                                <div className="artwork-reviewer">{artwork_details.reviewer}</div>
+                                            </div>
+                                        </div>
+                                    }
                                     {!artwork_details.album || artwork_details.album == "" ?
                                         null
                                         :
