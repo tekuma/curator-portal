@@ -1216,8 +1216,10 @@ export default class SearchManager extends React.Component {
         });
     }
 
+    /**
+     * Removes all data in the search accordion
+     */
     clearAllSearch = () => {
-        console.log("Entered clearAll");
         // Turn off search hints
         let searchCategories = this.state.searchCategories;
 
@@ -1284,9 +1286,9 @@ export default class SearchManager extends React.Component {
     }
 
     /**
-     * [toggleSearchCategory description]
-     * @param  {[type]} category [description]
-     * @param  {[type]} bool     [description]
+     * [TODO toggleSearchCategory description]
+     * @param  {String} category [description]
+     * @param  {Boolean} bool     [description]
      */
     toggleSearchCategory = (category, bool) => {
         let searchCategories = this.state.searchCategories;
@@ -1300,9 +1302,9 @@ export default class SearchManager extends React.Component {
     }
 
     /**
-     * [generalChange description]
+     * [generalChange description] ??
      * @param  {[type]} general [description]
-     * @param  {[type]} e       [description]
+     * @param  {HTML event} e       [description]
      */
     generalChange = (general, e) => {
         console.log(e);
@@ -1346,7 +1348,7 @@ export default class SearchManager extends React.Component {
     }
 
     /**
-     * [titleChange description]
+     * [titleChange description] what is a title?
      * @param  {String} title [description]
      */
     titleChange = (title) => {
@@ -1429,8 +1431,10 @@ export default class SearchManager extends React.Component {
      */
     megaSearch = () => {
         const general = String(document.getElementById("search-general").value || '').trim();
-        const title = String(document.getElementById("search-title").value || '').trim();
-        const artist = String(this.state.artist || '').trim();
+        const title   = String(document.getElementById("search-title").value || '').trim();
+        const artist  = String(document.getElementById("search-artist").value || '').trim();
+
+        // const artist  = String(this.state.artist || '').trim();
 
         let fields = {};
         if (this.state.searchCategories.title && title.length > 0)
