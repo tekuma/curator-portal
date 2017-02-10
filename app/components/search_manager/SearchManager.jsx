@@ -16,7 +16,7 @@ import ProjectSelector              from '../manage/ProjectSelector.jsx';
  */
 export default class SearchManager extends React.Component {
     state = {
-        searchCategories: {
+        searchCategories: { // true = there is this data present in buffer
             general: false,
             artist : false,
             tag    : false,
@@ -24,7 +24,7 @@ export default class SearchManager extends React.Component {
             time   : false,
             color  : false
         },
-        accordion: {
+        accordion: { // true = this field is open/editable in interface
             general : false,
             artist  : false,
             tag     : false,
@@ -33,7 +33,7 @@ export default class SearchManager extends React.Component {
             color   : false
         },
         allAccordion : false,
-        artistNames  : [],
+        artistNames  : [], //XXX not currently in use.
         clearable    : true,
         general: "",
         artist: "",
@@ -1182,9 +1182,8 @@ export default class SearchManager extends React.Component {
 // ============= Methods ===============
 
     /**
-     * TODO
-     * @param  {[type]} item [description]
-     * @return {[type]}      [description]
+     * Opens / closes a section of the accordion in the interface.
+     * @param  {string} item [one of general,artist,tag,color]
      */
     toggleAccordion = (item) => {
         let accordion   = this.state.accordion;
@@ -1195,8 +1194,7 @@ export default class SearchManager extends React.Component {
     }
 
     /**
-     * [toggleAllAccordion description]
-     * @return {[type]} [description]
+     * Opens/closes all sections in the search accordion
      */
     toggleAllAccordion = () => {
         let allAccordion = this.state.allAccordion;
@@ -1370,6 +1368,10 @@ export default class SearchManager extends React.Component {
         });
     }
 
+    /**
+     * [handleDelete description]
+     * @param  {Int} i [index of tag to delete]
+     */
     handleDelete = (i) => {
         let tags = this.state.tags;
         tags.splice(i, 1);
@@ -1383,6 +1385,10 @@ export default class SearchManager extends React.Component {
         }
     }
 
+    /**
+     * [handleAddition description]
+     * @param  {[type]} tag [description]
+     */
     handleAddition = (tag) => {
         let tags = this.state.tags;
         tags.push({
@@ -1401,6 +1407,12 @@ export default class SearchManager extends React.Component {
         }
     }
 
+    /**
+     * [handleDrag description]
+     * @param  {String} tag     [description]
+     * @param  {int} currPos [description]
+     * @param  {int} newPos  [description]
+     */
     handleDrag = (tag, currPos, newPos) => {
         let tags = this.state.tags;
 
@@ -1412,13 +1424,15 @@ export default class SearchManager extends React.Component {
         this.setState({ tags: tags });
     }
 
+    /**
+     * [colorChange description]
+     * @param  {[type]} searchColors [description]
+     */
     colorChange = (searchColors) => {
-
         this.setState({
             searchColors: searchColors
         });
     }
-
 
     setSearchColors = (searchColors) => {
         this.setState({
@@ -1431,10 +1445,8 @@ export default class SearchManager extends React.Component {
      */
     megaSearch = () => {
         const general = String(document.getElementById("search-general").value || '').trim();
-        const title   = String(document.getElementById("search-title").value || '').trim();
         const artist  = String(document.getElementById("search-artist").value || '').trim();
-
-        // const artist  = String(this.state.artist || '').trim();
+        const title   = String(document.getElementById("search-title").value || '').trim();
 
         let fields = {};
         if (this.state.searchCategories.title && title.length > 0)
