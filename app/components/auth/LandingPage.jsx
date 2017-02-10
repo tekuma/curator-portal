@@ -110,10 +110,12 @@ export default class LandingPage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            errors: this.state.errors.concat(nextProps.errors),
-            currentError: nextProps.errors[0]
-        });
+        if (nextProps.errors) {
+            this.setState({
+                errors: this.state.errors.concat(nextProps.errors),
+                currentError: nextProps.errors[0]
+            });
+        }
     }
 
 // ============= Methods ===============

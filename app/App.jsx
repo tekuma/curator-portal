@@ -98,7 +98,7 @@ export default class App extends React.Component {
             console.log(">Password Auth successful for:", thisUser.displayName);
             this.checkReturningUser(thisUser); // *
         }).catch( (error) => {
-            console.error(error);
+            console.log(error);
             this.setState({
                 errors: this.state.errors.concat(error.message)
             });
