@@ -1,7 +1,7 @@
 notifications:
   email:
     recipients:
-      - ScottCLivingston@gmail.com
+      - scott@tekuma.io
       - afika@tekuma.io
       - stephen@tekuma.io
     on_success: change
