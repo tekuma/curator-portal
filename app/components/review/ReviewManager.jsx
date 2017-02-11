@@ -24,12 +24,14 @@ const pg_size = 5;
 
 export default class ReviewManager extends React.Component {
     state = {
-        currentTab: reviewTabs.PENDING,        // Will determine which screen user is in (pending or reviewed)
-        reviewItems: [],
-        approvedItems:[],
-        artworkPreviewIsOpen: false,
+        currentTab              : reviewTabs.PENDING, // Will determine which screen user is in (pending, reviewed, held, declined)
         artworkDescriptionIsOpen: false,
-        reviewInfo: {}
+        artworkPreviewIsOpen    : false,
+        approvedItems           : [], // current page of approved items
+        declinedItems           : [], // current page of decliend items
+        reviewItems             : [], // current page of pending items
+        heldItems               : [], // current page of held items
+        reviewInfo              : {}  // details for pop-ups like description
     };
 
     constructor(props) {
@@ -67,6 +69,7 @@ export default class ReviewManager extends React.Component {
     componentWillUnmount() {
         firebase.database().ref("submissions").off();
         firebase.database().ref("approved").off();
+        firebase.database().ref("declined").off();
     }
     // =========== Flow Control =============
 
@@ -487,31 +490,35 @@ export default class ReviewManager extends React.Component {
     // =========== Methods ==============
 
     /**
-     * Detaches listeners from firebase database.
+     * Handles deleting a review item.
+     * @param  {String} id     [the artwork_uid]
+     * @param  {String} branch [one of submissions, declined, approved ]
      */
-    detachListeners = () => {
-        firebase.database().ref("submissions").off();
-        firebase.database().ref("approved").off();
-    }
-
     deleteItem = (id,branch) =>{
-        let subRef = firebase.database().ref(`submissions/${id}`);
-        subRef.set(null).then( ()=>{
-            console.log(id," was deleted.");
-        });
+        if (branch == "held") {
+            branch = "submissions"; // held items are still in submissions branch
+        }
+        if (branch == "submissions" || branch == "declined" || branch == "approved") {
+            let ref = firebase.database().ref(`${branch}/${id}`);
+            ref.set(null).then( ()=>{
+                console.log(id," was deleted from ", branch);
+            });
+        } else {
+            console.log(">> NOT A VALID BRANCH");
+        }
     }
 
     /**
-     * [updateReviewInfo description]
-     * @param  {String} artist_uid  [description]
-     * @param  {String} artwork_uid [description]
-     * @param  {String} description [description]
+     * sets this.state.reviewInfo
+     * @param  {String} artist_uid
+     * @param  {String} artwork_uid
+     * @param  {String} description
      */
     updateReviewInfo = (artist_uid,artwork_uid,description) => {
         let info = {
             artwork_uid:artwork_uid,
-            artist_uid:artist_uid,
             description:description
+            artist_uid :artist_uid,
         }
         this.setState({reviewInfo:info});
     }
@@ -586,6 +593,10 @@ export default class ReviewManager extends React.Component {
         }
     }
 
+    /**
+     * [Handles getting the next/previous page of items.
+     * @param  {Boolean} forward [True if next, false if previous]
+     */
     changePage = (forward) => {
         let currentTab = this.state.currentTab;
         let list,first,last,db_ref,query;
@@ -754,9 +765,19 @@ export default class ReviewManager extends React.Component {
         });
     }
 
-    updateItem = (a,b) => {
-        // what is this
+    fetchDeclined = () => {
+
     }
+
+    fetchHeld = () => {
+        //TODO same as fetch submissions, but sorts for key "held"
+    }
+
+
+    updateItem = (a,b) => {
+        // TODO what is this? is it needed?
+    }
+
 
     changeReviewScreen = (newTab) => {
         this.setState({
