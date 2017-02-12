@@ -44,13 +44,13 @@ export default class ReviewManager extends React.Component {
 
     render() {
         if (this.state.currentTab == reviewTabs.PENDING) {
-            return this.goToPending();
+            return this.renderReviewItems("Pending");
         } else if (this.state.currentTab == reviewTabs.APPROVED) {
-            return this.goToApproved();
+            return this.renderReviewItems("Approved");
         } else if (this.state.currentTab == reviewTabs.HELD) {
-            return this.goToHeld();
+            return this.renderReviewItems("Held");
         } else {
-            return this.goToDeclined();
+            return this.renderReviewItems("Declined");
         }
     }
 
@@ -78,10 +78,20 @@ export default class ReviewManager extends React.Component {
         firebase.database().ref("approved").off();
         firebase.database().ref("declined").off();
     }
-    // =========== Flow Control =============
+    // =========== Render Control =============
 
-//fix
-    goToPending = () => {
+    renderReviewItems = (catagory) => {
+        let items = [];
+        if (catagory === "Pending") {
+            items = this.state.reviewItems;
+        } else if (catagory === "Held") {
+            items = this.state.heldItems;
+        } else if (catagory === "Approved") {
+            items = this.state.approvedItems;
+        } else if (catagory === "Declined") {
+            items = this.state.declinedItems;
+        }
+
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
             width : window.innerWidth - 40
@@ -140,24 +150,22 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-                            {
-                                this.state.reviewItems.map(item => {
-
-                                    return (
-                                        <ReviewItem
-                                            mode={"Pending"}
-                                            item={item}
-                                            deleteItem={this.deleteItem}
-                                            saveReviewChanges={this.saveReviewChanges}
-                                            updateItem={this.updateItem}
-                                            updateReviewInfo={this.updateReviewInfo}
-                                            toggleArtworkPreview={this.toggleArtworkPreview}
-                                            toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                         />
-                                    );
-                                })}
+                            {items.map(item => {
+                                return (
+                                    <ReviewItem
+                                        item={item}
+                                        mode={catagory}
+                                        deleteItem={this.deleteItem}
+                                        updateItem={this.updateItem}
+                                        updateReviewInfo={this.updateReviewInfo}
+                                        saveReviewChanges={this.saveReviewChanges}
+                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                     />
+                                );
+                            })}
                         </tbody>
-                	</table>
+                    </table>
                 </div>
                 <div
                     className="pagination-wrapper">
@@ -186,331 +194,6 @@ export default class ReviewManager extends React.Component {
                      artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
                      reviewInfo={this.state.reviewInfo}
                   />
-                <div
-                    onClick     ={this.props.toggleNav}
-                    onTouchTap  ={this.props.toggleNav}
-                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
-            </div>
-        );
-    }
-
-    goToApproved = () => {
-        const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
-            width : window.innerWidth - 40
-        };
-        const tableWidth = {
-            width: window.innerWidth - 40 - 20
-        };
-        const itemTableWidth = {
-            width: window.innerWidth - 40 - 40
-        };
-
-        return (
-            <div>
-                <div className="review-sections">
-                    <div
-                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
-                        <h2>Pending</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
-                        <h2>Approved</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
-                        <h2>Held</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
-                        <h2>Declined</h2>
-                    </div>
-                </div>
-                <table
-                    className="review-headings-wrapper"
-                    style={reviewWrapperStyle}>
-                    <thead className="review-headings">
-                        <tr>
-                            <th className="review-artwork-heading">Artwork</th>
-                            <th className="review-details-heading">Details</th>
-                            <th className="review-tags-heading">Tags</th>
-                            <th className="review-description-heading">Description</th>
-                            <th className="review-submitted-heading">Submitted</th>
-                            <th className="review-status-heading">Status</th>
-                            <th className="review-note-heading">Review Note</th>
-                            <th className="review-button-heading"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <div className="review-wrapper"
-                    style={reviewWrapperStyle}>
-                    <table
-                        className="review-table"
-                        style={tableWidth}>
-                        <tbody>
-                            {this.state.approvedItems.map(item => {
-                                return (
-                                    <ReviewItem
-                                        mode={"Approved"}
-                                        item={item}
-                                        saveReviewChanges={this.saveReviewChanges}
-                                        updateItem={this.updateItem}
-                                        updateReviewInfo={this.updateReviewInfo}
-                                        toggleArtworkPreview={this.toggleArtworkPreview}
-                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                    />
-                                );
-                            })}
-                        </tbody>
-                	</table>
-                </div>
-                <div
-                    className="pagination-wrapper">
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},false)}
-                        onTouchTap={this.changePage.bind({},false)}>
-                        <img src="assets/images/icons/pagination-left.svg" />
-                    </div>
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},true)}
-                        onTouchTap={this.changePage.bind({},true)}>
-                        <img src="assets/images/icons/pagination-right.svg" />
-                    </div>
-                </div>
-                <ArtworkImagePreview
-                    toggleArtworkPreview={this.toggleArtworkPreview}
-                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
-                    reviewInfo={this.state.reviewInfo}
-                 />
-                <ArtworkDescriptionPreview
-                         toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
-                         reviewInfo={this.state.reviewInfo}
-                      />
-                <div
-                    onClick     ={this.props.toggleNav}
-                    onTouchTap  ={this.props.toggleNav}
-                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
-            </div>
-        );
-    }
-
-    goToHeld = () => {
-        const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
-            width : window.innerWidth - 40
-        };
-
-        const tableWidth = {
-            width: window.innerWidth - 40 - 20
-        };
-        const itemTableWidth = {
-            width: window.innerWidth - 40 - 40
-        };
-
-
-        return (
-            <div>
-                <div className="review-sections">
-                    <div
-                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
-                        <h2>Pending</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
-                        <h2>Approved</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
-                        <h2>Held</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
-                        <h2>Declined</h2>
-                    </div>
-                </div>
-                <table
-                    className="review-headings-wrapper"
-                    style={reviewWrapperStyle}>
-                    <thead className="review-headings">
-                        <tr>
-                            <th className="review-artwork-heading">Artwork</th>
-                            <th className="review-details-heading">Details</th>
-                            <th className="review-tags-heading">Tags</th>
-                            <th className="review-description-heading">Description</th>
-                            <th className="review-submitted-heading">Submitted</th>
-                            <th className="review-status-heading">Status</th>
-                            <th className="review-note-heading">Review Note</th>
-                            <th className="review-button-heading"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <div className="review-wrapper"
-                    style={reviewWrapperStyle}>
-                    <table
-                        className="review-table"
-                        style={tableWidth}>
-                        <tbody>
-                            {this.state.heldItems.map(item => {
-                                return (
-                                    <ReviewItem
-                                        item={item}
-                                        mode={"Held"}
-                                        updateItem={this.updateItem}
-                                        updateReviewInfo={this.updateReviewInfo}
-                                        saveReviewChanges={this.saveReviewChanges}
-                                        toggleArtworkPreview={this.toggleArtworkPreview}
-                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                    />
-                                );
-                            })}
-                        </tbody>
-                	</table>
-                </div>
-                <div
-                    className="pagination-wrapper">
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},false)}
-                        onTouchTap={this.changePage.bind({},false)}>
-                        <img src="assets/images/icons/pagination-left.svg" />
-                    </div>
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},true)}
-                        onTouchTap={this.changePage.bind({},true)}>
-                        <img src="assets/images/icons/pagination-right.svg" />
-                    </div>
-                </div>
-                <ArtworkImagePreview
-                    toggleArtworkPreview={this.toggleArtworkPreview}
-                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
-                    reviewInfo={this.state.reviewInfo}
-                 />
-                <ArtworkDescriptionPreview
-                         toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
-                         reviewInfo={this.state.reviewInfo}
-                      />
-                <div
-                    onClick     ={this.props.toggleNav}
-                    onTouchTap  ={this.props.toggleNav}
-                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
-            </div>
-        );
-    }
-
-    goToDeclined = () => {
-        const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
-            width : window.innerWidth - 40
-        };
-
-        const tableWidth = {
-            width: window.innerWidth - 40 - 20
-        };
-        const itemTableWidth = {
-            width: window.innerWidth - 40 - 40
-        };
-
-
-        return (
-            <div>
-                <div className="review-sections">
-                    <div
-                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
-                        <h2>Pending</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
-                        <h2>Approved</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
-                        <h2>Held</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
-                        <h2>Declined</h2>
-                    </div>
-                </div>
-                <table
-                    className="review-headings-wrapper"
-                    style={reviewWrapperStyle}>
-                    <thead className="review-headings">
-                        <tr>
-                            <th className="review-artwork-heading">Artwork</th>
-                            <th className="review-details-heading">Details</th>
-                            <th className="review-tags-heading">Tags</th>
-                            <th className="review-description-heading">Description</th>
-                            <th className="review-submitted-heading">Submitted</th>
-                            <th className="review-status-heading">Status</th>
-                            <th className="review-note-heading">Review Note</th>
-                            <th className="review-button-heading"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <div className="review-wrapper"
-                    style={reviewWrapperStyle}>
-                    <table
-                        className="review-table"
-                        style={tableWidth}>
-                        <tbody>
-                            {this.state.declinedItems.map(item => {
-                                return (
-                                    <ReviewItem
-                                        item={item}
-                                        mode={"Declined"}
-                                        updateItem={this.updateItem}
-                                        updateReviewInfo={this.updateReviewInfo}
-                                        saveReviewChanges={this.saveReviewChanges}
-                                        toggleArtworkPreview={this.toggleArtworkPreview}
-                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                    />
-                                );
-                            })}
-                        </tbody>
-                	</table>
-                </div>
-                <div
-                    className="pagination-wrapper">
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},false)}
-                        onTouchTap={this.changePage.bind({},false)}>
-                        <img src="assets/images/icons/pagination-left.svg" />
-                    </div>
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},true)}
-                        onTouchTap={this.changePage.bind({},true)}>
-                        <img src="assets/images/icons/pagination-right.svg" />
-                    </div>
-                </div>
-                <ArtworkImagePreview
-                    toggleArtworkPreview={this.toggleArtworkPreview}
-                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
-                    reviewInfo={this.state.reviewInfo}
-                 />
-                <ArtworkDescriptionPreview
-                         toggleDescriptionPreview={this.toggleDescriptionPreview}
-                         artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
-                         reviewInfo={this.state.reviewInfo}
-                      />
                 <div
                     onClick     ={this.props.toggleNav}
                     onTouchTap  ={this.props.toggleNav}
