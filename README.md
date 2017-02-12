@@ -39,6 +39,27 @@ Now, GET https://127.0.0.1/ to interact with the development server.
 
 ## Testing
 
+
+### Tests particular client-side
+
+To get the Selenium standalone server that the curator-portal configuration of
+Nightwatch (http://nightwatchjs.org/) is expecting,
+
+    ./get-testing-deps.sh
+
+For end-to-end testing, install ChromeDriver
+(https://sites.google.com/a/chromium.org/chromedriver/).
+On a Debian GNU/Linux (or Ubuntu, or Mint, or similar) host, try
+
+    sudo apt-get install chromedrive
+
+Note that nightwatch.json lists the path of the ChromeDriver executable as
+/usr/lib/chromium/chromedriver, which is consistent with the location from the
+`chromedrive` deb package. You might need to change the path on other systems.
+
+
+### Tests of server-side software
+
 To perform all tests on the server software,
 
     npm run testserv
@@ -71,14 +92,14 @@ For it to be used client-side, replace all imports from `firebase` to
 It should be possible to automate this as part of testing, e.g., using
 `webpack`. (low priority, unassigned task)
 
-### Using the remote testing, staging host
+#### Using the remote testing, staging host
 
 For SSH to accept the private key, the file permissions must not allow read
 access by users other than you. E.g., this can be achieved from
 
     chmod 600 conf/keys/staging
 
-### Using an existing remote database
+#### Using an existing remote database
 
 There is a CloudSQL database named "test-artworkdb" on the Google Cloud project
 curator-tekuma. If it does not exist, note that the next section describes how
@@ -89,7 +110,7 @@ database configuration:
 "artworkdb": "./test-remote-dbconf.json"
 ```
 
-### Initializing a remote database for testing
+#### Initializing a remote database for testing
 
 Go to the the Google Cloud project curator-tekuma, and perform the following:
 1. create a new "2nd generation" CloudSQL instance;
@@ -110,7 +131,7 @@ tests/initdb.sql in the sourcetree.
 mysql -uroot '--password=PASSPHRASE' --host=104.198.210.91 --ssl-cert=serv/cert/test-sql-client-cert.pem --ssl-key=serv/cert/test-sql-client-key.pem --ssl-ca=serv/cert/test-sql-server-ca.pem < conf/initdb.sql
 ```
 
-### Creating a local MySQL database in a Docker container
+#### Creating a local MySQL database in a Docker container
 
 https://hub.docker.com/_/mysql/
 To get it, `docker pull mysql:latest`
