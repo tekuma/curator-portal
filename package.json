@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "testserv": "mocha tests/serv",
+    "testfront": "nightwatch tests/frontend/e-to-e",
     "build": "webpack",
     "start": "webpack-dev-server --https --port 8000 --cert tests/cert/selfsigned.crt --cacert tests/cert/selfsigned.csr --key tests/cert/selfsigned.key",
     "lint": "eslint serv"
@@ -67,6 +68,7 @@
     "json-loader": "^0.5.4",
     "mocha": "^3.1.2",
     "mysql": "^2.11.1",
+    "nightwatch": "^0.9.12",
     "npm-install-webpack-plugin": "^4.0.3",
     "raw-loader": "^0.5.1",
     "react-dom": "^15.4.2",
