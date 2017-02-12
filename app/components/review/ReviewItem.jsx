@@ -89,7 +89,6 @@ export default class ReviewItem extends React.Component {
                          />
                 </td>
                 <td className="review-item-review">
-
                     {this.props.mode === "Pending" ?
                         <div>
                         <div
@@ -103,12 +102,14 @@ export default class ReviewItem extends React.Component {
                             Delete
                         </div>
                         </div>
-                    :
-                    <div
-                        className="review-item-review-button"
-                        onClick={this.handleReviewButton}>
-                        Update
-                    </div>
+                    : this.props.mode === "Declined" ?
+                        <div></div>
+                        :
+                        <div
+                            className="review-item-review-button"
+                            onClick={this.handleReviewButton}>
+                            Update
+                        </div>
                 }
                 </td>
             </tr>

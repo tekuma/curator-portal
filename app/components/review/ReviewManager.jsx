@@ -3,24 +3,13 @@ import React      from 'react';
 import firebase   from 'firebase';
 import uuid       from 'node-uuid';
 // Files
-import ReviewItem from './ReviewItem';
-import ArtworkImagePreview from './ArtworkImagePreview';
 import ArtworkDescriptionPreview from './ArtworkDescriptionPreview';
+import ArtworkImagePreview from './ArtworkImagePreview';
 import reviewTabs from '../../constants/reviewTabs';
+import ReviewItem from './ReviewItem';
 
 // Global Variables
-const pg_size = 5;
-/*  a Submission object looks like:
-    -jd7Jd21ka: {
-        artwork_uid:"-jd7Jd21ka",
-        artist_uid :"sakUdjf2118SusQLXa",
-        submitted  :"2016-11-26T20:33:35.393Z",
-        status     :"Unseen",
-        artist_name:"Pablo Picasso",
-        memo: ""
-
-    }
- */
+const pg_size = 8;
 
 export default class ReviewManager extends React.Component {
     state = {
@@ -96,7 +85,7 @@ export default class ReviewManager extends React.Component {
         }
 
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
+            height: window.innerHeight - 140 - 70, // 140px = Header and Review Tabs , 70px = Pagination Arrows
             width : window.innerWidth - 40
         };
         const tableWidth = {
@@ -362,121 +351,174 @@ export default class ReviewManager extends React.Component {
     }
 
     /**
-     * [Handles getting the next/previous page of items.
+     * Handles getting the next/previous page of review items.
      * @param  {Boolean} forward [True if next, false if previous]
      */
     changePage = (forward) => {
+        console.log(forward,this.state.currentTab);
         let currentTab = this.state.currentTab;
         let list,first,last,db_ref,query;
-        console.log(currentTab,forward);
-        if (currentTab == reviewTabs.PENDING && !forward) { // pending previous
-            list  = this.state.reviewItems.concat([]);//copy
-            first = list[0].submitted;
-            db_ref = firebase.database().ref(`submissions`);
-            db_ref.off();
-            query = db_ref.orderByChild("submitted").endAt(first).limitToLast(pg_size);
-            this.setState({reviewItems:[]});
-            query.on("value", (snapshot)=>{
-                snapshot.forEach( (childSnap)=>{
-                    if (childSnap.key != 0) { //ignore the placeholder in DB
-                        let data = childSnap.val();
-                        function isSame(elm) {
-                            return elm.artwork_uid == data.artwork_uid
+        if (forward) { // -->
+            if (currentTab == reviewTabs.PENDING) {
+                list = this.state.reviewItems.concat([]);//copy
+                last = list[list.length -1].submitted;
+                db_ref = firebase.database().ref(`submissions`);
+                db_ref.off();
+                query = db_ref.orderByChild("submitted").startAt(last).limitToFirst(pg_size);
+                this.setState({reviewItems:[]});
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.reviewItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.reviewItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.reviewItems.concat([data]);//copy
+                            }
+                            console.log(list);
+                            this.setState({reviewItems:list});
                         }
-                        let index = this.state.reviewItems.findIndex(isSame);
-                        let list;
-                        if (index != -1) { // already in array
-                            list  = this.state.reviewItems.concat([]);//copy
-                            list[index] = data;
-                        } else {
-                            list  = this.state.reviewItems.concat([data]);//copy
-                        }
-                        console.log(list);
-                        this.setState({reviewItems:list});
-                    }
+                    });
                 });
-            });
-        } else if (currentTab == reviewTabs.APPROVED && !forward) { // approve previous
-            list  = this.state.approvedItems.concat([]);//copy
-            first = list[0].approved;
-            db_ref = firebase.database().ref(`approved`);
-            db_ref.off();
-            query  = db_ref.orderByChild("approved").endAt(first).limitToLast(pg_size);
-            this.setState({approvedItems:[]});
-            query.on("value", (snapshot)=>{
-                snapshot.forEach( (childSnap)=>{
-                    if (childSnap.key != 0) { //ignore the placeholder in DB
-                        let data = childSnap.val();
-                        function isSame(elm) {
-                            return elm.artwork_uid == data.artwork_uid
+            } else if (currentTab == reviewTabs.DECLINED) {
+                list = this.state.declinedItems.concat([]);//copy
+                last = list[list.length -1].declined;
+                db_ref = firebase.database().ref(`declined`);
+                db_ref.off();
+                query = db_ref.orderByChild("declined").startAt(last).limitToFirst(pg_size);
+                this.setState({declinedItems:[]});
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.declinedItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.declinedItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.declinedItems.concat([data]);//copy
+                            }
+                            this.setState({declinedItems:list});
                         }
-                        let index = this.state.approvedItems.findIndex(isSame);
-                        let list;
-                        if (index != -1) { // already in array
-                            list  = this.state.approvedItems.concat([]);//copy
-                            list[index] = data;
-                        } else {
-                            list  = this.state.approvedItems.concat([data]);//copy
-                        }
-                        console.log(list);
-                        this.setState({approvedItems:list});
-                    }
+                    });
                 });
-            });
-        } else if (currentTab == reviewTabs.PENDING && forward) {
-            list = this.state.reviewItems.concat([]);//copy
-            last = list[list.length -1].submitted;
-            db_ref = firebase.database().ref(`submissions`);
-            db_ref.off();
-            query = db_ref.orderByChild("submitted").startAt(last).limitToFirst(pg_size);
-            this.setState({reviewItems:[]});
-            query.on("value", (snapshot)=>{
-                snapshot.forEach( (childSnap)=>{
-                    if (childSnap.key != 0) { //ignore the placeholder in DB
-                        let data = childSnap.val();
-                        function isSame(elm) {
-                            return elm.artwork_uid == data.artwork_uid
+            } else if (currentTab == reviewTabs.APPROVED) {
+                list = this.state.approvedItems.concat([]);//copy
+                last = list[list.length -1].approved;
+                db_ref = firebase.database().ref(`approved`);
+                db_ref.off();
+                query = db_ref.orderByChild("approved").startAt(last).limitToFirst(pg_size);
+                this.setState({approvedItems:[]});
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.approvedItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.approvedItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.approvedItems.concat([data]);//copy
+                            }
+                            this.setState({approvedItems:list});
                         }
-                        let index = this.state.reviewItems.findIndex(isSame);
-                        let list;
-                        if (index != -1) { // already in array
-                            list  = this.state.reviewItems.concat([]);//copy
-                            list[index] = data;
-                        } else {
-                            list  = this.state.reviewItems.concat([data]);//copy
-                        }
-                        console.log(list);
-                        this.setState({reviewItems:list});
-                    }
+                    });
                 });
-            });
-        } else if (currentTab == reviewTabs.APPROVED && forward) {
-            list = this.state.approvedItems.concat([]);//copy
-            last = list[list.length -1].approved;
-            db_ref = firebase.database().ref(`approved`);
-            db_ref.off();
-            query = db_ref.orderByChild("approved").startAt(last).limitToFirst(pg_size);
-            this.setState({approvedItems:[]});
-            query.on("value", (snapshot)=>{
-                snapshot.forEach( (childSnap)=>{
-                    if (childSnap.key != 0) { //ignore the placeholder in DB
-                        let data = childSnap.val();
-                        function isSame(elm) {
-                            return elm.artwork_uid == data.artwork_uid
+            }
+        } else { // <--
+            if (currentTab == reviewTabs.PENDING) {
+                list   = this.state.reviewItems.concat([]);//copy
+                first  = list[0].submitted;
+                db_ref = firebase.database().ref(`submissions`);
+                db_ref.off(); // turn off listener to last page
+                query = db_ref.orderByChild("submitted").endAt(first).limitToLast(pg_size);
+                this.setState({reviewItems:[]});
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.reviewItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.reviewItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.reviewItems.concat([data]);//copy
+                            }
+                            this.setState({reviewItems:list});
                         }
-                        let index = this.state.approvedItems.findIndex(isSame);
-                        let list;
-                        if (index != -1) { // already in array
-                            list  = this.state.approvedItems.concat([]);//copy
-                            list[index] = data;
-                        } else {
-                            list  = this.state.approvedItems.concat([data]);//copy
-                        }
-                        console.log(list);
-                        this.setState({approvedItems:list});
-                    }
+                    });
                 });
-            });
+            } else if (currentTab == reviewTabs.DECLINED) {
+                list   = this.state.declinedItems.concat([]);//copy
+                first  = list[0].declined;
+                db_ref = firebase.database().ref(`declined`);
+                db_ref.off();
+                query  = db_ref.orderByChild("declined").endAt(first).limitToLast(pg_size);
+                this.setState({declinedItems:[]});
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.declinedItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.declinedItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.declinedItems.concat([data]);//copy
+                            }
+                            this.setState({declinedItems:list});
+                        }
+                    });
+                });
+            } else if (currentTab == reviewTabs.APPROVED) {
+                list   = this.state.approvedItems.concat([]);//copy
+                first  = list[0].approved;
+                db_ref = firebase.database().ref(`approved`);
+                db_ref.off(); // turn off listener to old page
+                query  = db_ref.orderByChild("approved").endAt(first).limitToLast(pg_size);
+                this.setState({approvedItems:[]}); // clear last page out
+                query.on("value", (snapshot)=>{
+                    snapshot.forEach( (childSnap)=>{
+                        if (childSnap.key != 0) { //ignore the placeholder in DB
+                            let data = childSnap.val();
+                            function isSame(elm) {
+                                return elm.artwork_uid == data.artwork_uid
+                            }
+                            let index = this.state.approvedItems.findIndex(isSame);
+                            let list;
+                            if (index != -1) { // already in array
+                                list  = this.state.approvedItems.concat([]);//copy
+                                list[index] = data;
+                            } else {
+                                list  = this.state.approvedItems.concat([data]);//copy
+                            }
+                            this.setState({approvedItems:list});
+                        }
+                    });
+                });
+            }
         }
     }
 
@@ -515,9 +557,8 @@ export default class ReviewManager extends React.Component {
      * seconds between 1970 and when the status was set to approved.
      */
     fetchApproved = () => {
-        let pagLimit = 10;
         let appRef = firebase.database().ref(`approved`);
-        appRef.orderByChild("approved").limitToFirst(pagLimit).on("value", (snapshot)=>{
+        appRef.orderByChild("approved").limitToFirst(pg_size).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) {
                     let item = childSnap.val();
@@ -567,11 +608,12 @@ export default class ReviewManager extends React.Component {
 
     /**
      * Retrieves the subset of items in the `submissions` branch
-     * which have status == Held.
+     * which have status == Held. The first 15 items are shown only. There
+     * is no pagination to this tab.
      */
     fetchHeld = () => {
         let submitRef = firebase.database().ref(`submissions`);
-        submitRef.orderByChild("status").equalTo("Held").on("value", (snapshot)=>{
+        submitRef.orderByChild("status").equalTo("Held").limitToFirst(15).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();
