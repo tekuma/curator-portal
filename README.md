@@ -51,7 +51,7 @@ For end-to-end testing, install ChromeDriver
 (https://sites.google.com/a/chromium.org/chromedriver/).
 On a Debian GNU/Linux (or Ubuntu, or Mint, or similar) host, try
 
-    sudo apt-get install chromedrive
+    sudo apt-get install chromedriver
 
 Note that nightwatch.json lists the path of the ChromeDriver executable as
 /usr/lib/chromium/chromedriver, which is consistent with the location from the
