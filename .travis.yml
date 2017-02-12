@@ -36,3 +36,6 @@ script:
   - export TEKUMA_TEST_DB=mysql
   - cp ${TRAVIS_BUILD_DIR}/tests/ci-testdbconf.json ${TRAVIS_BUILD_DIR}/tests/testdbconf.json
   - npm run testserv
+
+  # Patch Nightwatch configuration for Travis CI Ubuntu images
+  - sed -i s/\/usr\/lib\/chromium\/chromedriver/\/usr\/lib\/chromium-browser\/chromedriver/g nightwatch.json
