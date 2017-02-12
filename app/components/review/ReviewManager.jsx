@@ -56,10 +56,17 @@ export default class ReviewManager extends React.Component {
 
     componentDidMount() {
         console.log("++++++ReviewManager");
+        //NOTE: should these be cascaded?
         this.fetchSubmissions();
-        setTimeout( ()=>{//NOTE
+        setTimeout( ()=>{
             this.fetchApproved();
-        }, 15);
+            setTimeout( ()=>{
+                this.fetchDeclined();
+                setTimeout( ()=>{
+                    this.fetchHeld();
+                }, 25);
+            }, 25);
+        }, 25);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -73,10 +80,11 @@ export default class ReviewManager extends React.Component {
     }
     // =========== Flow Control =============
 
+//fix
     goToPending = () => {
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 110, // 140px = Header and Review Tabs , 110px = Pagination Arrows
-            width: window.innerWidth - 40
+            width : window.innerWidth - 40
         };
         const tableWidth = {
             width: window.innerWidth - 40 - 20
@@ -353,7 +361,19 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-
+                            {this.state.heldItems.map(item => {
+                                return (
+                                    <ReviewItem
+                                        item={item}
+                                        mode={"Held"}
+                                        updateItem={this.updateItem}
+                                        updateReviewInfo={this.updateReviewInfo}
+                                        saveReviewChanges={this.saveReviewChanges}
+                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                    />
+                                );
+                            })}
                         </tbody>
                 	</table>
                 </div>
@@ -450,7 +470,19 @@ export default class ReviewManager extends React.Component {
                         className="review-table"
                         style={tableWidth}>
                         <tbody>
-
+                            {this.state.declinedItems.map(item => {
+                                return (
+                                    <ReviewItem
+                                        item={item}
+                                        mode={"Declined"}
+                                        updateItem={this.updateItem}
+                                        updateReviewInfo={this.updateReviewInfo}
+                                        saveReviewChanges={this.saveReviewChanges}
+                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                    />
+                                );
+                            })}
                         </tbody>
                 	</table>
                 </div>
@@ -489,6 +521,7 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
+
     /**
      * Handles deleting a review item.
      * @param  {String} id     [the artwork_uid]
@@ -517,12 +550,13 @@ export default class ReviewManager extends React.Component {
     updateReviewInfo = (artist_uid,artwork_uid,description) => {
         let info = {
             artwork_uid:artwork_uid,
-            description:description
+            description:description,
             artist_uid :artist_uid,
         }
         this.setState({reviewInfo:info});
     }
 
+    //FIXME Replace '.set()' calls with atomic transactions!
     /**
      * This method first checks if the status has been changed to approve.
      * If so, it updates the status and moves the obj from the submissions
@@ -546,8 +580,7 @@ export default class ReviewManager extends React.Component {
             this.props.sendToSnackbar(message);
         } else if (status == "Approved") {
             let newApproval = false;
-            console.log(artwork.artwork_uid);
-            artwork.status = status; // "Approved"
+            artwork.status  = status; // "Approved"
             if (!artwork.approved) {
                 artwork.approved = new Date().getTime();
                 newApproval = true;
@@ -562,6 +595,7 @@ export default class ReviewManager extends React.Component {
                     console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
                 });
             });
+
             //Remove this artwork from the pending screen
             for (var i = 0; i < this.state.reviewItems.length; i++) {
                 let item = this.state.reviewItems[i];
@@ -572,13 +606,44 @@ export default class ReviewManager extends React.Component {
                     break;
                 }
             }
+
             let message = "";
             if (newApproval) {
                 message = "Artwork has been approved and the artist has been notified.";
             } else {
                 message = "Artwork status has been updated.";
             }
+            this.props.sendToSnackbar(message);
+        } else if (status == "Declined") {
+            let newDecline = false;
+            console.log(status,memo);
+            artwork.status   = status;
+            artwork.reviewer = this.props.user.public.display_name;
+            if (!artwork.declined) {
+                artwork.declined = new Date().getTime();
+                newDecline = true;
+            }
 
+            let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
+            let decRef = firebase.database().ref(`declined/${artwork.artwork_uid}`);
+            decRef.set(artwork).then(()=>{
+                subRef.set(null).then(()=>{
+                    console.log("Artwork: ",artwork.artwork_uid, " sent to declined.");
+                });
+            });
+            //Remove this artwork from the pending screen
+            for (var i = 0; i < this.state.reviewItems.length; i++) {
+                let item = this.state.reviewItems[i];
+                if (item.artwork_uid == artwork.artwork_uid) {
+                    let updates = this.state.reviewItems.concat([]); //deepcopy
+                    updates.splice(i,1);
+                    this.setState({reviewItems:updates});
+                    break;
+                }
+            }
+
+            let message = "";
+            newDecline ? message = "Artwork has been declined and the artist has been notified." : message = "Artwork status has been updated." ;
             this.props.sendToSnackbar(message);
         } else if (artwork.status != status || artwork.memo != memo) {
             console.log("updating db...",artwork.artwork_uid);
@@ -713,9 +778,9 @@ export default class ReviewManager extends React.Component {
     }
 
     /**
-     * Fetches submissions from the `submissions` branch of the curator-tekuma
-     * firebase database. NOTE FIXME set the .indexOn rule in the firebase
-     * rules for better performance.
+     * Fetches first page of submissions from the `submissions` branch of the curator-tekuma
+     * firebase database. Then, sorts based on the field "submitted" which is the number
+     * of seconds between 1970 and when the item was submitted.
      */
     fetchSubmissions = () => {
         let submitRef = firebase.database().ref(`submissions`);
@@ -741,6 +806,11 @@ export default class ReviewManager extends React.Component {
         });
     }
 
+    /**
+     * Fetches the first page of approved items from the approved branch of the
+     * curator-tekuma firebase DB. Approved is sorted by the 'approved' field, which is
+     * seconds between 1970 and when the status was set to approved.
+     */
     fetchApproved = () => {
         let pagLimit = 10;
         let appRef = firebase.database().ref(`approved`);
@@ -765,12 +835,58 @@ export default class ReviewManager extends React.Component {
         });
     }
 
+    /**
+     * Retrieves the first page of items from the `declined` branch of the
+     * curator-tekuma firebase db, and attaches listener.
+     */
     fetchDeclined = () => {
-
+        let appRef = firebase.database().ref(`declined`);
+        appRef.orderByChild("declined").limitToFirst(pg_size).on("value", (snapshot)=>{
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) {
+                    let item = childSnap.val();
+                    function isSame(elm) {
+                        return elm.artwork_uid == item.artwork_uid
+                    }
+                    let index = this.state.declinedItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array, do update
+                        updated = this.state.declinedItems.concat([]); //dont mutate state
+                        updated[index] = item;
+                    } else { //
+                        updated = this.state.declinedItems.concat([item]);
+                    }
+                    this.setState({declinedItems:updated});
+                }
+            });
+        });
     }
 
+    /**
+     * Retrieves the subset of items in the `submissions` branch
+     * which have status == Held.
+     */
     fetchHeld = () => {
-        //TODO same as fetch submissions, but sorts for key "held"
+        let submitRef = firebase.database().ref(`submissions`);
+        submitRef.orderByChild("status").equalTo("Held").on("value", (snapshot)=>{
+            snapshot.forEach( (childSnap)=>{
+                if (childSnap.key != 0) { //ignore the placeholder in DB
+                    let submit = childSnap.val();
+                    function isSame(elm) {
+                        return elm.artwork_uid == submit.artwork_uid
+                    }
+                    let index = this.state.heldItems.findIndex(isSame);
+                    let updated;
+                    if (index != -1) { // already in array
+                        updated = this.state.heldItems.concat([]); //dont mutate state
+                        updated[index] = submit;
+                    } else {
+                        updated = this.state.heldItems.concat([submit]);
+                    }
+                    this.setState({heldItems:updated});
+                }
+            });
+        });
     }
 
 
@@ -779,6 +895,10 @@ export default class ReviewManager extends React.Component {
     }
 
 
+    /**
+     * Change which tab is displayed
+     * @param  {String} newTab [one of 'Pending', 'Approved',TODO]
+     */
     changeReviewScreen = (newTab) => {
         this.setState({
             currentTab: newTab
