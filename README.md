@@ -49,13 +49,15 @@ Nightwatch (http://nightwatchjs.org/) is expecting,
 
 For end-to-end testing, install ChromeDriver
 (https://sites.google.com/a/chromium.org/chromedriver/).
-On a Debian GNU/Linux (or Ubuntu, or Mint, or similar) host, try
+On a Debian GNU/Linux host, try
 
     sudo apt-get install chromedriver
 
+On Ubuntu, use instead `apt-get install chromium-chromedriver`.
 Note that nightwatch.json lists the path of the ChromeDriver executable as
 /usr/lib/chromium/chromedriver, which is consistent with the location from the
 `chromedrive` deb package. You might need to change the path on other systems.
+In particular, on Ubuntu, it is /usr/lib/chromium-browser/chromedriver.
 
 
 ### Tests of server-side software
