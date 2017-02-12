@@ -15,7 +15,7 @@ addons:
   apt:
     packages:
     - xvfb
-    - chromedrive
+    - chromedriver
 
 
 language: node_js
