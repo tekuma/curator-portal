@@ -7,8 +7,16 @@ notifications:
     on_success: change
     on_failure: always
 
+
 services:
   - mysql
+
+addons:
+  apt:
+    packages:
+    - xvfb
+    - chromedrive
+
 
 language: node_js
 node_js:
