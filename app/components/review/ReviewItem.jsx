@@ -136,10 +136,20 @@ export default class ReviewItem extends React.Component {
 
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;
+        let branch;
+        if (this.props.mode == "Approved") {
+            branch = 'approved';
+        } else if (this.props.mode == "Declined") {
+            branch = 'declined';
+        } else if (this.props.mode == "Held") {
+            branch = 'held';
+        } else if (this.props.mode == "Pending"){
+            branch = 'submissions';
+        }
         confirm("Are you sure you want to delete this review item?").then(
                 () => {
                     // Proceed Callback
-                    this.props.deleteItem(id);
+                    this.props.deleteItem(id,branch);
                 },
                 () => {
                     // Cancel Callback
@@ -160,7 +170,7 @@ export default class ReviewItem extends React.Component {
         this.props.saveReviewChanges(this.props.item,status,memo);
         this.setState({
             status:status
-        })
+        });
     }
 
     handleArtworkPreview = () => {

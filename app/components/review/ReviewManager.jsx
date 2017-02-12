@@ -56,7 +56,7 @@ export default class ReviewManager extends React.Component {
 
     componentDidMount() {
         console.log("++++++ReviewManager");
-        //NOTE: should these be cascaded?
+        //NOTE: Cascaded to spread out the load, prevent lag on load.
         this.fetchSubmissions();
         setTimeout( ()=>{
             this.fetchApproved();
@@ -64,13 +64,12 @@ export default class ReviewManager extends React.Component {
                 this.fetchDeclined();
                 setTimeout( ()=>{
                     this.fetchHeld();
-                }, 25);
-            }, 25);
-        }, 25);
+                }, 100);
+            }, 100);
+        }, 100);
     }
 
     componentWillReceiveProps(nextProps) {
-
     }
 
     componentWillUnmount() {
@@ -80,6 +79,10 @@ export default class ReviewManager extends React.Component {
     }
     // =========== Render Control =============
 
+    /**
+     * @param  {String} catagory [One of "Approved", "Held", "Pending", "Declined"]
+     * @return {JSX}
+     */
     renderReviewItems = (catagory) => {
         let items = [];
         if (catagory === "Pending") {
@@ -97,7 +100,7 @@ export default class ReviewManager extends React.Component {
             width : window.innerWidth - 40
         };
         const tableWidth = {
-            width: window.innerWidth - 40 - 20
+            width : window.innerWidth - 40 - 20
         };
 
         const itemTableWidth = {
@@ -156,7 +159,6 @@ export default class ReviewManager extends React.Component {
                                         item={item}
                                         mode={catagory}
                                         deleteItem={this.deleteItem}
-                                        updateItem={this.updateItem}
                                         updateReviewInfo={this.updateReviewInfo}
                                         saveReviewChanges={this.saveReviewChanges}
                                         toggleArtworkPreview={this.toggleArtworkPreview}
@@ -204,7 +206,6 @@ export default class ReviewManager extends React.Component {
 
     // =========== Methods ==============
 
-
     /**
      * Handles deleting a review item.
      * @param  {String} id     [the artwork_uid]
@@ -216,7 +217,9 @@ export default class ReviewManager extends React.Component {
         }
         if (branch == "submissions" || branch == "declined" || branch == "approved") {
             let ref = firebase.database().ref(`${branch}/${id}`);
-            ref.set(null).then( ()=>{
+            ref.transaction((data)=>{
+                return null;
+            },(err,wasSuccessful,snapshot)=>{
                 console.log(id," was deleted from ", branch);
             });
         } else {
@@ -239,7 +242,6 @@ export default class ReviewManager extends React.Component {
         this.setState({reviewInfo:info});
     }
 
-    //FIXME Replace '.set()' calls with atomic transactions!
     /**
      * This method first checks if the status has been changed to approve.
      * If so, it updates the status and moves the obj from the submissions
@@ -273,8 +275,12 @@ export default class ReviewManager extends React.Component {
             artwork.reviewer = this.props.user.public.display_name;
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
-            aprRef.set(artwork).then(()=>{ // add to approved branch
-                subRef.set(null).then( ()=>{ //delete item
+            aprRef.transaction((data)=>{
+                return artwork; // add artwork to approved branch
+            },(err,wasSuccessful,snapshot)=>{
+                subRef.transaction((data)=>{
+                    return null; // delete artwork from submissions branch
+                },(err,wasSuccessful,snapshot)=>{
                     console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
                 });
             });
@@ -299,7 +305,6 @@ export default class ReviewManager extends React.Component {
             this.props.sendToSnackbar(message);
         } else if (status == "Declined") {
             let newDecline = false;
-            console.log(status,memo);
             artwork.status   = status;
             artwork.reviewer = this.props.user.public.display_name;
             if (!artwork.declined) {
@@ -309,11 +314,16 @@ export default class ReviewManager extends React.Component {
 
             let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
             let decRef = firebase.database().ref(`declined/${artwork.artwork_uid}`);
-            decRef.set(artwork).then(()=>{
-                subRef.set(null).then(()=>{
-                    console.log("Artwork: ",artwork.artwork_uid, " sent to declined.");
+            decRef.transaction((data)=>{
+                return artwork; // add artwork to declined branch
+            },(err,wasSuccessful,snapshot)=>{
+                subRef.transaction((data)=>{
+                    return null; // delete artwork from submissions branch
+                },(err,wasSuccessful,snapshot)=>{
+                    console.log("Artwork: ",artwork.artwork_uid, " sent to declined");
                 });
             });
+
             //Remove this artwork from the pending screen
             for (var i = 0; i < this.state.reviewItems.length; i++) {
                 let item = this.state.reviewItems[i];
@@ -328,16 +338,26 @@ export default class ReviewManager extends React.Component {
             let message = "";
             newDecline ? message = "Artwork has been declined and the artist has been notified." : message = "Artwork status has been updated." ;
             this.props.sendToSnackbar(message);
-        } else if (artwork.status != status || artwork.memo != memo) {
-            console.log("updating db...",artwork.artwork_uid);
-            artwork.status = status;
-            artwork.memo = memo;
-            artwork.new_message = true;
-            let path = `submissions/${artwork.artwork_uid}`;
-            firebase.database().ref(path).set(artwork);
-            console.log("updated");
-            let message = "Artwork status has been updated."
-            this.props.sendToSnackbar(message);
+        } else if (artwork.status == "Pending" || artwork.status == "Held"){
+            if (artwork.status != status || artwork.memo != memo) {
+                console.log("updating db...",artwork.artwork_uid);
+                let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
+                firebase.database().ref(path)
+                subRef.transaction((data)=>{
+                    data.new_message = true;
+                    data.status = status;
+                    data.memo = memo;
+                    console.log("artwork updated.");
+                    return data;
+                },(err,wasSuccessful,snapshot)=>{
+                    if (err) { console.log(err); }
+                    if (wasSuccessful) {
+                        this.props.sendToSnackbar("Artwork status has been updated.")
+                    }
+                });
+            }
+        } else {
+            console.log(">> NOT HIT CASE!!");
         }
     }
 
@@ -572,12 +592,6 @@ export default class ReviewManager extends React.Component {
         });
     }
 
-
-    updateItem = (a,b) => {
-        // TODO what is this? is it needed?
-    }
-
-
     /**
      * Change which tab is displayed
      * @param  {String} newTab [one of 'Pending', 'Approved',TODO]
@@ -600,4 +614,4 @@ export default class ReviewManager extends React.Component {
         });
     }
 
-}//END App
+}
