@@ -11,7 +11,7 @@ const search = require('../../serv/search.js');
 const dbconf = require('../testdbconf.json');
 
 
-describe('getting details about artworks', function () {
+describe('labels', function () {
 
     before('Opening database connection', function (done) {
         console.log('TEKUMA_TEST_DB: '+process.env.TEKUMA_TEST_DB);
@@ -66,6 +66,21 @@ describe('getting details about artworks', function () {
            function () {
                return search.get_detail('1337f00f').then(function (detail) {
                    assert( detail.found === false );
+               });
+           });
+    });
+
+    describe('REGRESSION: duplicate artworks in results', function () {
+        it('should not find the artwork "4 beef" (UID sth14sth) more than once',
+           function () {
+               return search.q('beef').then(function (rows) {
+                   var counter = 0;
+                   for (let j = 0; j < rows.length; j++) {
+                       if (rows.uid === "sth14sth") {
+                           counter += 1;
+                       }
+                   }
+                   assert( counter === 1 );
                });
            });
     });
