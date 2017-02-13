@@ -4,7 +4,7 @@
   "description": "A curation portal, written as a Node.js application with use of ReactJS for front-end services. The application uses ES6 syntax.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run testserv && npm run testfront",
     "testserv": "mocha tests/serv",
     "testfront": "nightwatch tests/frontend/e-to-e",
     "build": "webpack",
