@@ -7,7 +7,7 @@
 module.exports = {
     // modified from pre_auth_home_button.js of the dev-artist-portal repo
     // by Afika Nyati
-    'Test home button redirects to Tekuma homepage' : function (browser) {
+    'Test home button redirects to Tekuma homepage': function (browser) {
         browser
             .url('https://127.0.0.1')
             .waitForElementVisible('body', 2000)
@@ -17,7 +17,7 @@ module.exports = {
             .end();
     },
 
-    'Test for text "curator"' : function (browser) {
+    'Test for text "curator"': function (browser) {
         browser
             .url('https://127.0.0.1')
             .waitForElementVisible('body', 2000)
