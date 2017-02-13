@@ -33,7 +33,7 @@ sudo nginx -c `pwd`/conf/dev-nginx.conf
 npm run start > /dev/null &
 webpackserv_pid=$!
 
-node serv/main.js --firebase-mockup &
+node serv/main.js &
 serv_pid=$!
 
 wait
