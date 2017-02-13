@@ -40,7 +40,7 @@ script:
   - npm run testserv
 
   # Patch Nightwatch configuration for Travis CI Ubuntu images
-  - sed -i s/\/usr\/lib\/chromium\/chromedriver/\/usr\/lib\/chromium-browser\/chromedriver/g nightwatch.json
+  - sed -i 's/\/usr\/lib\/chromium\/chromedriver/\/usr\/lib\/chromium-browser\/chromedriver/g' nightwatch.json
 
   - ./dev-spin.sh&
   - npm run testfront
