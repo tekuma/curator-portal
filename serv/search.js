@@ -640,7 +640,19 @@ exports.q = (query, fields) => {
         }
 
         return Promise.all([artworks_direct, artists_direct, labels_direct]).then(function (qrows) {
-            var rows = qrows[0].concat(qrows[2]);
+            var rows = qrows[0];
+            for (let j = 0; j < qrows[2].length; j++) {
+                let found_match = false;
+                for (let k = 0; k < rows.length; k++) {
+                    if (rows[k].uid === qrows[2][j].uid) {
+                        found_match = true;
+                        break;
+                    }
+                }
+                if (!found_match) {
+                    rows[rows.length] = qrows[2][j];
+                }
+            }
 
             // If used search field that constrains which artist names are
             // matches, then prune other lists to only those artist matches.
