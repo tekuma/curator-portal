@@ -61,7 +61,7 @@ describe('getting details about artworks', function () {
         search.disconnectdb();
     });
 
-    describe('#parse_color_label', function () {
+    describe('#get_detail', function () {
         it('should fail to find artwork with given UID',
            function () {
                return search.get_detail('1337f00f').then(function (detail) {
