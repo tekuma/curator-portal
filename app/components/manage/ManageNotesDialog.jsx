@@ -99,7 +99,7 @@ export default class ManageNotesDialog extends React.Component {
                                     <textarea
                                         id          ="collab-note"
                                         placeholder ="Write a short note about this project that will be viewable by all collaborators..."
-                                        DefaultValue       ={this.state.my_notes.collab}
+                                        defaultValue={this.state.my_notes.collab}
                                         maxLength   ="1500"
                                         onChange    ={(e) => {
                                             this.updateManageNotes(Object.assign({}, myNotes, {collab: e.target.value}))
@@ -113,7 +113,7 @@ export default class ManageNotesDialog extends React.Component {
                                     <textarea
                                         id          ="personal-note"
                                         placeholder ="Write a short note about this project that you will get to view..."
-                                        defaultValue       ={this.state.my_notes.personal}
+                                        defaultValue={this.state.my_notes.personal}
                                         maxLength   ="1500"
                                         onChange    ={(e) => {
                                             this.updateManageNotes(Object.assign({}, myNotes, {personal: e.target.value}))
@@ -136,12 +136,14 @@ export default class ManageNotesDialog extends React.Component {
 
         if (nextProps.projectDetails.notes && nextProps.projectDetails.notes[uid]) {
             let private_note = nextProps.projectDetails.notes[uid].private;
+            let public_note  = nextProps.projectDetails.notes[uid].public.note;
 
             let update = this.state.my_notes;
             update.personal = private_note;
+            update.collab = public_note;
             this.setState({
                 my_notes: update
-            })
+            });
         }
     }
 

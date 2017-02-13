@@ -113,7 +113,8 @@ export default class ProjectArtworkManager extends React.Component {
                             result={result}
                             deleteArtworksFromProject={this.props.deleteArtworksFromProject}
                             addArtworksToProject={this.props.addArtworksToProject}
-                            sendToSnackbar={this.props.sendToSnackbar} />
+                            sendToSnackbar={this.props.sendToSnackbar}
+                            role={this.props.role} />
                     );
                 })}
                 </Masonry>

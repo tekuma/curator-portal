@@ -26,7 +26,7 @@ export default class SearchAccordion extends React.Component {
 
     render() {
         let wrapperHeight = {
-            height: window.innerHeight - 5*60 // - Header Height (60px) - Project Selector (60px) - Search Hints Height (60px) - Search Tools Height (60px) - Search Button Height (60px) 
+            height: window.innerHeight - 5*60 // - Header Height (60px) - Project Selector (60px) - Search Hints Height (60px) - Search Tools Height (60px) - Search Button Height (60px)
         }
 
         let options = this.props.artistNames.map(function(artist){
@@ -74,18 +74,15 @@ export default class SearchAccordion extends React.Component {
                     <div
                         id="search-artist-content"
                         className={this.props.accordion.artist ? "accordion-content open" : "accordion-content"}>
-                        <Select
-                            ref="searchArtist"
-                            inputProps={{id: 'search-artist'}}
-                            autofocus
-                            options={options}
-                            simpleValue
-                            clearable={this.props.clearable}
-                            name="artist-search"
-                            value={this.props.artist}
-                            placeholder="Search by Artist Name..."
-                            onChange={this.props.artistChange}
-                            />
+                        <input
+                        type="text"
+                        id="aritist-search"
+                        onKeyPress={this.getGeneralAndChange}
+                        ref="search-artist"
+                        placeholder="Search by artist (case insensitive)"
+                        autoCapitalize="off"
+                        autoComplete="off"
+                        autoCorrect="off" />
                     </div>
                     <div
                         className={this.props.accordion.tag ? "accordion-item open" : "accordion-item"}
@@ -291,6 +288,21 @@ export default class SearchAccordion extends React.Component {
             </div>
         );
     }
+
+    /*  This is the selector from Artist in the accordion.
+    <Select
+        ref="searchArtist"
+        inputProps={{id: 'search-artist'}}
+        autofocus
+        options={options}
+        simpleValue
+        clearable={this.props.clearable}
+        name="artist-search"
+        value={this.props.artist}
+        placeholder="Search by Artist Name..."
+        onChange={this.props.artistChange}
+        />
+     */
 
     componentDidMount() {
         console.log("+++++SearchAccordion");
