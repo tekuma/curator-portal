@@ -23,5 +23,14 @@ module.exports = {
             .waitForElementVisible('body', 2000)
             .assert.containsText('body', 'Curator')
             .end();
+    },
+
+    'Test for log-in input boxes': function (browser) {
+        browser
+            .url('https://127.0.0.1')
+            .waitForElementVisible('body', 2000)
+            .assert.attributeContains('#register-email', 'type', 'email')
+            .assert.attributeContains('#register-password', 'type', 'password')
+            .end()
     }
 };
