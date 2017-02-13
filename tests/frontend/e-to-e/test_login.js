@@ -32,5 +32,20 @@ module.exports = {
             .assert.attributeContains('#register-email', 'type', 'email')
             .assert.attributeContains('#register-password', 'type', 'password')
             .end()
+    },
+
+    'Try to log-in using the TravisCI curator-portal account': function (browser) {
+        browser
+            .url('https://127.0.0.1')
+            .waitForElementVisible('input#register-email', 2000)
+            .waitForElementVisible('input#register-password', 1000)
+            .setValue('input[type=email]', 'travis-ci@tekuma.io')
+            .setValue('input[type=password]', ['BczEZW{p8fgyhYs,_-2)%o5Jd/Vt6bqUm9', browser.Keys.ENTER])
+            .waitForElementVisible('.header-icon.curator.search', 3000)
+            .click('.header-icon.curator.search')
+            .waitForElementVisible('.empty-search-box', 1000)
+            .pause(100)
+            .assert.containsText('body', 'Search for Artworks')
+            .end()
     }
 };
