@@ -71,12 +71,12 @@ describe('labels', function () {
     });
 
     describe('REGRESSION: duplicate artworks in results', function () {
-        it('should not find the artwork "4 beef" (UID sth14sth) more than once',
+        it('should not find the artwork "4 beef" (UID deadbeef) more than once',
            function () {
                return search.q('beef').then(function (rows) {
                    var counter = 0;
                    for (let j = 0; j < rows.length; j++) {
-                       if (rows.uid === "sth14sth") {
+                       if (rows[j].uid === "deadbeef") {
                            counter += 1;
                        }
                    }
