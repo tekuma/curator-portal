@@ -42,5 +42,8 @@ script:
   # Patch Nightwatch configuration for Travis CI Ubuntu images
   - sed -i 's/\/usr\/lib\/chromium\/chromedriver/\/usr\/lib\/chromium-browser\/chromedriver/g' nightwatch.json
 
+  # Search server should use the MySQL instance in this CI job
+  - cp ${TRAVIS_BUILD_DIR}/tests/ci-testdbconf.json ${TRAVIS_BUILD_DIR}/serv/local-test-dbconf.json
+
   - ./dev-spin.sh&
   - npm run testfront
