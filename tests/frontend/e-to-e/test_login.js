@@ -3,9 +3,10 @@
 // Copyright 2017 Tekuma Inc.
 // All rights reserved.
 // created by Scott C. Livingston
-// modified from pre_auth_login_password.js, by Afika Nyati
 
 module.exports = {
+    // modified from pre_auth_home_button.js of the dev-artist-portal repo
+    // by Afika Nyati
     'Test home button redirects to Tekuma homepage' : function (browser) {
         browser
             .url('https://127.0.0.1')
