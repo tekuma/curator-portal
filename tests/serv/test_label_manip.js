@@ -37,10 +37,10 @@ describe('getting details about artworks', function () {
                                  val: '#a9a9a9 0.3855',
                                  type: 'clarifai-w3c-color-density',
                                  origin: 'Clarif.ai'},
-                               {artwork_uid: 'f00fba54',
-                                val: '#ffe4c4 0.8',
-                                type: 'clarifai-w3c-color-density',
-                                origin: 'Clarif.ai'}];
+                                {artwork_uid: 'f00fba54',
+                                 val: '#ffe4c4 0.8',
+                                 type: 'clarifai-w3c-color-density',
+                                 origin: 'Clarif.ai'}];
 
         search.cleardb().then(function () {
             Promise.all([
