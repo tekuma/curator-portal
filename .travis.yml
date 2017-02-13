@@ -34,6 +34,7 @@ install:
 
 script:
   - java -version
+  - /usr/lib/chromium-browser/chromedriver --version
 
   - export TEKUMA_TEST_DB=sqlite
   - npm run testserv
