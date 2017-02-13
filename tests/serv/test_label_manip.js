@@ -40,6 +40,10 @@ describe('getting details about artworks', function () {
                                 {artwork_uid: 'f00fba54',
                                  val: '#ffe4c4 0.8',
                                  type: 'clarifai-w3c-color-density',
+                                 origin: 'Clarif.ai'},
+                                {artwork_uid: 'deadbeef',
+                                 val: 'beefy',
+                                 type: 'clarifai-text-tag',
                                  origin: 'Clarif.ai'}];
 
         search.cleardb().then(function () {
