@@ -15,5 +15,13 @@ module.exports = {
             .waitForElementVisible('body', 2000)
             .assert.urlEquals('http://tekuma.io/')
             .end();
+    },
+
+    'Test for text "curator"' : function (browser) {
+        browser
+            .url('https://127.0.0.1')
+            .waitForElementVisible('body', 2000)
+            .assert.containsText('body', 'Curator')
+            .end();
     }
 };
