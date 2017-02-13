@@ -45,5 +45,8 @@ script:
   # Search server should use the MySQL instance in this CI job
   - cp ${TRAVIS_BUILD_DIR}/tests/ci-testdbconf.json ${TRAVIS_BUILD_DIR}/serv/local-test-dbconf.json
 
+  - node serv/manage.js info
+  - node serv/manage.js clear
+
   - ./dev-spin.sh&
   - npm run testfront
