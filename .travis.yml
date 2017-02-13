@@ -29,6 +29,7 @@ node_js:
 install:
   - export NODE_ENV=debug
   - npm install
+  - ./get-testing-deps.sh
   - mysql -u root --host=127.0.0.1 --port=3306 -e 'CREATE DATABASE IF NOT EXISTS Tekuma_artworkdb'
 
 script:
