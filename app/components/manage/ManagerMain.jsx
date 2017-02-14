@@ -191,23 +191,13 @@ export default class ManagerMain extends React.Component {
                 uid: uid
             };
 
-            // $.ajax({
-            //     url: 'detail',
-            //     data: payload,
-            //     dataType: 'json',
-            //     cache: false,
-            //     success: this.props.updateInfoArtwork
-            // });
-            let artwork = {
-                title: "Starry Night",
-                artist: "Van Gogh",
-                album: "Impressionism",
-                year: "1888",
-                reviewer: "Afika Nyati",
-                memo: "This is a masterpiece!"
-            }
-            console.log("Made van Gogh Blob");
-            this.props.updateInfoArtwork(artwork);
+            $.ajax({
+                url: 'detail',
+                data: payload,
+                dataType: 'json',
+                cache: false,
+                success: this.props.updateInfoArtwork
+            });
         });
     }
 
