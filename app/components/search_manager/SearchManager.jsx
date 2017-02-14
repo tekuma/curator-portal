@@ -1164,7 +1164,7 @@ export default class SearchManager extends React.Component {
                             onClick={this.clearAllSearch}
                             className="search-tool"
                             title="Clear All Search Fields">
-                            <img src="assets/images/icons/cross.svg" />
+                            <img src="assets/images/icons/cross-gradient.svg" />
                             <h4 className="search-tool-writing">
                                 Clear
                             </h4>

@@ -202,6 +202,10 @@ button {
 
 /* Nav-Trigger/Hamburger Style */
 
+.hide-hamburger {
+	display: none;
+}
+
 .nav-trigger {
 	position: absolute;
 	display: none;
@@ -5047,9 +5051,25 @@ animation
 /* Artwork Detail Box */
 
 .artwork-detail-dialog {
-	position: relative;
-	height: 100%;
+	position: absolute;
+	top: -100vh;
+	width: 100vw;
 	background: #aaaaaa;
+	z-index: 10;
+	box-shadow: 13px 10px 13px rgba(0,0,0,0.19),
+	0px 10px 10px rgba(0,0,0,0.19);
+	transition: all 0.4s ease;
+	-webkit-transition: all 0.4s ease;
+	-moz-transition: all 0.4s ease;
+	-ms-transition: all 0.4s ease;
+}
+
+.artwork-detail-dialog.open {
+	top: 60px;
+	transition: all 0.4s;
+	-webkit-transition: all 0.4s;
+	-moz-transition: all 0.4s;
+	-ms-transition: all 0.4s;
 }
 
 .artwork-edit-dialog {
@@ -5059,36 +5079,12 @@ animation
 }
 
 .artwork-preview {
-	width: 456px;
+	width: 65%;
 	height: 100%;
 	display: inline-block;
 	overflow: scroll;
-	padding: 30px;
-	background: #ffffff;
+	background: #111111;
 	vertical-align: top;
-}
-
-.artwork-image-wrapper {
-	display: flex;
-	border: 15px solid #000000;
-	box-shadow: 13px 10px 13px rgba(0,0,0,0.19),
-	0px 10px 10px rgba(0,0,0,0.19);
-	border-style: inset;
-	padding: 8%;
-	width: 396px;
-	height: 100%;
-	-webkit-align-items: center;
-	-ms-align-items: center;
-	-moz-align-items: center;
-	align-items: center;
-	-webkit-justify-content: center;
-	-ms-justify-content: center;
-	-moz-justify-content: center;
-	justify-content: center;
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-ms-transition: all 0.3s;
 }
 
 .artwork-image {
@@ -5102,9 +5098,9 @@ animation
 .artwork-info-wrapper {
 	display: inline-block;
 	overflow: scroll;
-	width: 392px;
+	width: 35%;
 	height: 100%;
-	background: #aaaaaa;
+	background: #dddddc;
 }
 
 .artwork-details {
@@ -5774,6 +5770,10 @@ animation
 	-moz-justify-content: center;
 }
 
+.review-artwork-dialog {
+	background: #111111;
+}
+
 .review-description-dialog {
 	width: 500px;
 }
@@ -5784,7 +5784,7 @@ animation
 	display: inline-block;
 	overflow: scroll;
 	padding: 30px;
-	background: #ffffff;
+	background: #111111;
 }
 
 /*.preview-logo {
@@ -5815,22 +5815,6 @@ animation
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
-}
-
-.artwork-image {
-	background-position: center center;
-	background-size: contain;
-    background-repeat: no-repeat;
-	width: 100%;
-	height: 100%;
-}
-
-.artwork-info-wrapper {
-	display: inline-block;
-	overflow: scroll;
-	width: 392px;
-	height: 100%;
-	background: #dddddc;
 }
 
 .review-descrition-wrapper {
@@ -5987,34 +5971,6 @@ animation
 		width: 200px;
 	}
 
-	.artwork-preview-wrapper {
-		width: 200px;
-		height: 200px;
-	}
-
-	.artwork-preview {
-		display: none;
-	}
-
-	.artwork-info-wrapper {
-		width: 592px;
-	}
-
-	.artwork-title,
-	.artwork-artist,
-	.artwork-year,
-	.artwork-album {
-		text-align: center;
-	}
-
-	.artwork-album-heading,
-	.artwork-tags-heading,
-	.artwork-description-heading,
-	.artwork-colors-heading,
-	.artwork-review-heading {
-		text-align: center;
-	}
-
 	.manage-notes-group-notes-wrapper {
 		width: 296px;
 	}
@@ -6074,6 +6030,12 @@ animation
 		display: none;
 	}
 
+}
+
+@media (max-width: 685px) {
+	.pagination-arrow {
+		margin: 0 20px;
+	}
 }
 
 @media (max-height: 670px) {
@@ -6145,11 +6107,6 @@ animation
 		width: 150px;
 	}
 
-	.artwork-preview-wrapper {
-		width: 150px;
-		height: 200px;
-	}
-
 	.edit-social-icon img {
     	height: 30px;
 	}
@@ -6158,10 +6115,6 @@ animation
 		padding: 0.5em 0.5em;
 		height: 2.2em;
 		width: 100px;
-	}
-
-	.artwork-info-wrapper {
-		width: 542px;
 	}
 
 	.manage-notes-group-notes-wrapper,
@@ -6288,6 +6241,29 @@ animation
 	.solo-links {
 		text-align: center;
 	}
+
+	.artwork-preview {
+		display: none;
+	}
+
+	.artwork-info-wrapper {
+		width: 100%;
+	}
+
+	.artwork-title,
+	.artwork-artist,
+	.artwork-year,
+	.artwork-album {
+		text-align: center;
+	}
+
+	.artwork-album-heading,
+	.artwork-tags-heading,
+	.artwork-description-heading,
+	.artwork-colors-heading,
+	.artwork-review-heading {
+		text-align: center;
+	}
 }
 
 @media (max-width: 575px) {
@@ -6298,10 +6274,6 @@ animation
 
 	.edit-artwork-body {
 		width: 368px !important;
-	}
-
-	.artwork-info-wrapper {
-		width: 368px;
 	}
 
 	.artwork-preview-colors {
@@ -6468,10 +6440,6 @@ animation
 		width: 310px !important;
 		padding: 0 !important;
 	}
-
-	.artwork-info-wrapper {
-		width: 310px;
-	}
 }
 
 @media (max-width: 350px) {
@@ -6496,15 +6464,6 @@ animation
 }
 
 @media (max-width: 338px) {
-
-	.pagination-arrow {
-		margin: 10px;
-		padding: 10px;
-	}
-
-	.pagination-arrow img {
-		width: 30px;
-	}
 
 	.review-sections h2 {
 		font-size: 0.9em;

@@ -2,6 +2,7 @@
 import React      from 'react';
 import firebase   from 'firebase';
 import Masonry    from 'react-masonry-component';
+import uuid                 from 'node-uuid';
 
 // Files
 import Artwork    from './Artwork';
@@ -90,7 +91,6 @@ export default class ProjectArtworkManager extends React.Component {
                                         styleSmallScreen :
                                         fixedWidth
                                 : styleManagerClosed}
-                disableClick
                 className       ="artworks"
                 >
                 <Masonry
@@ -105,6 +105,7 @@ export default class ProjectArtworkManager extends React.Component {
                 {this.props.projectArtworks.map(result => {
                     return (
                         <Artwork
+                            key={result.uid}
                             detailArtwork={this.props.detailArtwork}
                             toggleDetailBox={this.props.toggleDetailBox}
                             command = {this.props.command}

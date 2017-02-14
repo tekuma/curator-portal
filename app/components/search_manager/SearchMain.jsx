@@ -5,7 +5,6 @@ import firebase from 'firebase';
 import SearchArtworkManager from '../artwork_manager/SearchArtworkManager';
 import CurationHeader       from '../headers/CurationHeader';
 import SearchManager        from './SearchManager';
-import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 /*
 ## SCHEMA SKETCH
@@ -27,11 +26,9 @@ tags: Array of Objects
 
 export default class SearchMain extends React.Component {
     state = {
-        detailBoxIsOpen: false, // whether popup is open or not
         infoArtwork    : null,  // uid of displayed artworkInfo
         results        :[],// current list of search results
         command        : "",  // used for controlling artworks
-        artworkInfo    : {uid: null, found: false},
         no_results: false
     }
 
@@ -48,7 +45,7 @@ export default class SearchMain extends React.Component {
         <div>
             <SearchArtworkManager
                 detailArtwork={this.detailArtwork}
-                toggleDetailBox={this.toggleDetailBox}
+                toggleDetailBox={this.props.toggleDetailBox}
                 command={this.props.command}
                 results={this.state.results}
                 managerIsOpen={this.props.managerIsOpen}
@@ -69,11 +66,6 @@ export default class SearchMain extends React.Component {
                 addNewProject={this.props.addNewProject}
                 changeProject={this.props.changeProject}
                 projects={this.props.projects}
-             />
-            <ArtworkDetailBoxDialog
-                toggleDetailBox={this.toggleDetailBox}
-                detailBoxIsOpen={this.state.detailBoxIsOpen}
-                artworkInfo={this.state.artworkInfo}
              />
             <div
                 onClick     ={this.props.toggleNav}
@@ -102,20 +94,12 @@ export default class SearchMain extends React.Component {
                 data: payload,
                 dataType: 'json',
                 cache: false,
-                success: this.updateInfoArtwork
+                success: this.props.updateInfoArtwork
             });
         });
     }
 
-    updateInfoArtwork = (data) => {
-        this.setState({artworkInfo: data});
-    }
 
-    toggleDetailBox = () => {
-        this.setState({
-            detailBoxIsOpen: !this.state.detailBoxIsOpen
-        })
-    }
 
     /**
      * updates the this.state.results to be data.rows.
