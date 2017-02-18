@@ -7,3 +7,4 @@ npm-debug.log
 .nightwatch*
 /extern/
 /test-ui-reports/
+selenium-debug.log
