@@ -61,7 +61,7 @@ export default class LandingPage extends React.Component {
                                         <li id="email-landing">
                                             <input
                                                 type        ="email"
-                                                id          ="login-email"
+                                                id          ="register-email"
                                                 style       ={this.state.errorType.email ? errorStyle : null}
                                                 ref         ="email"
                                                 placeholder ="Email"
@@ -72,7 +72,7 @@ export default class LandingPage extends React.Component {
                                         <li>
                                             <input
                                                 type         ="password"
-                                                id           ="login-password"
+                                                id           ="register-password"
                                                 ref          ="password"
                                                 style        ={this.state.errorType.password ? errorStyle : null}
                                                 placeholder  ="Password"
@@ -84,10 +84,10 @@ export default class LandingPage extends React.Component {
                                 </div>
                                 <div className="bottom-form">
                                     <button
-                                        className="login-button"
+                                        className="signup-button"
                                         type="submit"
                                         onClick={this.onLogin}>
-                                        <h3>Login</h3>
+                                        <h3>Sign Up</h3>
                                     </button>
                                 </div>
                             </form>
@@ -96,7 +96,7 @@ export default class LandingPage extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="snackbar-error"
+                        className="registration-error"
                         open={this.state.errors.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -126,38 +126,21 @@ export default class LandingPage extends React.Component {
      */
     onLogin = (e) => {
         e.preventDefault();
-        // Clear errors from any previous form submission
-        this.state.errors = [];
-        this.state.errorType = {};
-        this.state.currentError = "";
 
+
+        // Clear errors from any previous form submission
         let data = {};
         let email = this.refs.email.value;
         let password = this.refs.password.value;
 
         if(email.length == 0) {
             this.state.errors.push("Please enter an email address.");
-            let errorType = this.state.errorType;
-            errorType.email = true;
-            this.setState({
-                errorType: errorType
-            });
         } else if(!/.+@.+\..+/.test(email)) {
             this.state.errors.push("The email address you supplied is invalid.");
-            let errorType = this.state.errorType;
-            errorType.email = true;
-            this.setState({
-                errorType: errorType
-            });
         }
 
         if(password.length == 0) {
             this.state.errors.push("Please enter your password.");
-            let errorType = this.state.errorType;
-            errorType.password = true;
-            this.setState({
-                errorType: errorType
-            });
         }
 
         if(this.state.errors.length == 0) {
@@ -166,19 +149,114 @@ export default class LandingPage extends React.Component {
             this.props.authenticateWithPassword(data);
         }
 
+        this.forceUpdate();
+
+        // for(let i = 0; i < this.state.errors.length; i++) {
+        //     setTimeout(() => {
+        //         this.setState({
+        //             currentError: this.state.errors[i]
+        //         });
+        //     }, 3000 * i);
+        //
+        //     setTimeout(() => {
+        //         this.setState({
+        //             currentError: "",
+        //             errors: []
+        //         });
+        //     }, 3000 * i + 4000);
+        // }
+    }
+
+
+
+    saveAndContinue = (e) => {
+        e.preventDefault();
+        console.log("errors: ", this.state.errors);
+        // Clear errors from any previous form submission
+        this.state.errors = [];
+        this.state.errorType = {};
+        this.state.currentError = "";
+
+        let privateData = {};
+        let email = this.refs.email.value;
+        let password = this.refs.password.value;
+        let confirmPassword = this.refs.confirmPassword.value;
+
+        if(email.length == 0) {
+            this.state.errors.push("Please enter an email address");
+
+            let errorType = this.state.errorType;
+            errorType.email = true;
+            this.setState({
+                errorType: errorType
+            });
+        } else if(!/.+@.+\..+/.test(email)) {
+            this.state.errors.push("The email address you supplied is invalid");
+
+            let errorType = this.state.errorType;
+            errorType.email = true;
+            this.setState({
+                errorType: errorType
+            });
+        }
+
+        if(password.length == 0) {
+            this.state.errors.push("Please choose a password");
+
+            let errorType = this.state.errorType;
+            errorType.password = true;
+            this.setState({
+                errorType: errorType
+            });
+
+        } else if (password.length < 6) {
+            this.state.errors.push("Your password must be at least 6 characters long");
+
+            let errorType = this.state.errorType;
+            errorType.password = true;
+            this.setState({
+                errorType: errorType
+            });
+        }
+
+        if(confirmPassword.length == 0) {
+            this.state.errors.push("Please confirm your password");
+
+            let errorType = this.state.errorType;
+            errorType.confirmPassword = true;
+            this.setState({
+                errorType: errorType
+            });
+        }
+
+        if(password != confirmPassword) {
+            this.state.errors.push("Passwords do not match");
+
+            let errorType = this.state.errorType;
+            errorType.password = true;
+            errorType.confirmPassword = true;
+            this.setState({
+                errorType: errorType
+            });
+        }
+
+        // Rerender the component
+        this.forceUpdate();
+        this.props.clearErrors();
+
+        if(this.state.errors.length == 0) {
+            privateData.email = email;
+            privateData.password = password;
+            this.props.saveRegPrivate(privateData);
+            this.props.nextStep();
+        }
+
         for(let i = 0; i < this.state.errors.length; i++) {
             setTimeout(() => {
                 this.setState({
                     currentError: this.state.errors[i]
                 });
             }, 3000 * i);
-
-            setTimeout(() => {
-                this.setState({
-                    currentError: "",
-                    errors: []
-                });
-            }, 3000 * i + 4000);
         }
     }
 }

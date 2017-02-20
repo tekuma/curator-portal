@@ -3,6 +3,9 @@
 
 // Libs
 import React              from 'react';
+import Snackbar           from 'material-ui/Snackbar';
+import getMuiTheme        from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider   from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
 // Files
 import PreAuthHeader from '../headers/PreAuthHeader';
@@ -30,8 +33,7 @@ export default class App extends React.Component {
             <div>
                 <PreAuthHeader />
                 <LandingPage
-                    authenticateWithPassword={this.props.authenticateWithPassword}
-                    errors={this.props.errors} />
+                    authenticateWithPassword={this.props.authenticateWithPassword} />
             </div>
         );
     }

@@ -1,6 +1,9 @@
 // Libs
 import React                        from 'react';
 import Dropzone                     from 'react-dropzone';
+import getMuiTheme                  from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider             from 'material-ui/styles/MuiThemeProvider';
+import Snackbar                     from 'material-ui/Snackbar';
 import {Tooltip, OverlayTrigger}    from 'react-bootstrap';
 import Select                       from 'react-select';
 import { WithContext as ReactTags } from 'react-tag-input';
@@ -73,10 +76,10 @@ export default class SearchAccordion extends React.Component {
                         className={this.props.accordion.artist ? "accordion-content open" : "accordion-content"}>
                         <input
                         type="text"
-                        id="search-artist-input"
+                        id="aritist-search"
                         onKeyPress={this.getGeneralAndChange}
                         ref="search-artist"
-                        placeholder="Search by Artist Name..."
+                        placeholder="Search by artist (case insensitive)"
                         autoCapitalize="off"
                         autoComplete="off"
                         autoCorrect="off" />

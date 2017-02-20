@@ -9,6 +9,7 @@
 // Libs
 import React                from 'react';
 import firebase             from 'firebase';
+import Snackbar             from 'material-ui/Snackbar';
 import getMuiTheme          from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider     from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from "react-tap-event-plugin";
@@ -41,8 +42,7 @@ import PostAuth from './components/auth/PostAuth';
  */
 export default class App extends React.Component {
     state = {
-        loggedIn: false,
-        errors: []
+        loggedIn: false
     };
 
     constructor(props) {
@@ -62,8 +62,7 @@ export default class App extends React.Component {
         } else {
             return(
                 <PreAuth
-                    authenticateWithPassword={this.authenticateWithPassword}
-                    errors={this.state.errors} />
+                    authenticateWithPassword={this.authenticateWithPassword} />
             );
         }
     }
@@ -98,10 +97,10 @@ export default class App extends React.Component {
         .then( (thisUser) => {
             console.log(">Password Auth successful for:", thisUser.displayName);
             this.checkReturningUser(thisUser); // *
-        }).catch((error) => {
+        }).catch( (error) => {
             console.log(error);
             this.setState({
-                errors: [error.message]
+                errors: this.state.errors.concat(error.message)
             });
         });
     }
@@ -113,9 +112,8 @@ export default class App extends React.Component {
      * @return {Boolean}      if a returning user
      */
     checkReturningUser = (user) => {
-        const uid = firebase.auth().currentUser.uid;
-        const path = `users`;
-        let allUIDs = firebase.database().ref(path).once('value', (snapshot)=>{
+        let uid = firebase.auth().currentUser.uid;
+        let allUIDs = firebase.database().ref(this.paths.users).once('value', (snapshot)=>{
             if (!snapshot.hasChild(uid)) {
                 this.createNewUser(user);
                 return false;
@@ -137,10 +135,15 @@ export default class App extends React.Component {
      * @param  {[type]} user [description]
      */
     createNewUser = (user) => {
+        // Create an initial projec
+        let projectID =  this.createNewProject();
+        console.log(">>>> ID", projectID);
+        let projects = [projectID];
         let child = {
             first_login : new Date().toISOString(),
             email       : user.email,
             uid         : user.uid,
+            projects    : projects,
             public      : {
                 display_name: "Unset",
                 social_media   : {
@@ -153,7 +156,7 @@ export default class App extends React.Component {
                 bio             : "",
                 location        : "",
                 portfolio       : "",
-                display_name    : "Untitled Curator",
+                display_name    : "",
                 avatar          : ""
 
             },
