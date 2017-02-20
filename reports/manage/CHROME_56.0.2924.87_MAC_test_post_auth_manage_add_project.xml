@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="0"
+            tests="3">
+
+  <testsuite name="test_post_auth_manage_add_project"
+    errors="0" failures="0" hostname="" id="" package="manage" skipped="0"
+    tests="3" time="16.51" timestamp="Sun, 19 Feb 2017 20:49:19 GMT">
+  
+    <testcase name="Test Post-Auth: Add/Delete Project (Using Empty Artwork Card Section)" time="5.864" assertions="13">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Add/Delete Project (Using Project Manager)" time="5.486" assertions="13">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Add/Delete Project (Using Project Selector)" time="5.163" assertions="13">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+  
+  </testsuite>
+</testsuites>

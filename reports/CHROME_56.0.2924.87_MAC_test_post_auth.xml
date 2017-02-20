@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="0"
+            tests="3">
+
+  <testsuite name="test_post_auth"
+    errors="0" failures="0" hostname="" id="" package="test_post_auth" skipped="0"
+    tests="3" time="17.51" timestamp="Mon, 20 Feb 2017 04:01:42 GMT">
+  
+    <testcase name="Test Post-Auth: Functional Hamburger Icon" time="5.124" assertions="8">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Functional Search/Manager Icons in Header" time="6.836" assertions="10">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Successfully Toggle Right Drawer Interface" time="5.553" assertions="9">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+  
+  </testsuite>
+</testsuites>

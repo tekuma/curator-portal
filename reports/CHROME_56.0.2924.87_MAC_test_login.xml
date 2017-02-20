@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="1"
+            failures="1"
+            tests="4">
+
+  <testsuite name="test_login"
+    errors="1" failures="1" hostname="" id="" package="test_login" skipped="3"
+    tests="4" time="2.850" timestamp="Sat, 18 Feb 2017 22:02:59 GMT">
+  
+    <testcase name="Test home button redirects to Tekuma homepage" time="2.850" assertions="3">
+
+    
+
+      <failure message="Testing if the URL equals &quot;http://tekuma.io/&quot;.">    at Object.TestHomeButtonRedirectsToTekumaHomepage [as Test home button redirects to Tekuma homepage] (/Users/afikanyati/Documents/Tekuma/applications/curation/tests/frontend/e-to-e/test_login.js:16:21)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)</failure>
+
+    
+    </testcase>
+      <system-err>
+        ERROR: Unable to locate element: &quot;a[href=&quot;http://tekuma.io&quot;]&quot; using: css selector
+    at Object.TestHomeButtonRedirectsToTekumaHomepage [as Test home button redirects to Tekuma homepage] (/Users/afikanyati/Documents/Tekuma/applications/curation/tests/frontend/e-to-e/test_login.js:14:14)
+    at Module.call (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/nightwatch/lib/runner/module.js:62:34)
+    at /Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/nightwatch/lib/runner/testcase.js:70:29
+    at _fulfilled (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:834:54)
+    at self.promiseDispatch.done (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:863:30)
+    at Promise.promise.promiseDispatch (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:796:13)
+    at /Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:556:49
+    at runSingle (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:137:13)
+    at flush (/Users/afikanyati/Documents/Tekuma/applications/curation/node_modules/q/q.js:125:13)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+      </system-err>
+  
+  
+    
+    <testcase
+      name="Test for text &quot;curator&quot;">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="Test for log-in input boxes">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="Try to log-in using the TravisCI curator-portal account">
+      <skipped />
+    </testcase>
+    
+  
+  </testsuite>
+</testsuites>

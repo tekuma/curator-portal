@@ -62,6 +62,7 @@ export default class ManagerMain extends React.Component {
                       doQuery={this.doQuery}
                       projects={this.props.projects}
                       onDelete={this.deleteProject}
+                      sendToSnackbar={this.props.sendToSnackbar}
                    />
                 <ManageNotesDialog
                     addNote={this.addNote}
@@ -84,6 +85,12 @@ export default class ManagerMain extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
+        // When a user is initially created, it has no this.props.user
+        // We call this.createNewUser() in App.jsx
+        // When user is created in database, fetch new list of users
+        if (nextProps.user != this.props.user) {
+            this.fetchAllUsers();
+        }
     }
 
     componentWillUnmount() {
@@ -140,7 +147,7 @@ export default class ManagerMain extends React.Component {
             });
             console.log(users);
             this.setState({users:users});
-        })
+        });
     }
 
     /**
@@ -167,12 +174,12 @@ export default class ManagerMain extends React.Component {
      * [deleteProject description]
      * @param  {HTML Element} e [description]
      */
-    deleteProject = (e) => {
+    deleteProject = (collaborators, e) => {
         e.stopPropagation();
         confirm('Are you sure you want to delete this project?').then(
             () => {
                 // Proceed Callback
-                this.props.deleteCurrentProject();
+                this.props.deleteCurrentProject(collaborators);
             }, () => {
                 // Cancel Callback
                 return;

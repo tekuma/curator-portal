@@ -16,7 +16,8 @@ export default class ManageNotesDialog extends React.Component {
     state = {
         my_notes: {
             collab  : "",
-            personal: ""
+            personal: "",
+            edited: false
         }
     }
 
@@ -32,8 +33,8 @@ export default class ManageNotesDialog extends React.Component {
         const actions = [
             <ConfirmButton
                 label     ={"Update"}
-                className ="edit-artwork-yes"
-                onClick   ={this.props.addNote.bind({},this.state.my_notes)} />,
+                className ={this.state.my_notes.edited ? "edit-artwork-yes unsaved" :"edit-artwork-yes"}
+                onClick   ={this.saveNotes} />,
 
             <ConfirmButton
                 label     ={"Close"}
@@ -102,7 +103,7 @@ export default class ManageNotesDialog extends React.Component {
                                         defaultValue={this.state.my_notes.collab}
                                         maxLength   ="1500"
                                         onChange    ={(e) => {
-                                            this.updateManageNotes(Object.assign({}, myNotes, {collab: e.target.value}))
+                                            this.updateManageNotes(Object.assign({}, myNotes, {collab: e.target.value, edited: true}))
                                         }} />
                                 </div>
                                 <div className="manage-notes-textarea">
@@ -116,7 +117,7 @@ export default class ManageNotesDialog extends React.Component {
                                         defaultValue={this.state.my_notes.personal}
                                         maxLength   ="1500"
                                         onChange    ={(e) => {
-                                            this.updateManageNotes(Object.assign({}, myNotes, {personal: e.target.value}))
+                                            this.updateManageNotes(Object.assign({}, myNotes, {personal: e.target.value, edited: true}))
                                         }} />
                                 </div>
                             </div>
@@ -150,6 +151,16 @@ export default class ManageNotesDialog extends React.Component {
     updateManageNotes = (my_notes) => {
         this.setState({
             my_notes : my_notes
+        });
+    }
+
+    saveNotes = () => {
+        let my_notes = this.state.my_notes;
+        my_notes["edited"] = false;
+
+        this.props.addNote(this.state.my_notes);
+        this.setState({
+            my_notes: my_notes
         });
     }
 }

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="6">
+
+  <testsuite name="test_post_auth_manage_collaborators"
+    errors="0" failures="1" hostname="" id="" package="manage" skipped="3"
+    tests="6" time="38.14" timestamp="Mon, 20 Feb 2017 04:00:14 GMT">
+  
+    <testcase name="Test Post-Auth: Check Self is Collaborator in Project" time="11.58" assertions="20">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Add Collaborator with No Selection" time="12.18" assertions="16">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="Test Post-Auth: Add Self as Collaborator" time="14.38" assertions="10">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+      <failure message="Timed out while waiting for element &lt;div.collaborator-select-container .Select.add-collaborator-selector.Select--single.is-searchable.has-value div.Select-control span#react-select-5--value-item.Select-value-label&gt; to be present for 3000 milliseconds.">    at Object.TestPostAuthAddSelfAsCollaborator [as Test Post-Auth: Add Self as Collaborator] (/Users/afikanyati/Documents/Tekuma/applications/curation/tests/frontend/e-to-e/manage/test_post_auth_manage_collaborators.js:125:14)
+    at _combinedTickCallback (internal/process/next_tick.js:67:7)
+    at process._tickCallback (internal/process/next_tick.js:98:9)</failure>
+
+    
+    </testcase>
+  
+  
+    
+    <testcase
+      name="Test Post-Auth: Successfully add Collaborator">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="Test Post-Auth: Successfully add and delete Collaborator">
+      <skipped />
+    </testcase>
+    
+    <testcase
+      name="Test Post-Auth: Verify Creator not deletable in collaborator profile/Delete via collaborator profile">
+      <skipped />
+    </testcase>
+    
+  
+  </testsuite>
+</testsuites>

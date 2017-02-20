@@ -128,7 +128,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -199,7 +199,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -241,7 +241,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -294,7 +294,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -510,7 +510,7 @@ export default class PostAuth extends React.Component {
      * Deletes the current project from the firebaseDB, removes it from
      * the user's projects, and updates the current project to none.
      */
-    deleteCurrentProject = (e) => {
+    deleteCurrentProject = (collaborators,e) => {
         let projectID = this.state.currentProject[1];
         let userUid   = firebase.auth().currentUser.uid;
         let userPath  = `users/${userUid}/projects`;
@@ -533,10 +533,6 @@ export default class PostAuth extends React.Component {
             let message = "Project successfully deleted";
             this.sendToSnackbar(message);
         });
-
-
-
-
     }
 
     /**
