@@ -57,11 +57,9 @@ export default class ArtworkImagePreview extends React.Component {
                                 href={fullsize_url}
                                 target="_blank"
                                 title="Click to open fullsize artwork">
-                                <div className="review-artwork-image-wrapper">
-                                    <div
-                                        className="artwork-image"
-                                        style={previewImage}>
-                                    </div>
+                                <div
+                                    className="artwork-image"
+                                    style={previewImage}>
                                 </div>
                             </a>
                         </div>

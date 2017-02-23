@@ -6,17 +6,14 @@ import ProjectArtworkManager from '../artwork_manager/ProjectArtworkManager';
 import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
 import confirm    from '../confirm_dialog/ConfirmFunction';
-import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 import ManageNotesDialog   from './ManageNotesDialog';
 
 
 export default class ManagerMain extends React.Component {
     state = {
         manageNotesIsOpen:false, // whether popup is open or not
-        detailBoxIsOpen  :false, // whether artwork detail box is open or not
         projectNotes     :[],  // gathered notes
-        artworkInfo      :{uid: null, found: false},  // Information display by more info pop-up
-        users            :[],  // list of [name,uid] pairs to populate collaborators
+        users            :[]  // list of [name,uid] pairs to populate collaborators
     }
 
     constructor(props) {
@@ -40,7 +37,7 @@ export default class ManagerMain extends React.Component {
                       projects={this.props.projects}
                       addNewProject={this.props.addNewProject}
                       detailArtwork={this.detailArtwork}
-                      toggleDetailBox={this.toggleDetailBox}
+                      toggleDetailBox={this.props.toggleDetailBox}
                       deleteArtworksFromProject={this.props.deleteArtworksFromProject}
                       addArtworksToProject={this.props.addArtworksToProject}
                       sendToSnackbar={this.props.sendToSnackbar}
@@ -66,11 +63,6 @@ export default class ManagerMain extends React.Component {
                       projects={this.props.projects}
                       onDelete={this.deleteProject}
                    />
-                   <ArtworkDetailBoxDialog
-                       toggleDetailBox={this.toggleDetailBox}
-                       detailBoxIsOpen={this.state.detailBoxIsOpen}
-                       artworkInfo={this.state.artworkInfo}
-                    />
                 <ManageNotesDialog
                     addNote={this.addNote}
                     removeNote={this.removeNote}
@@ -204,20 +196,11 @@ export default class ManagerMain extends React.Component {
                 data: payload,
                 dataType: 'json',
                 cache: false,
-                success: this.updateInfoArtwork
+                success: this.props.updateInfoArtwork
             });
         });
     }
 
-    updateInfoArtwork = (data) => {
-        this.setState({artworkInfo: data});
-    }
-
-    toggleDetailBox = () => {
-        this.setState({
-            detailBoxIsOpen: !this.state.detailBoxIsOpen
-        })
-    }
     toggleManageNotes = () => {
         this.setState({
             manageNotesIsOpen: !this.state.manageNotesIsOpen

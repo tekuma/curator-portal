@@ -54,11 +54,28 @@ export default class CurationHeader extends React.Component {
             </Tooltip>
         );
 
+        const closeTooltip = (
+            <Tooltip
+                id="manage-tooltip"
+                className="tooltip">
+                Close Artwork Info
+            </Tooltip>
+        );
+
+        const hide = {
+            display: "none"
+        }
+
+        const show = {
+            display: "block"
+        }
+
         return (
             <div>
                 <header className={this.state.display_tools ? "light": "dark"}>
                 	<div
                         className="tekuma-logo"
+                        style={this.props.detailBoxIsOpen ? hide : show}
                         onClick={this.props.changeAppLayout.bind({}, Roles.MANAGE)}
                         onTouchTap={this.props.changeAppLayout.bind({}, Roles.MANAGE)} >
                         <svg version="1.0" id="tekuma-logo-image-small" x="0px" y="0px" viewBox="0 0 1000 1000">
@@ -115,15 +132,26 @@ export default class CurationHeader extends React.Component {
                                  </div>
                             </OverlayTrigger>
                             :
-                            <OverlayTrigger placement="bottom" overlay={searchTooltip}>
-                                 <div
-                                     className="header-icon curator search"
-                                     onClick={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
-                                     onTouchTap={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
-                                    >
-                                     <img src="assets/images/icons/search.svg" />
-                                 </div>
-                            </OverlayTrigger>
+                            this.props.detailBoxIsOpen ?
+                                <OverlayTrigger placement="bottom" overlay={closeTooltip}>
+                                     <div
+                                         className="header-icon curator"
+                                         onClick={this.props.toggleDetailBox}
+                                         onTouchTap={this.props.toggleDetailBox}
+                                        >
+                                         <img src="assets/images/icons/cross-white.svg" />
+                                     </div>
+                                </OverlayTrigger>
+                                :
+                                <OverlayTrigger placement="bottom" overlay={searchTooltip}>
+                                     <div
+                                         className="header-icon curator search"
+                                         onClick={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
+                                         onTouchTap={this.props.changeAppLayout.bind({}, Roles.SEARCH)}
+                                        >
+                                         <img src="assets/images/icons/search.svg" />
+                                     </div>
+                                </OverlayTrigger>
                         }
                     </div>
         	</header>
