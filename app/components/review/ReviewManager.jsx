@@ -65,6 +65,7 @@ export default class ReviewManager extends React.Component {
         firebase.database().ref("submissions").off();
         firebase.database().ref("approved").off();
         firebase.database().ref("declined").off();
+        firebase.database().ref("held").off();
     }
     // =========== Render Control =============
 
@@ -83,6 +84,7 @@ export default class ReviewManager extends React.Component {
         } else if (catagory === "Declined") {
             items = this.state.declinedItems;
         }
+        console.log(catagory);
 
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 70, // 140px = Header and Review Tabs , 70px = Pagination Arrows
@@ -232,58 +234,79 @@ export default class ReviewManager extends React.Component {
     }
 
     /**
-     * This method first checks if the status has been changed to approve.
-     * If so, it updates the status and moves the obj from the submissions
-     * branch to the approved branch. Else, it updates the status/memo fields
-     * on the submissions branch.
+     * Removes an artwork from the list of artworks in the reviewItems array in
+     * state. This method uses concat([]) as a way to copy the state, as not to
+     * directly mutate the state.
+     * @param  {String} artwork_uid [uid of the artwork]
+     */
+    removeFromReviewItems = (artwork_uid) => {
+        for (var i = 0; i < this.state.reviewItems.length; i++) {
+            let item = this.state.reviewItems[i];
+            if (item.artwork_uid == artwork_uid) {
+                let updates = this.state.reviewItems.concat([]); //deepcopy
+                updates.splice(i,1);
+                this.setState({reviewItems:updates});
+                break;
+            }
+        }
+    }
+
+    /**
+     * This method handles syncing any changes in data from the review interface
+     * to the firebase database.
+     * RULES:
+     * -items cannot be moved -> Pending, only from pending.
+     * -items cannot be moved from Approved, Declined, or Held, only to.
+     * -items moved to Held trigger the daemon to unlock the artwork in artist.tekuma.io
+     * -When items are moved from pending -> approved || declined, remove that artwork
+     *  from the held branch, even if it is not there as it has a known path.
      * @param  {Object} artwork [artwork obj as in FB db]
      * @param  {String} status  ["Approve", "Pending", ..]
-     * @param  {String} memo    []
+     * @param  {String} memo    [The message field from the curator]
      */
-    saveReviewChanges = (artwork,status,memo) =>{
-        if (!memo || status == "Pending") {
-            let message;
-            if (!memo && status == "Pending") {
-                message = "Review failed. Write a review note to the artist explaining the artwork's review status and edit its review status."
-            } else if (!memo) {
-                message = "Review failed. Write a review note to the artist explaining the artwork's review status."
-            } else {
-                message = "Review failed. Edit the review status of the review item."
-            }
+    saveReviewChanges = (artwork,newStatus,memo) =>{
+        console.log("saving changes to", artwork.artwork_uid);
+        const subRef  = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
+        const aprRef  = firebase.database().ref(`approved/${artwork.artwork_uid}`);
+        const decRef  = firebase.database().ref(`declined/${artwork.artwork_uid}`);
+        const heldRef = firebase.database().ref(`held/${artwork.artwork_uid}`);
+        const oldStatus = artwork.status;
 
+        console.log("new",newStatus,"old",oldStatus,memo, artwork);
+        if (!memo) {
+            let message;
+            if (!memo && newStatus == "Pending") {
+                message = "Review failed. Write a review note to the artist explaining the artwork's review status and edit its review status.";
+            } else {
+                message = "Review failed. Write a review note to the artist explaining the artwork's review status.";
+            }
             this.props.sendToSnackbar(message);
-        } else if (status == "Approved") {
+        } else if (newStatus == "Approved") {
             let newApproval = false;
-            artwork.status  = status; // "Approved"
+
             if (!artwork.approved) {
                 artwork.approved = new Date().getTime();
                 newApproval = true;
             }
-            artwork.memo = memo;
-            artwork.new_message = true;
-            artwork.reviewer = this.props.user.public.display_name;
-            let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
-            let aprRef = firebase.database().ref(`approved/${artwork.artwork_uid}`);
             aprRef.transaction((data)=>{
-                return artwork; // add artwork to approved branch
+                data.memo = memo;
+                data.status = newStatus;
+                data.reviewer = this.props.user.public.display_name;
+                data.new_message = true;
+                return data; // add artwork to approved branch
             },(err,wasSuccessful,snapshot)=>{
                 subRef.transaction((data)=>{
                     return null; // delete artwork from submissions branch
                 },(err,wasSuccessful,snapshot)=>{
                     console.log("Artwork: ",artwork.artwork_uid, " sent to approved");
                 });
+                heldRef.transaction((data)=>{ // even if it isn't
+                    return null;  // remove artwork from held branch
+                });
             });
 
             //Remove this artwork from the pending screen
-            for (var i = 0; i < this.state.reviewItems.length; i++) {
-                let item = this.state.reviewItems[i];
-                if (item.artwork_uid == artwork.artwork_uid) {
-                    let updates = this.state.reviewItems.concat([]); //deepcopy
-                    updates.splice(i,1);
-                    this.setState({reviewItems:updates});
-                    break;
-                }
-            }
+            this.removeFromReviewItems(artwork.artwork_uid);
 
             let message = "";
             if (newApproval) {
@@ -292,46 +315,72 @@ export default class ReviewManager extends React.Component {
                 message = "Artwork status has been updated.";
             }
             this.props.sendToSnackbar(message);
-        } else if (status == "Declined") {
+        } else if (newStatus == "Declined") {
             let newDecline = false;
-            artwork.status   = status;
-            artwork.reviewer = this.props.user.public.display_name;
             if (!artwork.declined) {
                 artwork.declined = new Date().getTime();
                 newDecline = true;
             }
 
-            let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
-            let decRef = firebase.database().ref(`declined/${artwork.artwork_uid}`);
             decRef.transaction((data)=>{
-                return artwork; // add artwork to declined branch
+                data.status = false;
+                data.memo   = memo;
+                data.reviewer = this.props.user.public.display_name;
+                return data; // add artwork to declined branch
             },(err,wasSuccessful,snapshot)=>{
                 subRef.transaction((data)=>{
                     return null; // delete artwork from submissions branch
                 },(err,wasSuccessful,snapshot)=>{
                     console.log("Artwork: ",artwork.artwork_uid, " sent to declined");
                 });
+                heldRef.transaction((data)=>{
+                    return null; // clean the held branch as well.
+                });
             });
 
             //Remove this artwork from the pending screen
-            for (var i = 0; i < this.state.reviewItems.length; i++) {
-                let item = this.state.reviewItems[i];
-                if (item.artwork_uid == artwork.artwork_uid) {
-                    let updates = this.state.reviewItems.concat([]); //deepcopy
-                    updates.splice(i,1);
-                    this.setState({reviewItems:updates});
-                    break;
-                }
-            }
+            this.removeFromReviewItems(artwork.artwork_uid);
 
             let message = "";
             newDecline ? message = "Artwork has been declined and the artist has been notified." : message = "Artwork status has been updated." ;
             this.props.sendToSnackbar(message);
-        } else if (artwork.status == "Pending" || artwork.status == "Held"){
+
+        } else if (newStatus == "Held") {
+            let message;
+            if (oldStatus == "Held" && memo != null) { // an update
+                // only thing that can be updated in Held is the memo.
+                artwork.memo = memo;
+                heldRef.transaction((data)=>{
+                    return artwork;
+                });
+                message = "This message has been updated";
+            } else { //initial move into held.
+                artwork.reviewer = this.props.user.public.display_name;
+                if (!artwork.held) {
+                    artwork.held = new Date().getTime();
+                }
+
+                artwork.status   = newStatus;
+                heldRef.transaction((data)=>{
+                    return artwork; // add artwork to declined branch
+                },(err,wasSuccessful,snapshot)=>{
+                    subRef.transaction((data)=>{
+                        return null; // delete artwork from submissions branch
+                    },(err,wasSuccessful,snapshot)=>{
+                        console.log("Artwork: ",artwork.artwork_uid, " sent to Held");
+                    });
+                });
+
+                //splice out this artwork from the pending screen
+                this.removeFromReviewItems(artwork.artwork_uid);
+
+                message = "This artwork has been held. The corresponding artwork in the artist portal has been unlocked, so the artist can make changes";
+            }
+            this.props.sendToSnackbar(message);
+        } else if (newStatus == "Pending" && oldStatus == "Pending"){ // update info
             if (artwork.status != status || artwork.memo != memo) {
                 console.log("updating db...",artwork.artwork_uid);
                 let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
-                firebase.database().ref(path)
                 subRef.transaction((data)=>{
                     data.new_message = true;
                     data.status = status;
@@ -346,7 +395,7 @@ export default class ReviewManager extends React.Component {
                 });
             }
         } else {
-            console.log(">> NOT HIT CASE!!");
+            this.props.sendToSnackbar("Illegal operation. If you think this is in error, please log the operation you were attempting");
         }
     }
 
@@ -607,18 +656,16 @@ export default class ReviewManager extends React.Component {
     }
 
     /**
-     * Retrieves the subset of items in the `submissions` branch
-     * which have status == Held. The first 15 items are shown only. There
-     * is no pagination to this tab.
+     * Retrieves first page of items from the held branch
      */
     fetchHeld = () => {
-        let submitRef = firebase.database().ref(`submissions`);
-        submitRef.orderByChild("status").equalTo("Held").limitToFirst(15).on("value", (snapshot)=>{
+        let heldRef = firebase.database().ref(`held`);
+        heldRef.orderByChild("held").limitToFirst(pg_size).on("value", (snapshot)=>{
             snapshot.forEach( (childSnap)=>{
                 if (childSnap.key != 0) { //ignore the placeholder in DB
                     let submit = childSnap.val();
                     function isSame(elm) {
-                        return elm.artwork_uid == submit.artwork_uid
+                        return elm.artwork_uid == submit.artwork_uid;
                     }
                     let index = this.state.heldItems.findIndex(isSame);
                     let updated;
