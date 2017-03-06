@@ -56,7 +56,7 @@ export default class SearchAccordion extends React.Component {
                         <input
                         type="text"
                         id="search-general"
-                        onKeyPress={this.getGeneralAndChange}
+                        onChange={this.getGeneralAndChange}
                         ref="general"
                         placeholder="Search by Artist, Title, etc..."
                         autoCapitalize="off"
@@ -73,9 +73,9 @@ export default class SearchAccordion extends React.Component {
                         className={this.props.accordion.artist ? "accordion-content open" : "accordion-content"}>
                         <input
                         type="text"
-                        id="search-artist-input"
-                        onKeyPress={this.getGeneralAndChange}
-                        ref="search-artist"
+                        id="search-artist"
+                        onChange={this.getArtistAndChange}
+                        ref="artist"
                         placeholder="Search by Artist Name..."
                         autoCapitalize="off"
                         autoComplete="off"
@@ -325,9 +325,14 @@ export default class SearchAccordion extends React.Component {
         this.props.generalChange(general, e);
     }
 
-    getTitleAndChange = () => {
+    getArtistAndChange = (e) => {
+        let artist = this.refs.artist.value;
+        this.props.artistChange(artist, e);
+    }
+
+    getTitleAndChange = (e) => {
         let title = this.refs.title.value;
-        this.props.titleChange(title);
+        this.props.titleChange(title, e);
     }
 
     setTime = (e) => {
