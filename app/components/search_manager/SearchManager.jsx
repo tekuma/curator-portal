@@ -1341,6 +1341,7 @@ export default class SearchManager extends React.Component {
 
         let message = "Performing your search. Results will arrive shortly...";
         this.props.sendToSnackbar(message);
+        console.log("Sent to snackbar");
     }
 
     /**

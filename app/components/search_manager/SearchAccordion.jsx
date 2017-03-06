@@ -47,7 +47,8 @@ export default class SearchAccordion extends React.Component {
                     className="search-accordion">
                     <div
                         className={this.props.accordion.general ? "accordion-item open" : "accordion-item"}
-                        onClick={this.props.toggleAccordion.bind({},"general")}>
+                        onClick={this.props.toggleAccordion.bind({},"general")}
+                        id="general-accordion-drawer">
                         <h2 className="accordion-item-heading search">General</h2>
                     </div>
                     <div
@@ -56,6 +57,7 @@ export default class SearchAccordion extends React.Component {
                         <input
                         type="text"
                         id="search-general"
+                        onKeyPress={this.getGeneralAndChange}
                         onChange={this.getGeneralAndChange}
                         ref="general"
                         placeholder="Search by Artist, Title, etc..."
@@ -65,7 +67,8 @@ export default class SearchAccordion extends React.Component {
                     </div>
                     <div
                         className={this.props.accordion.artist ? "accordion-item open" : "accordion-item"}
-                        onClick={this.props.toggleAccordion.bind({},"artist")}>
+                        onClick={this.props.toggleAccordion.bind({},"artist")}
+                        id="artist-accordion-drawer">
                         <h2 className="accordion-item-heading search">Artist</h2>
                     </div>
                     <div
@@ -74,6 +77,7 @@ export default class SearchAccordion extends React.Component {
                         <input
                         type="text"
                         id="search-artist"
+                        onKeyPress={this.getArtistAndChange}
                         onChange={this.getArtistAndChange}
                         ref="artist"
                         placeholder="Search by Artist Name..."
@@ -83,7 +87,8 @@ export default class SearchAccordion extends React.Component {
                     </div>
                     <div
                         className={this.props.accordion.tag ? "accordion-item open" : "accordion-item"}
-                        onClick={this.props.toggleAccordion.bind({},"tag")}>
+                        onClick={this.props.toggleAccordion.bind({},"tag")}
+                        id="tag-accordion-drawer">
                         <h2 className="accordion-item-heading search">Tag</h2>
                     </div>
                     <div
@@ -98,7 +103,8 @@ export default class SearchAccordion extends React.Component {
                     </div>
                     <div
                         className={this.props.accordion.title ? "accordion-item open" : "accordion-item"}
-                        onClick={this.props.toggleAccordion.bind({},"title")}>
+                        onClick={this.props.toggleAccordion.bind({},"title")}
+                        id="title-accordion-drawer">
                         <h2 className="accordion-item-heading search">Title</h2>
                     </div>
                     <div
@@ -107,6 +113,7 @@ export default class SearchAccordion extends React.Component {
                         <input
                         type="text"
                         id="search-title"
+                        onKeyPress={this.getTitleAndChange}
                         onChange={this.getTitleAndChange}
                         ref="title"
                         placeholder="Search by Artwork Title..."
@@ -116,7 +123,8 @@ export default class SearchAccordion extends React.Component {
                     </div>
                     <div
                         className={this.props.accordion.time ? "accordion-item open" : "accordion-item"}
-                        onClick={this.props.toggleAccordion.bind({},"time")}>
+                        onClick={this.props.toggleAccordion.bind({},"time")}
+                        id="time-accordion-drawer">
                         <h2 className="accordion-item-heading search">Time</h2>
                     </div>
                     <div
@@ -183,7 +191,8 @@ export default class SearchAccordion extends React.Component {
                     </div>
                     <div
                         className={this.props.accordion.color ? "accordion-item open no-border-bottom" : "accordion-item no-border-bottom"}
-                        onClick={this.props.toggleAccordion.bind({},"color")}>
+                        onClick={this.props.toggleAccordion.bind({},"color")}
+                        id="color-accordion-drawer">
                         <h2 className="accordion-item-heading search">Color</h2>
                     </div>
                     <div
