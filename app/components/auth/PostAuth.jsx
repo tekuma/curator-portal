@@ -408,7 +408,6 @@ export default class PostAuth extends React.Component {
             let callbacks = projectIDs.length;
             const leng = projectIDs.length;
 
-
             for (var i = 0; i < leng ; i++) {
                 let projID = projectIDs[i];
 
@@ -416,9 +415,9 @@ export default class PostAuth extends React.Component {
                 let path   = `projects/${projID}`;
                 //NOTE: Use once, not on. On is called in the parent method.
                 firebase.database().ref(path).once('value', (snapshot) => {
-                    let data = snapshot.val()
+                    let data = snapshot.val();
                     let thisProj = [data.name,data.id];
-                    projects.push(thisProj)
+                    projects.push(thisProj);
                     callbacks--;
                     if (callbacks === 0) {
                         if (!this.state.currentProject) {
@@ -513,33 +512,55 @@ export default class PostAuth extends React.Component {
      * - Deletes the current project from the /projects branch of firebase DB
      * - Deletes pointer to it from the user's branch
      * - Updates current project -> none
-     * -
+     * - deletes current project from /projects for each collaborator
+     * @param  {2D Array} collaborators -> [[uid,display_name], ....]
      */
     deleteCurrentProject = (collaborators) => {
-        let projectID = this.state.currentProject[1];
-        let userUid   = firebase.auth().currentUser.uid;
-        let userPath  = `users/${userUid}/projects`;
+        const projectID = this.state.currentProject[1];
+        let projPath  = `projects/${projectID}`;
 
-        firebase.database().ref(userPath).transaction((data)=>{
-            let index = data.indexOf(projectID);
-            data.splice(index,1);
-            return data;
-        }, ()=>{
-            let projectRef = `projects/${projectID}`;
-            firebase.database().ref(projectRef).remove(); //NOTE: not atomic
+        // Delete the project from projects branch
+        firebase.database().ref(projPath).transaction((data)=>{
+            return null;
+        }).then(()=>{  // delete from the current users data
+            let userUid   = firebase.auth().currentUser.uid;
+            let userPath  = `users/${userUid}/projects`;
+            firebase.database().ref(userPath).transaction((data)=>{
+                if (data){
+                    let index = data.indexOf(projectID);
+                    if (index != -1) { // is actually there
+                        data.splice(index,1);
+                    }
+                }
+                return data;
+            }).then(()=>{ // delete from each collaborators data
+                for (let user of collaborators) {
+                    let uid = user[0];
+                    let path = `users/${uid}/projects`;
+                    firebase.database().ref(path).transaction((data)=>{
+                        if (data) {
+                            let index = data.indexOf(projectID);
+                            if (index != -1) { // is actually there
+                                data.splice(index,1);
+                            }
+                        }
+                        return data;
+                    });
+                }
 
-            // Update the current project to an existing one
-            if (this.state.projects.length > 1) {
-                let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
-                this.changeProject(project);
-            } else {
-                this.changeProject(null);
-            }
+                // Update the current project to an existing one
+                if (this.state.projects.length > 1) {
+                    let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
+                    this.changeProject(project);
+                } else {
+                    this.changeProject(null);
+                }
 
-            //Notify the user
-            let message = "Project successfully deleted";
-            console.log(message);
-            this.sendToSnackbar(message);
+                //Notify the user
+                let message = "Project successfully deleted";
+                console.log(message);
+                this.sendToSnackbar(message);
+            })
         });
     }
 
@@ -550,15 +571,16 @@ export default class PostAuth extends React.Component {
      */
     fetchProjectDetails = () => {
         if (this.state.currentProject) { // not null
-
             let projectID = this.state.currentProject[1];
             let path = `projects/${projectID}`;
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-                for (var key in node.artworks) { // obj -> array
-                    if (node.artworks.hasOwnProperty(key)) {
-                        art.push(node.artworks[key]);
+                if (node.artworks){
+                    for (var key in node.artworks) { // obj -> array
+                        if (node.artworks.hasOwnProperty(key)) {
+                            art.push(node.artworks[key]);
+                        }
                     }
                 }
                 this.setState({projectArtworks:art});
@@ -620,6 +642,7 @@ export default class PostAuth extends React.Component {
         });
     }
 
+
     /**
      * TODO
      * @param {[type]} artwork [description]
@@ -675,11 +698,9 @@ export default class PostAuth extends React.Component {
     }
 
     sendToSnackbar = (message) => {
-
         this.setState({
             currentError: message
         });
-
         setTimeout(() => {
             this.setState({
                 currentError: ""

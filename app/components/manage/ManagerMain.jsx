@@ -184,10 +184,12 @@ export default class ManagerMain extends React.Component {
 
     /**
      * [askToDeleteProject description]
+     * @param {2D Array} collaborators [[uid,display_name], ....]
      * @param  {HTML Element} e [description]
      */
     askToDeleteProject = (collaborators, e) => {
         e.stopPropagation();
+        console.log(collaborators);
         confirm('Are you sure you want to delete this project?').then(
             () => {
                 // Proceed Callback
