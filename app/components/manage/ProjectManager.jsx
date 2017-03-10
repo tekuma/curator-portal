@@ -254,8 +254,8 @@ export default class ProjectManager extends React.Component {
                             <div className="function-seperator"></div>
                             <div
                                 className="manager-function-box delete center"
-                                onClick={this.props.onDelete.bind({}, collaborators)}
-                                onTouchTap={this.props.onDelete.bind({}, collaborators)}>
+                                onClick={this.props.askToDeleteProject.bind({}, collaborators)}
+                                onTouchTap={this.props.askToDeleteProject.bind({}, collaborators)}>
                                 <p>Delete Project</p>
                             </div>
                         </div>
@@ -296,7 +296,7 @@ export default class ProjectManager extends React.Component {
      */
     deleteCollaborator = (user) => {
         confirm('Are you sure you want to remove this collaborator from the project?').then(
-            () => {
+            ()=>{
                 // Proceed Callback
                 let project_id = this.props.currentProject[1];
                 let projPath = `projects/${project_id}/collaborators`;
@@ -329,6 +329,10 @@ export default class ProjectManager extends React.Component {
         );
     }
 
+    /**
+     * [collaboratorChange description]
+     * @param  {[type]} data [description]
+     */
     collaboratorChange = (data) => {
         this.setState({collabBuffer:data.user});
     }
@@ -368,6 +372,9 @@ export default class ProjectManager extends React.Component {
         }
     }
 
+    /**
+     * TODO
+     */
     handleCSV = () => {
         console.log("Requested CSV for ->", this.props.artworkBuffer);
         let message = "CSV file is being generated. Download will begin shortly...";
@@ -375,12 +382,19 @@ export default class ProjectManager extends React.Component {
         //do ajax call here
     }
 
+    /**
+     * TODO
+     */
     handleRaw = () => {
         console.log("Requested Raw Files->",this.props.artworkBuffer);
         let message = "Zipped raw files are being generated. Download will begin shortly...";
         this.props.sendToSnackbar(message);
 
     }
+
+    /**
+     * TODO
+     */
     handlePrintfile = () => {
         console.log("Requested Printfiles->",this.props.artworkBuffer);
         let message = "Print files are being generated. Download will begin shortly...";
@@ -400,7 +414,7 @@ export default class ProjectManager extends React.Component {
     }
 
     /**
-     * [toggleAllAccordion description]
+     * [toggleAllAccordion description]TODO
      * @return {[type]} [description]
      */
     toggleAllAccordion = () => {

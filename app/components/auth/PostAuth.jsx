@@ -76,7 +76,6 @@ export default class PostAuth extends React.Component {
 // =========== Flow Control =============
 
     goToSearch = () => {
-
         return(
             <div>
                 <HiddenNav
@@ -325,8 +324,12 @@ export default class PostAuth extends React.Component {
         });
     };
 
+    /**
+     * Gathers all data on currently logged in user, and stores it at
+     * this.state.user
+     */
     fetchUserData = () => {
-        const uid = firebase.auth().currentUser.uid;
+        const uid  = firebase.auth().currentUser.uid;
         const path = `users/${uid}`;
         firebase.database().ref(path).on("value", (snapshot)=>{
             this.setState({
@@ -462,6 +465,7 @@ export default class PostAuth extends React.Component {
             this.changeProject(theProject);
 
             let message = "New project created";
+            console.log(message);
             this.sendToSnackbar(message);
         });
     }
@@ -472,12 +476,11 @@ export default class PostAuth extends React.Component {
      */
     changeProject = (newName) => {
         if (newName === null) {
-            console.log("Received Null");
             this.setState({
-                currentProject:"",
-                projectArtworks  :[],
-                projects: [],
-                projectDetails: {}
+                currentProject  :"",
+                projectArtworks :[],
+                projects        :[],
+                projectDetails  :{}
             });
         } else {
             let theProj = [newName.label,newName.id];
@@ -507,30 +510,35 @@ export default class PostAuth extends React.Component {
     }
 
     /**
-     * Deletes the current project from the firebaseDB, removes it from
-     * the user's projects, and updates the current project to none.
+     * - Deletes the current project from the /projects branch of firebase DB
+     * - Deletes pointer to it from the user's branch
+     * - Updates current project -> none
+     * -
      */
-    deleteCurrentProject = (collaborators,e) => {
+    deleteCurrentProject = (collaborators) => {
         let projectID = this.state.currentProject[1];
         let userUid   = firebase.auth().currentUser.uid;
         let userPath  = `users/${userUid}/projects`;
+
         firebase.database().ref(userPath).transaction((data)=>{
             let index = data.indexOf(projectID);
             data.splice(index,1);
-
             return data;
         }, ()=>{
             let projectRef = `projects/${projectID}`;
-            firebase.database().ref(projectRef).remove();
+            firebase.database().ref(projectRef).remove(); //NOTE: not atomic
 
-            if(this.state.projects.length > 1) {
+            // Update the current project to an existing one
+            if (this.state.projects.length > 1) {
                 let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
                 this.changeProject(project);
             } else {
                 this.changeProject(null);
             }
 
+            //Notify the user
             let message = "Project successfully deleted";
+            console.log(message);
             this.sendToSnackbar(message);
         });
     }
