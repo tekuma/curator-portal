@@ -5,9 +5,9 @@ import React from 'react';
  * The icon is visually located on the far left of the CurationHeader, and appears as 3 parrellel
  * horizontal line segments.
  */
-export default ({navIsOpen, toggleNav}) => {
+export default ({navIsOpen, toggleNav, detailBoxIsOpen}) => {
     return (
-        <div>
+        <div className={detailBoxIsOpen ? "hide-hamburger" : null}>
             <input type="checkbox" id="nav-trigger" className="nav-trigger" checked={navIsOpen} />
         	<label className="nav-trigger-icon" htmlFor="nav-trigger">
         		<button

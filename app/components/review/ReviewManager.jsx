@@ -87,7 +87,7 @@ export default class ReviewManager extends React.Component {
         console.log(catagory);
 
         const reviewWrapperStyle = {
-            height: window.innerHeight - 140 - 70, // 140px = Header and Review Tabs , 70px = Pagination Arrows
+            height: window.innerHeight - 140 - 78, // 140px = Header and Review Tabs ,91 = Pagination Arrows
             width : window.innerWidth - 40
         };
         const tableWidth = {

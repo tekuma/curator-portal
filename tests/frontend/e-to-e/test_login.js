@@ -29,16 +29,16 @@ module.exports = {
         browser
             .url('https://127.0.0.1')
             .waitForElementVisible('body', 2000)
-            .assert.attributeContains('#register-email', 'type', 'email')
-            .assert.attributeContains('#register-password', 'type', 'password')
+            .assert.attributeContains('#login-email', 'type', 'email')
+            .assert.attributeContains('#login-password', 'type', 'password')
             .end()
     },
 
     'Try to log-in using the TravisCI curator-portal account': function (browser) {
         browser
             .url('https://127.0.0.1')
-            .waitForElementVisible('input#register-email', 2000)
-            .waitForElementVisible('input#register-password', 1000)
+            .waitForElementVisible('input#login-email', 2000)
+            .waitForElementVisible('input#login-password', 1000)
             .setValue('input[type=email]', 'travis-ci@tekuma.io')
             .setValue('input[type=password]', ['BczEZW{p8fgyhYs,_-2)%o5Jd/Vt6bqUm9', browser.Keys.ENTER])
             .waitForElementVisible('.header-icon.curator.search', 3000)

@@ -10,6 +10,7 @@ import ProjectSelector              from './ProjectSelector';
 import ManageProjectName            from './ManageProjectName';
 import ManageToggler                from './ManageToggler';
 import Select                       from 'react-select';
+import confirm    from '../confirm_dialog/ConfirmFunction';
 
 /**
  * TODO
@@ -129,6 +130,7 @@ export default class ProjectManager extends React.Component {
                         <ManageProjectName
                             renameCurrentProject={this.props.renameCurrentProject}
                             currentProject={this.props.currentProject}
+                            sendToSnackbar={this.props.sendToSnackbar}
                             />
                     }
                     <div
@@ -152,7 +154,7 @@ export default class ProjectManager extends React.Component {
                             </div>
                         </div>
                         <div
-                            className="manager-function"
+                            className="manager-function download"
                             style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Download
@@ -174,7 +176,7 @@ export default class ProjectManager extends React.Component {
                             </div>
                         </div>
                         <div
-                            className="manager-function"
+                            className="manager-function collaborate"
                             style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Collaborators
@@ -191,11 +193,10 @@ export default class ProjectManager extends React.Component {
 
                                     </article>
                                     {collaborators.map( user => {
-                                        let self2 = user[0] === firebase.auth().currentUser.uid;
                                         return(
                                             <article
                                                 key={user[0]}
-                                                className={self2 ? "collaborator-thumb self" : "collaborator-thumb"}>
+                                                className={user[0] === firebase.auth().currentUser.uid ? "collaborator-thumb self" : "collaborator-thumb"}>
                                                 <p className="collaborator-name">
                                                     {user[1]}
                                                 </p>
@@ -235,13 +236,13 @@ export default class ProjectManager extends React.Component {
                             </div>
                         </div>
                         <div
-                            className="manager-function"
+                            className="manager-function notes"
                             style={this.props.projects.length == 0 ? hide : show}>
                             <h3 className="manager-heading">
                                 Notes
                             </h3>
                             <div
-                                className="manager-function-box center"
+                                className="manager-function-box manage-notes center"
                                 onClick={this.props.toggleManageNotes}
                                 onTouchTap={this.props.toggleManageNotes}>
                             <p>Manage Notes</p>
@@ -253,8 +254,8 @@ export default class ProjectManager extends React.Component {
                             <div className="function-seperator"></div>
                             <div
                                 className="manager-function-box delete center"
-                                onClick={this.props.onDelete}
-                                onTouchTap={this.props.onDelete}>
+                                onClick={this.props.onDelete.bind({}, collaborators)}
+                                onTouchTap={this.props.onDelete.bind({}, collaborators)}>
                                 <p>Delete Project</p>
                             </div>
                         </div>
@@ -294,25 +295,38 @@ export default class ProjectManager extends React.Component {
      * @param  {Array} user [uid,name]
      */
     deleteCollaborator = (user) => {
-        let project_id = this.props.currentProject[1];
-        let projPath = `projects/${project_id}/collaborators`;
-        firebase.database().ref(projPath).transaction((data)=>{
-            function isNotUser(value){
+        confirm('Are you sure you want to remove this collaborator from the project?').then(
+            () => {
+                // Proceed Callback
+                let project_id = this.props.currentProject[1];
+                let projPath = `projects/${project_id}/collaborators`;
+                firebase.database().ref(projPath).transaction((data)=>{
+                    function isNotUser(value){
 
-                return value[0] != user[0]
-            }
-            let newdata = data.filter(isNotUser);
-            return newdata;
-        });
+                        return value[0] != user[0]
+                    }
+                    let newdata = data.filter(isNotUser);
+                    return newdata;
+                });
 
-        let userPath = `users/${user[0]}/projects`;
-        firebase.database().ref(userPath).transaction((data)=>{
-            function isNotProject(value){
-                return value != project_id
+                let userPath = `users/${user[0]}/projects`;
+                firebase.database().ref(userPath).transaction((data)=>{
+                    function isNotProject(value){
+                        return value != project_id
+                    }
+                    let newData = data.filter(isNotProject);
+                    return newData;
+                });
+
+                this.props.changeProject(null);
+
+                let message = "Collaborator successfully removed";
+                this.sendToSnackbar(message);
+            }, () => {
+                // Cancel Callback
+                return;
             }
-            let newData = data.filter(isNotProject);
-            return newData;
-        });
+        );
     }
 
     collaboratorChange = (data) => {
@@ -345,20 +359,32 @@ export default class ProjectManager extends React.Component {
                 data.push(project_id);
                 return data;
             });
+        } else if (this.state.collabBuffer == "") {
+            let message = "Please select a collaborator to add to this project.";
+            this.props.sendToSnackbar(message);
+        } else if (this.state.collabBuffer[1] == this.props.user.public.display_name) {
+            let message = "You are already a collaborator in this project.";
+            this.props.sendToSnackbar(message);
         }
     }
 
     handleCSV = () => {
         console.log("Requested CSV for ->", this.props.artworkBuffer);
+        let message = "CSV file is being generated. Download will begin shortly...";
+        this.props.sendToSnackbar(message);
         //do ajax call here
     }
 
     handleRaw = () => {
         console.log("Requested Raw Files->",this.props.artworkBuffer);
+        let message = "Zipped raw files are being generated. Download will begin shortly...";
+        this.props.sendToSnackbar(message);
 
     }
     handlePrintfile = () => {
         console.log("Requested Printfiles->",this.props.artworkBuffer);
+        let message = "Print files are being generated. Download will begin shortly...";
+        this.props.sendToSnackbar(message);
     }
 
     /**

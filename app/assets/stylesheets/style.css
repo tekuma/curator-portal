@@ -202,6 +202,10 @@ button {
 
 /* Nav-Trigger/Hamburger Style */
 
+.hide-hamburger {
+	display: none;
+}
+
 .nav-trigger {
 	position: absolute;
 	display: none;
@@ -2088,13 +2092,12 @@ textarea.bio {
 	border-color: #ec167c;
 }
 
-.edit-button,
-.signup-button,
 .login-button {
 	position: relative;
 	width: 150px;
 	height: 43.2px;
 	margin: 0 auto;
+	margin-top: 10px;
 	background: #000000;
 	border-radius: 0px;
 	cursor: pointer;
@@ -2106,29 +2109,6 @@ textarea.bio {
 	-ms-transition: all 0.3s;
 }
 
-.signup-button {
-	margin-top: 10px;
-}
-
-.login-button {
-	margin: 15px 36px;
-	text-align: center;
-	background: #ffffff;
-}
-
-.signup-button.left,
-login-button.left {
-	margin: 0px 0 5px;
-}
-
-.signup-button.center{
-	margin: 15px auto;
-	margin-bottom: 10px;
-}
-
-
-.edit-button:hover,
-.signup-button:hover,
 .login-button:hover {
 /*	box-shadow: 0 7px 14px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22); */
 	transition: all 0.3s;
@@ -2147,8 +2127,6 @@ login-button.left {
 	/* IE6-9 */
 }
 
-.edit-button h3,
-.signup-button h3,
 .login-button h3 {
 	line-height: 1em;
 	text-align: center;
@@ -2157,22 +2135,10 @@ login-button.left {
 	font-size: 1em;
 	color: #ffffff;
 	margin: 0;
-}
-
-.edit-button h3,
-.signup-button h3 {
 	transition: all 0.3s;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
-}
-
-.login-button h3 {
-	color: #000000;
-}
-
-.login-button:hover h3 {
-	color: #ffffff;
 }
 
 .solo-links {
@@ -2518,19 +2484,19 @@ login-button.left {
 	font-size: 1.5em;
 }
 
-.registration-error {
+.snackbar-error {
 	text-align: center !important;
 	background: #000000;
 }
 
-.registration-error span {
+.snackbar-error span {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	font-weight: 500;
 	color: rgb(236, 22, 124);
 }
 
-.registration-error > div {
+.snackbar-error > div {
 	margin: 20px !important;
 	height: auto !important;
 	line-height: 1.5em !important;
@@ -2559,11 +2525,6 @@ login-button.left {
 	font-size: 1em;
 	text-align: center;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.registration-error.page-2 h2,
-.registration-error.page-3 h2 {
-	font-size: 0.7em;
 }
 
 .popover-title {
@@ -2869,7 +2830,7 @@ login-button.left {
 }
 
 .confirm-yes,
-.edit-artwork-yes,
+.manage-notes-yes,
 .edit-album-yes,
 .delete-account-yes {
 	width: 50%;
@@ -2894,8 +2855,12 @@ login-button.left {
     -ms-transition: all 0.3s;
 }
 
+.manage-notes-yes.unsaved {
+	background: #e73827;
+}
+
 .confirm-yes h2,
-.edit-artwork-yes h2,
+.manage-notes-yes h2,
 .edit-album-yes h2,
 .delete-account-yes h2 {
 	color: #ffffff;
@@ -2905,7 +2870,7 @@ login-button.left {
 }
 
 .confirm-no,
-.edit-artwork-no,
+.manage-notes-no,
 .edit-album-no,
 .delete-account-no {
 	width: 50%;
@@ -2931,7 +2896,7 @@ login-button.left {
 }
 
 .confirm-no h2,
-.edit-artwork-no h2,
+.manage-notes-no h2,
 .edit-album-no h2,
 .confirm-edit-profile h2,
 .delete-account-no h2 {
@@ -2943,8 +2908,8 @@ login-button.left {
 
 .confirm-no:hover,
 .confirm-yes:hover,
-.edit-artwork-yes:hover,
-.edit-artwork-no:hover,
+.manage-notes-yes:hover,
+.manage-notes-no:hover,
 .edit-album-yes:hover,
 .edit-album-no:hover,
 .upload-dialog-button:hover,
@@ -4070,7 +4035,8 @@ label.age-confirm-label {
 	width: 200px;
 }
 
-#search-title, #search-general {
+#search-title, #search-general,
+#search-artist-input {
 	border: 2px solid #dddddd;
 	border-radius: 0px;
 }
@@ -5047,9 +5013,25 @@ animation
 /* Artwork Detail Box */
 
 .artwork-detail-dialog {
-	position: relative;
-	height: 100%;
+	position: absolute;
+	top: -100vh;
+	width: 100vw;
 	background: #aaaaaa;
+	z-index: 10;
+	box-shadow: 13px 10px 13px rgba(0,0,0,0.19),
+	0px 10px 10px rgba(0,0,0,0.19);
+	transition: all 0.4s ease;
+	-webkit-transition: all 0.4s ease;
+	-moz-transition: all 0.4s ease;
+	-ms-transition: all 0.4s ease;
+}
+
+.artwork-detail-dialog.open {
+	top: 60px;
+	transition: all 0.4s;
+	-webkit-transition: all 0.4s;
+	-moz-transition: all 0.4s;
+	-ms-transition: all 0.4s;
 }
 
 .artwork-edit-dialog {
@@ -5059,36 +5041,12 @@ animation
 }
 
 .artwork-preview {
-	width: 456px;
+	width: 65%;
 	height: 100%;
 	display: inline-block;
 	overflow: scroll;
-	padding: 30px;
-	background: #ffffff;
+	background: #111111;
 	vertical-align: top;
-}
-
-.artwork-image-wrapper {
-	display: flex;
-	border: 15px solid #000000;
-	box-shadow: 13px 10px 13px rgba(0,0,0,0.19),
-	0px 10px 10px rgba(0,0,0,0.19);
-	border-style: inset;
-	padding: 8%;
-	width: 396px;
-	height: 100%;
-	-webkit-align-items: center;
-	-ms-align-items: center;
-	-moz-align-items: center;
-	align-items: center;
-	-webkit-justify-content: center;
-	-ms-justify-content: center;
-	-moz-justify-content: center;
-	justify-content: center;
-	transition: all 0.3s;
-	-webkit-transition: all 0.3s;
-	-moz-transition: all 0.3s;
-	-ms-transition: all 0.3s;
 }
 
 .artwork-image {
@@ -5102,9 +5060,9 @@ animation
 .artwork-info-wrapper {
 	display: inline-block;
 	overflow: scroll;
-	width: 392px;
+	width: 35%;
 	height: 100%;
-	background: #aaaaaa;
+	background: #dddddc;
 }
 
 .artwork-details {
@@ -5774,6 +5732,10 @@ animation
 	-moz-justify-content: center;
 }
 
+.review-artwork-dialog {
+	background: #111111;
+}
+
 .review-description-dialog {
 	width: 500px;
 }
@@ -5784,7 +5746,7 @@ animation
 	display: inline-block;
 	overflow: scroll;
 	padding: 30px;
-	background: #ffffff;
+	background: #111111;
 }
 
 /*.preview-logo {
@@ -5815,22 +5777,6 @@ animation
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
-}
-
-.artwork-image {
-	background-position: center center;
-	background-size: contain;
-    background-repeat: no-repeat;
-	width: 100%;
-	height: 100%;
-}
-
-.artwork-info-wrapper {
-	display: inline-block;
-	overflow: scroll;
-	width: 392px;
-	height: 100%;
-	background: #dddddc;
 }
 
 .review-descrition-wrapper {
@@ -5987,34 +5933,6 @@ animation
 		width: 200px;
 	}
 
-	.artwork-preview-wrapper {
-		width: 200px;
-		height: 200px;
-	}
-
-	.artwork-preview {
-		display: none;
-	}
-
-	.artwork-info-wrapper {
-		width: 592px;
-	}
-
-	.artwork-title,
-	.artwork-artist,
-	.artwork-year,
-	.artwork-album {
-		text-align: center;
-	}
-
-	.artwork-album-heading,
-	.artwork-tags-heading,
-	.artwork-description-heading,
-	.artwork-colors-heading,
-	.artwork-review-heading {
-		text-align: center;
-	}
-
 	.manage-notes-group-notes-wrapper {
 		width: 296px;
 	}
@@ -6074,6 +5992,12 @@ animation
 		display: none;
 	}
 
+}
+
+@media (max-width: 685px) {
+	.pagination-arrow {
+		margin: 0 20px;
+	}
 }
 
 @media (max-height: 670px) {
@@ -6145,11 +6069,6 @@ animation
 		width: 150px;
 	}
 
-	.artwork-preview-wrapper {
-		width: 150px;
-		height: 200px;
-	}
-
 	.edit-social-icon img {
     	height: 30px;
 	}
@@ -6158,10 +6077,6 @@ animation
 		padding: 0.5em 0.5em;
 		height: 2.2em;
 		width: 100px;
-	}
-
-	.artwork-info-wrapper {
-		width: 542px;
 	}
 
 	.manage-notes-group-notes-wrapper,
@@ -6288,6 +6203,29 @@ animation
 	.solo-links {
 		text-align: center;
 	}
+
+	.artwork-preview {
+		display: none;
+	}
+
+	.artwork-info-wrapper {
+		width: 100%;
+	}
+
+	.artwork-title,
+	.artwork-artist,
+	.artwork-year,
+	.artwork-album {
+		text-align: center;
+	}
+
+	.artwork-album-heading,
+	.artwork-tags-heading,
+	.artwork-description-heading,
+	.artwork-colors-heading,
+	.artwork-review-heading {
+		text-align: center;
+	}
 }
 
 @media (max-width: 575px) {
@@ -6298,10 +6236,6 @@ animation
 
 	.edit-artwork-body {
 		width: 368px !important;
-	}
-
-	.artwork-info-wrapper {
-		width: 368px;
 	}
 
 	.artwork-preview-colors {
@@ -6468,10 +6402,6 @@ animation
 		width: 310px !important;
 		padding: 0 !important;
 	}
-
-	.artwork-info-wrapper {
-		width: 310px;
-	}
 }
 
 @media (max-width: 350px) {
@@ -6496,15 +6426,6 @@ animation
 }
 
 @media (max-width: 338px) {
-
-	.pagination-arrow {
-		margin: 10px;
-		padding: 10px;
-	}
-
-	.pagination-arrow img {
-		width: 30px;
-	}
 
 	.review-sections h2 {
 		font-size: 0.9em;

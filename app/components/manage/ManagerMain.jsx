@@ -6,17 +6,14 @@ import ProjectArtworkManager from '../artwork_manager/ProjectArtworkManager';
 import ProjectManager from './ProjectManager';
 import CurationHeader from '../headers/CurationHeader';
 import confirm    from '../confirm_dialog/ConfirmFunction';
-import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 import ManageNotesDialog   from './ManageNotesDialog';
 
 
 export default class ManagerMain extends React.Component {
     state = {
         manageNotesIsOpen:false, // whether popup is open or not
-        detailBoxIsOpen  :false, // whether artwork detail box is open or not
         projectNotes     :[],  // gathered notes
-        artworkInfo      :{uid: null, found: false},  // Information display by more info pop-up
-        users            :[],  // list of [name,uid] pairs to populate collaborators
+        users            :[]  // list of [name,uid] pairs to populate collaborators
     }
 
     constructor(props) {
@@ -40,7 +37,7 @@ export default class ManagerMain extends React.Component {
                       projects={this.props.projects}
                       addNewProject={this.props.addNewProject}
                       detailArtwork={this.detailArtwork}
-                      toggleDetailBox={this.toggleDetailBox}
+                      toggleDetailBox={this.props.toggleDetailBox}
                       deleteArtworksFromProject={this.props.deleteArtworksFromProject}
                       addArtworksToProject={this.props.addArtworksToProject}
                       sendToSnackbar={this.props.sendToSnackbar}
@@ -65,12 +62,8 @@ export default class ManagerMain extends React.Component {
                       doQuery={this.doQuery}
                       projects={this.props.projects}
                       onDelete={this.deleteProject}
+                      sendToSnackbar={this.props.sendToSnackbar}
                    />
-                   <ArtworkDetailBoxDialog
-                       toggleDetailBox={this.toggleDetailBox}
-                       detailBoxIsOpen={this.state.detailBoxIsOpen}
-                       artworkInfo={this.state.artworkInfo}
-                    />
                 <ManageNotesDialog
                     addNote={this.addNote}
                     removeNote={this.removeNote}
@@ -92,6 +85,12 @@ export default class ManagerMain extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
+        // When a user is initially created, it has no this.props.user
+        // We call this.createNewUser() in App.jsx
+        // When user is created in database, fetch new list of users
+        if (nextProps.user != this.props.user) {
+            this.fetchAllUsers();
+        }
     }
 
     componentWillUnmount() {
@@ -106,7 +105,9 @@ export default class ManagerMain extends React.Component {
      */
     addNote = (notes) => {
         let publicNote = notes.collab;
+        console.log(publicNote);
         let privateNote = notes.personal;
+        console.log(privateNote);
         let project_id = this.props.currentProject[1];
         let uid = firebase.auth().currentUser.uid;
 
@@ -115,6 +116,7 @@ export default class ManagerMain extends React.Component {
             curator: this.props.user.public.display_name,
             uid:uid
         }
+
         console.log(full_note);
         let path = `projects/${project_id}/notes`;
         firebase.database().ref(path).transaction( (data)=>{
@@ -124,8 +126,16 @@ export default class ManagerMain extends React.Component {
             } else if (!data[uid]) {
                 data[uid] = {}
             }
-            data[uid]["public"] = full_note;
-            data[uid]["private"] = privateNote;
+            if (full_note.note != "") {
+                data[uid]["public"] = full_note;
+                data[uid]["private"] = privateNote;
+            } else {
+                if(data[uid]["public"] != "") {
+                    data[uid]["public"] = null;
+                }
+                data[uid]["private"] = privateNote;
+            }
+
             return data;
         });
 
@@ -148,7 +158,7 @@ export default class ManagerMain extends React.Component {
             });
             console.log(users);
             this.setState({users:users});
-        })
+        });
     }
 
     /**
@@ -175,12 +185,12 @@ export default class ManagerMain extends React.Component {
      * [deleteProject description]
      * @param  {HTML Element} e [description]
      */
-    deleteProject = (e) => {
+    deleteProject = (collaborators, e) => {
         e.stopPropagation();
         confirm('Are you sure you want to delete this project?').then(
             () => {
                 // Proceed Callback
-                this.props.deleteCurrentProject();
+                this.props.deleteCurrentProject(collaborators);
             }, () => {
                 // Cancel Callback
                 return;
@@ -204,20 +214,11 @@ export default class ManagerMain extends React.Component {
                 data: payload,
                 dataType: 'json',
                 cache: false,
-                success: this.updateInfoArtwork
+                success: this.props.updateInfoArtwork
             });
         });
     }
 
-    updateInfoArtwork = (data) => {
-        this.setState({artworkInfo: data});
-    }
-
-    toggleDetailBox = () => {
-        this.setState({
-            detailBoxIsOpen: !this.state.detailBoxIsOpen
-        })
-    }
     toggleManageNotes = () => {
         this.setState({
             manageNotesIsOpen: !this.state.manageNotesIsOpen

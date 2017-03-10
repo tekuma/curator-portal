@@ -16,6 +16,7 @@ import Roles          from '../../constants/Roles';
 import EditProfile    from '../edit_profile/EditProfile';
 import EditProfileDialog   from '../edit_profile/EditProfileDialog';
 import VerifyEmailDialog   from '../edit_profile/VerifyEmailDialog';
+import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 /**
  * Component Rendered following successful log in.
@@ -26,6 +27,7 @@ export default class PostAuth extends React.Component {
         navIsOpen    : false,
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
+        detailBoxIsOpen: false,                     // whether artwork detail box is open or not
         user           : {},
         role           : Roles.MANAGE,
         projects       : [],
@@ -34,7 +36,8 @@ export default class PostAuth extends React.Component {
         projectArtworks: [],
         projectDetails : {},
         command        : "", // used for controlling artworks
-        currentError   : ""
+        currentError   : "",
+        artworkInfo    : {uid: null, found: false} // Information display by more info pop-up
     };
 
     constructor(props) {
@@ -73,6 +76,7 @@ export default class PostAuth extends React.Component {
 // =========== Flow Control =============
 
     goToSearch = () => {
+
         return(
             <div>
                 <HiddenNav
@@ -88,8 +92,12 @@ export default class PostAuth extends React.Component {
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                     />
                     <HamburgerIcon
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <SearchMain
@@ -108,11 +116,19 @@ export default class PostAuth extends React.Component {
                         addArtworksToProject={this.addArtworksToProject}
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
-                        addArtworksToProject={this.addArtworksToProject}  />
+                        addArtworksToProject={this.addArtworksToProject}
+                        updateInfoArtwork={this.updateInfoArtwork}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}  />
+                        <ArtworkDetailBoxDialog
+                            toggleDetailBox={this.toggleDetailBox}
+                            detailBoxIsOpen={this.state.detailBoxIsOpen}
+                            artworkInfo={this.state.artworkInfo}
+                         />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -122,6 +138,7 @@ export default class PostAuth extends React.Component {
     }
 
     goToManage = () => {
+
         return(
             <div>
                 <HiddenNav
@@ -137,8 +154,11 @@ export default class PostAuth extends React.Component {
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                     />
                     <HamburgerIcon
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ManagerMain
@@ -167,11 +187,19 @@ export default class PostAuth extends React.Component {
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
-                        role={this.state.role}  />
+                        role={this.state.role}
+                        updateInfoArtwork={this.updateInfoArtwork}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}   />
+                        <ArtworkDetailBoxDialog
+                            toggleDetailBox={this.toggleDetailBox}
+                            detailBoxIsOpen={this.state.detailBoxIsOpen}
+                            artworkInfo={this.state.artworkInfo}
+                         />
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -181,6 +209,7 @@ export default class PostAuth extends React.Component {
     }
 
     goToReview = () => {
+
         return(
             <div>
                 <HiddenNav
@@ -196,8 +225,11 @@ export default class PostAuth extends React.Component {
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                     />
                     <HamburgerIcon
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <ReviewManager
@@ -209,7 +241,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -219,6 +251,7 @@ export default class PostAuth extends React.Component {
     }
 
     goToEditProfile = () => {
+
         return (
             <div>
                 <HiddenNav
@@ -234,8 +267,11 @@ export default class PostAuth extends React.Component {
                         sendToSnackbar={this.sendToSnackbar}
                         deleteArtworksFromProject={this.deleteArtworksFromProject}
                         addArtworksToProject={this.addArtworksToProject}
+                        toggleDetailBox={this.toggleDetailBox}
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                     />
                     <HamburgerIcon
+                        detailBoxIsOpen={this.state.detailBoxIsOpen}
                         toggleNav={this.toggleNav}
                         navIsOpen={this.state.navIsOpen} />
                     <div className="edit-profile-layout">
@@ -258,7 +294,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -335,6 +371,16 @@ export default class PostAuth extends React.Component {
             managerIsOpen: !this.state.managerIsOpen
         });
     };
+
+    toggleDetailBox = () => {
+        this.setState({
+            detailBoxIsOpen: !this.state.detailBoxIsOpen
+        });
+    }
+
+    updateInfoArtwork = (data) => {
+        this.setState({artworkInfo: data});
+    }
 
     /**
      * Gathers the list of projects that this user has access to, and passes
@@ -464,7 +510,7 @@ export default class PostAuth extends React.Component {
      * Deletes the current project from the firebaseDB, removes it from
      * the user's projects, and updates the current project to none.
      */
-    deleteCurrentProject = (e) => {
+    deleteCurrentProject = (collaborators,e) => {
         let projectID = this.state.currentProject[1];
         let userUid   = firebase.auth().currentUser.uid;
         let userPath  = `users/${userUid}/projects`;
@@ -487,10 +533,6 @@ export default class PostAuth extends React.Component {
             let message = "Project successfully deleted";
             this.sendToSnackbar(message);
         });
-
-
-
-
     }
 
     /**

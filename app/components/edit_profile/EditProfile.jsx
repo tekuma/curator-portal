@@ -1,9 +1,6 @@
 // Libs
 import React            from 'react';
 import firebase         from 'firebase';
-import Snackbar         from 'material-ui/Snackbar';
-import getMuiTheme      from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Files
 import confirm          from '../confirm_dialog/ConfirmFunction';

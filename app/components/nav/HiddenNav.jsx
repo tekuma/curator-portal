@@ -60,7 +60,7 @@ export default class HiddenNav extends React.Component {
         let avatarStyle = {
             backgroundImage: 'url(' + avatar + ')'
         }
-        let displayName = "Curator Name";
+        let displayName = "Untitled Curator";
         if (this.props.user.public) {
             displayName = this.props.user.public.display_name;
         }

@@ -162,7 +162,7 @@ export default class ArtworkManager extends React.Component {
                 }
                 <h3 className="empty-search-writing medium">
                     {this.props.noResults ?
-                        "No search results matching your search were found."
+                        "No artworks matched your search query."
                         :
                         "Search for Artworks"
                     }
