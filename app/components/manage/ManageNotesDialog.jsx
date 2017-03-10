@@ -47,7 +47,6 @@ export default class ManageNotesDialog extends React.Component {
         if (this.props.projectDetails.notes) {
             for (var uid in this.props.projectDetails.notes) {
                 if (this.props.projectDetails.notes.hasOwnProperty(uid) && this.props.projectDetails.notes[uid].public) {
-                    console.log(this.props.projectDetails.notes);
                     public_notes.push(this.props.projectDetails.notes[uid].public);
                 }
             }

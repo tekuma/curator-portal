@@ -153,7 +153,6 @@ export default class ManagerMain extends React.Component {
         let users = [];
         firebase.database().ref('users').once("value", (snapshot)=>{
             snapshot.forEach((childSnap)=>{
-                console.log("callback");
                 let uid  = childSnap.child("uid").val();
                 let name = childSnap.child("public/display_name").val();
                 // console.log(uid);
