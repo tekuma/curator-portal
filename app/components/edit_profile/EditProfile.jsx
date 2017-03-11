@@ -25,8 +25,7 @@ export default class EditProfile extends React.Component {
     }
 
     render() {
-        console.log(this.props.user);
-        if(this.state.editingPublic) {
+        if (this.state.editingPublic) {
             return this.goToPublicEdit();
         } else {
             return this.goToPrivateEdit();
@@ -133,18 +132,11 @@ export default class EditProfile extends React.Component {
             let thisCredential = firebase.auth.EmailAuthProvider.credential(thisUser.email, data.current_password);
             thisUser.reauthenticate(thisCredential).then( ()=>{
                 thisUser.updatePassword(data.password).then(() => {
-                    console.log("> Successfully reset password");
+                    let message = "Your password was been updated Successfully!";
+                    this.props.sendToSnackbar(message);
+                    console.log(message);
                 }).catch((error) => {
-                    // TODO HANDLE ERROR IN UI
-                    // 
-                    // this.setState({
-                    //     currentError: error.message
-                    // });
-                    // setTimeout(() => {
-                    //     this.setState({
-                    //         currentError: ""
-                    //     });
-                    // }, 4500);   // Clear error once it has been shown
+                    this.props.sendToSnackbar(error);
                 });
             });
         }

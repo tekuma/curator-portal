@@ -278,6 +278,7 @@ export default class PostAuth extends React.Component {
                             user={this.state.user}
                             toggleProfileDialog={this.toggleProfileDialog}
                             toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
+                            sendToSnackbar={this.sendToSnackbar}
                             />
                     </div>
                     <EditProfileDialog
