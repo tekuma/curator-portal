@@ -89,7 +89,7 @@ export default class EditProfile extends React.Component {
 
     /**
      * Handles syncing the collected data with the firebase DB.
-     * @param  {Object} data [has fields:bio,location,display_name,portfolio,social_media]
+     * @param  {Object} data [has possible fields:bio,location,display_name,portfolio,social_media]
      */
     editPublicUserInfo = (data) => {
         let uid = firebase.auth().currentUser.uid;
@@ -120,14 +120,35 @@ export default class EditProfile extends React.Component {
         }
     }
 
+    /**
+     * [editPrivateUserInfo description]
+     * @param  {JSON} data [possible fields: legal_name, email, email_password, password,
+     *  current_password, paypal, dob, gender_pronoun]
+     */
     editPrivateUserInfo = (data) => {
         let uid = firebase.auth().currentUser.uid;
-        let path = `users/${uid}/private`;
+        const thisUser     = firebase.auth().currentUser;
 
-        console.log(data);
-        // firebase.database().ref(path).transaction((oldData)=>{
-        //     return data;
-        // });
+        if (data.password && data.current_password) {
+            let thisCredential = firebase.auth.EmailAuthProvider.credential(thisUser.email, data.current_password);
+            thisUser.reauthenticate(thisCredential).then( ()=>{
+                thisUser.updatePassword(data.password).then(() => {
+                    console.log("> Successfully reset password");
+                }).catch((error) => {
+                    // TODO HANDLE ERROR IN UI
+                    // 
+                    // this.setState({
+                    //     currentError: error.message
+                    // });
+                    // setTimeout(() => {
+                    //     this.setState({
+                    //         currentError: ""
+                    //     });
+                    // }, 4500);   // Clear error once it has been shown
+                });
+            });
+        }
+
     }
 
     setSaved = () => {
