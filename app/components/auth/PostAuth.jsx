@@ -403,10 +403,10 @@ export default class PostAuth extends React.Component {
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {
-            let projects = [];
             const projectIDs = snapshot.val()
             let callbacks = projectIDs.length;
-            const leng = projectIDs.length;
+            let projects  = [];
+            const leng    = projectIDs.length;
 
             for (var i = 0; i < leng ; i++) {
                 let projID = projectIDs[i];
@@ -422,6 +422,12 @@ export default class PostAuth extends React.Component {
                     if (callbacks === 0) {
                         if (!this.state.currentProject) {
                             //by default, set the first project as selected.
+                            this.setState({
+                                projects:projects,
+                                currentProject:projects[0]
+                            });
+                        // current project is not in updated project list (was deleted)
+                    } else if (projectIDs.indexOf(this.state.currentProject[1]) === -1) {
                             this.setState({
                                 projects:projects,
                                 currentProject:projects[0]
