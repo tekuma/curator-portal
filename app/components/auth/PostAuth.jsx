@@ -515,17 +515,16 @@ export default class PostAuth extends React.Component {
      * - deletes current project from /projects for each collaborator
      * @param  {2D Array} collaborators -> [[uid,display_name], ....]
      */
-    deleteCurrentProject = (collaborators) => {
+    deleteCurrentProject = (collaborators,owner) => {
         const projectID = this.state.currentProject[1];
         let projPath  = `projects/${projectID}`;
 
         // Delete the project from projects branch
         firebase.database().ref(projPath).transaction((data)=>{
             return null;
-        }).then(()=>{  // delete from the current users data
-            let userUid   = firebase.auth().currentUser.uid;
-            let userPath  = `users/${userUid}/projects`;
-            firebase.database().ref(userPath).transaction((data)=>{
+        }).then(()=>{  // delete from the owner's data
+            let ownerPath  = `users/${owner}/projects`;
+            firebase.database().ref(ownerPath).transaction((data)=>{
                 if (data){
                     let index = data.indexOf(projectID);
                     if (index != -1) { // is actually there

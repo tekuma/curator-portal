@@ -103,6 +103,10 @@ export default class ProjectManager extends React.Component {
         if (this.props.projectDetails.collaborators) {
             collaborators = this.props.projectDetails.collaborators;
         }
+        let owner = "";
+        if (this.props.projectDetails.curator) {
+            owner = this.props.projectDetails.curator;
+        }
 
         //NOTE: in the Collaborator tool, the current user is shown in black, and
         //all other collaborators in grey.  collaborator-thumb self
@@ -254,8 +258,8 @@ export default class ProjectManager extends React.Component {
                             <div className="function-seperator"></div>
                             <div
                                 className="manager-function-box delete center"
-                                onClick={this.props.askToDeleteProject.bind({}, collaborators)}
-                                onTouchTap={this.props.askToDeleteProject.bind({}, collaborators)}>
+                                onClick={this.props.askToDeleteProject.bind({}, collaborators, owner)}
+                                onTouchTap={this.props.askToDeleteProject.bind({}, collaborators,owner)}>
                                 <p>Delete Project</p>
                             </div>
                         </div>
