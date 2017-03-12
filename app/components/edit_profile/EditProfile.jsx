@@ -125,8 +125,9 @@ export default class EditProfile extends React.Component {
      *  current_password, paypal, dob, gender_pronoun]
      */
     editPrivateUserInfo = (data) => {
-        let uid = firebase.auth().currentUser.uid;
-        const thisUser     = firebase.auth().currentUser;
+        let uid  = firebase.auth().currentUser.uid;
+        const path = `users/${uid}/private`;
+        const thisUser = firebase.auth().currentUser;
 
         if (data.password && data.current_password) {
             let thisCredential = firebase.auth.EmailAuthProvider.credential(thisUser.email, data.current_password);
@@ -140,7 +141,28 @@ export default class EditProfile extends React.Component {
                 });
             });
         }
-
+        if (data.dob || data.legal_name || data.paypal || data.gender_pronoun) {
+            //node is the JSON of the specified node in the DB tree
+            firebase.database().ref(path).transaction((node)=>{
+                if (data.dob){
+                    node.dob = data.dob;
+                }
+                if (data.legal_name){
+                    node.legal_name = data.legal_name;
+                }
+                if (data.paypal) {
+                    node.paypal = data.paypal;
+                }
+                if (data.gender_pronoun){
+                    node.gender_pronoun = data.gender_pronoun;
+                }
+                return node;
+            }).then(()=>{
+                let message = "fields updated successfully!";
+                this.props.sendToSnackbar(message);
+                console.log(message);
+            });
+        }
     }
 
     setSaved = () => {
