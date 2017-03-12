@@ -44,6 +44,7 @@ export default class ManagerMain extends React.Component {
                       role={this.props.role}
                   />
                   <ProjectManager
+                      deleteCollaborator={this.deleteCollaborator}
                       artworkBuffer={this.props.artworkBuffer}
                       projectDetails={this.props.projectDetails}
                       user={this.props.user}
@@ -98,6 +99,54 @@ export default class ManagerMain extends React.Component {
     }
 
     // =============== Methods =====================
+
+    /**
+     *
+     * This method deletes a collaborator from a project.
+     * - Remove user from /project branch
+     * - Remove project from /user branch
+     * @param  {Array} user [uid,name]
+     */
+    deleteCollaborator = (user) => {
+        let question = `Are you sure you want to remove this collaborator from the project?`;
+        confirm(question).then(()=>{
+            // remove them as a collaborator in the project
+            const project_id = this.props.currentProject[1];
+            let projPath = `projects/${project_id}/collaborators`;
+            firebase.database().ref(projPath).transaction((data)=>{
+                if (data) {
+                    function isNotUser(value) {
+                        return value[0] != user[0];
+                    }
+                    let newdata = data.filter(isNotUser);
+                    return newdata;
+                } else {
+                    return 0;
+                }
+            });
+            // remove project from user's list of projects
+            let userPath = `users/${user[0]}/projects`;
+            firebase.database().ref(userPath).transaction((data)=>{
+                if (data) {
+                    function isNotProject(value) {
+                        return value != project_id;
+                    }
+                    let newData = data.filter(isNotProject);
+                    return newData;
+                } else {
+                    return 0; // pass it an unexpected value
+                }
+            });
+            let message = "Collaborator successfully removed";
+            this.props.sendToSnackbar(message);
+            console.log(message);
+            }, () => {
+                // Cancel Callback
+                return;
+            }
+        );
+    }
+
 
     /**
      * This method handles saving the strings from the notes manager of the

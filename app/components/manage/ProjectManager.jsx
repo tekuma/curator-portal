@@ -205,8 +205,8 @@ export default class ProjectManager extends React.Component {
                                                     {user[1]}
                                                 </p>
                                                 <div className="delete-collaborator"
-                                                     onTouchTap={this.deleteCollaborator.bind({}, user)}
-                                                     onClick={this.deleteCollaborator.bind({}, user)}>
+                                                     onTouchTap={this.props.deleteCollaborator.bind({}, user)}
+                                                     onClick={this.props.deleteCollaborator.bind({}, user)}>
                                                     <img src="assets/images/icons/delete-white.svg" />
                                                 </div>
                                             </article>
@@ -292,46 +292,6 @@ export default class ProjectManager extends React.Component {
 
 // ============= Methods ===============
 
-    /**
-     * This method deletes a collaborator from a project.
-     * - Remove user from /project branch
-     * - Remove project from /user branch
-     * @param  {Array} user [uid,name]
-     */
-    deleteCollaborator = (user) => {
-        confirm('Are you sure you want to remove this collaborator from the project?').then(
-            ()=>{
-                // Proceed Callback
-                let project_id = this.props.currentProject[1];
-                let projPath = `projects/${project_id}/collaborators`;
-                firebase.database().ref(projPath).transaction((data)=>{
-                    function isNotUser(value){
-
-                        return value[0] != user[0]
-                    }
-                    let newdata = data.filter(isNotUser);
-                    return newdata;
-                });
-
-                let userPath = `users/${user[0]}/projects`;
-                firebase.database().ref(userPath).transaction((data)=>{
-                    function isNotProject(value){
-                        return value != project_id
-                    }
-                    let newData = data.filter(isNotProject);
-                    return newData;
-                });
-
-                this.props.changeProject(null);
-
-                let message = "Collaborator successfully removed";
-                this.sendToSnackbar(message);
-            }, () => {
-                // Cancel Callback
-                return;
-            }
-        );
-    }
 
     /**
      * [collaboratorChange description]
