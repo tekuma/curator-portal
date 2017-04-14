@@ -44,6 +44,7 @@ export default class ManagerMain extends React.Component {
                       role={this.props.role}
                   />
                   <ProjectManager
+                      deleteCollaborator={this.deleteCollaborator}
                       artworkBuffer={this.props.artworkBuffer}
                       projectDetails={this.props.projectDetails}
                       user={this.props.user}
@@ -61,7 +62,8 @@ export default class ManagerMain extends React.Component {
                       toggleManageNotes={this.toggleManageNotes}
                       doQuery={this.doQuery}
                       projects={this.props.projects}
-                      onDelete={this.deleteProject}
+                      askToDeleteProject={this.askToDeleteProject}
+                      sendToSnackbar={this.props.sendToSnackbar}
                    />
                 <ManageNotesDialog
                     addNote={this.addNote}
@@ -84,6 +86,12 @@ export default class ManagerMain extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
+        // When a user is initially created, it has no this.props.user
+        // We call this.createNewUser() in App.jsx
+        // When user is created in database, fetch new list of users
+        if (nextProps.user != this.props.user) {
+            this.fetchAllUsers();
+        }
     }
 
     componentWillUnmount() {
@@ -94,35 +102,97 @@ export default class ManagerMain extends React.Component {
 
     /**
      *
-     * @param {Object} notes [description]
+     * This method deletes a collaborator from a project.
+     * - Remove user from /project branch
+     * - Remove project from /user branch
+     * @param  {Array} user [uid,name]
+     */
+    deleteCollaborator = (user) => {
+        let question = `Are you sure you want to remove this collaborator from the project?`;
+        confirm(question).then(()=>{
+            // remove them as a collaborator in the project
+            const project_id = this.props.currentProject[1];
+            let projPath = `projects/${project_id}/collaborators`;
+            firebase.database().ref(projPath).transaction((data)=>{
+                if (data) {
+                    function isNotUser(value) {
+                        return value[0] != user[0];
+                    }
+                    let newdata = data.filter(isNotUser);
+                    return newdata;
+                } else {
+                    return 0;
+                }
+            });
+            // remove project from user's list of projects
+            let userPath = `users/${user[0]}/projects`;
+            firebase.database().ref(userPath).transaction((data)=>{
+                if (data) {
+                    function isNotProject(value) {
+                        return value != project_id;
+                    }
+                    let newData = data.filter(isNotProject);
+                    return newData;
+                } else {
+                    return 0; // pass it an unexpected value
+                }
+            });
+            let message = "Collaborator successfully removed";
+            this.props.sendToSnackbar(message);
+            console.log(message);
+            }, () => {
+                // Cancel Callback
+                return;
+            }
+        );
+    }
+
+
+    /**
+     * This method handles saving the strings from the notes manager of the
+     * manager interface. Note are stored in the FB Database inside of the
+     * project's object. Inside of projects/{project id}/notes/{curator uid} are
+     * 2 types, public and private. Private just takes the string of the private note,
+     * while public is an object  with the curators public note, display name,
+     * and uid (which is also its key).
+     * @param {Object} notes [has .collab and .personal
+     * which are strings reflecting the 2 types of notes a curator
+     * can leave in a project]
      */
     addNote = (notes) => {
-        let publicNote = notes.collab;
-        let privateNote = notes.personal;
-        let project_id = this.props.currentProject[1];
-        let uid = firebase.auth().currentUser.uid;
-
+        let publicNote   = notes.collab;
+        let privateNote  = notes.personal;
+        const project_id = this.props.currentProject[1];
+        const uid = firebase.auth().currentUser.uid;
         let full_note = {
             note: publicNote,
             curator: this.props.user.public.display_name,
             uid:uid
         }
-        console.log(full_note);
+
         let path = `projects/${project_id}/notes`;
         firebase.database().ref(path).transaction( (data)=>{
-            if (!data) {
+            if (!data) { // first note on project
                 data = {};
-                data[uid] = {}
+                data[uid] = {} // curator's first note on project
             } else if (!data[uid]) {
                 data[uid] = {}
             }
-            data[uid]["public"] = full_note;
-            data[uid]["private"] = privateNote;
+            if (full_note.note != "") {
+                data[uid]["public"] = full_note;
+                data[uid]["private"] = privateNote;
+            } else {
+                if(data[uid]["public"] != "") {
+                    data[uid]["public"] = null;
+                }
+                data[uid]["private"] = privateNote;
+            }
             return data;
+        }).then(()=>{
+            let message = "Your notes have been updated.";
+            console.log(message);
+            this.props.sendToSnackbar(message);
         });
-
-        let message = "Your notes have been updated.";
-        this.props.sendToSnackbar(message);
     }
 
     /**
@@ -132,15 +202,13 @@ export default class ManagerMain extends React.Component {
         let users = [];
         firebase.database().ref('users').once("value", (snapshot)=>{
             snapshot.forEach((childSnap)=>{
-                console.log("callback");
                 let uid  = childSnap.child("uid").val();
                 let name = childSnap.child("public/display_name").val();
-                console.log(uid);
+                // console.log(uid);
                 users.push([uid,name]);
             });
-            console.log(users);
             this.setState({users:users});
-        })
+        });
     }
 
     /**
@@ -164,15 +232,17 @@ export default class ManagerMain extends React.Component {
     }
 
     /**
-     * [deleteProject description]
+     * [askToDeleteProject description]
+     * @param {2D Array} collaborators [[uid,display_name], ....]
+     * @param {String} owner - a string of the UID of the curator that made this proj
      * @param  {HTML Element} e [description]
      */
-    deleteProject = (e) => {
+    askToDeleteProject = (collaborators,owner,e) => {
         e.stopPropagation();
         confirm('Are you sure you want to delete this project?').then(
             () => {
                 // Proceed Callback
-                this.props.deleteCurrentProject();
+                this.props.deleteCurrentProject(collaborators,owner);
             }, () => {
                 // Cancel Callback
                 return;
@@ -191,6 +261,7 @@ export default class ManagerMain extends React.Component {
                 uid: uid
             };
 
+            console.log("about to detail",uid);
             $.ajax({
                 url: 'detail',
                 data: payload,

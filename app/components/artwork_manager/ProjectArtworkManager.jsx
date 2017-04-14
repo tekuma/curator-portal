@@ -131,7 +131,7 @@ export default class ProjectArtworkManager extends React.Component {
         };
 
         let styleManagerOpen = {
-            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            width: window.innerWidth * 0.6,  // Album Manager is 30% of Screen
             height: window.innerHeight - 60
         };
 
@@ -178,7 +178,7 @@ export default class ProjectArtworkManager extends React.Component {
         };
 
         let styleManagerOpen = {
-            width: window.innerWidth * 0.7,  // Album Manager is 30% of Screen
+            width: window.innerWidth * 0.6,  // Album Manager is 30% of Screen
             height: window.innerHeight - 60
         };
 

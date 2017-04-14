@@ -1,9 +1,6 @@
 // Libs
 import React            from 'react';
 import firebase         from 'firebase';
-import Snackbar         from 'material-ui/Snackbar';
-import getMuiTheme      from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Files
 import confirm          from '../confirm_dialog/ConfirmFunction';
@@ -28,8 +25,7 @@ export default class EditProfile extends React.Component {
     }
 
     render() {
-        console.log(this.props.user);
-        if(this.state.editingPublic) {
+        if (this.state.editingPublic) {
             return this.goToPublicEdit();
         } else {
             return this.goToPrivateEdit();
@@ -92,7 +88,7 @@ export default class EditProfile extends React.Component {
 
     /**
      * Handles syncing the collected data with the firebase DB.
-     * @param  {Object} data [has fields:bio,location,display_name,portfolio,social_media]
+     * @param  {Object} data [has possible fields:bio,location,display_name,portfolio,social_media]
      */
     editPublicUserInfo = (data) => {
         let uid = firebase.auth().currentUser.uid;
@@ -123,14 +119,50 @@ export default class EditProfile extends React.Component {
         }
     }
 
+    /**
+     * [editPrivateUserInfo description]
+     * @param  {JSON} data [possible fields: legal_name, email, email_password, password,
+     *  current_password, paypal, dob, gender_pronoun]
+     */
     editPrivateUserInfo = (data) => {
-        let uid = firebase.auth().currentUser.uid;
-        let path = `users/${uid}/private`;
+        let uid  = firebase.auth().currentUser.uid;
+        const path = `users/${uid}/private`;
+        const thisUser = firebase.auth().currentUser;
 
-        console.log(data);
-        // firebase.database().ref(path).transaction((oldData)=>{
-        //     return data;
-        // });
+        if (data.password && data.current_password) {
+            let thisCredential = firebase.auth.EmailAuthProvider.credential(thisUser.email, data.current_password);
+            thisUser.reauthenticate(thisCredential).then( ()=>{
+                thisUser.updatePassword(data.password).then(() => {
+                    let message = "Your password was been updated Successfully!";
+                    this.props.sendToSnackbar(message);
+                    console.log(message);
+                }).catch((error) => {
+                    this.props.sendToSnackbar(error);
+                });
+            });
+        }
+        if (data.dob || data.legal_name || data.paypal || data.gender_pronoun) {
+            //node is the JSON of the specified node in the DB tree
+            firebase.database().ref(path).transaction((node)=>{
+                if (data.dob){
+                    node.dob = data.dob;
+                }
+                if (data.legal_name){
+                    node.legal_name = data.legal_name;
+                }
+                if (data.paypal) {
+                    node.paypal = data.paypal;
+                }
+                if (data.gender_pronoun){
+                    node.gender_pronoun = data.gender_pronoun;
+                }
+                return node;
+            }).then(()=>{
+                let message = "fields updated successfully!";
+                this.props.sendToSnackbar(message);
+                console.log(message);
+            });
+        }
     }
 
     setSaved = () => {

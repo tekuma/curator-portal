@@ -2092,13 +2092,12 @@ textarea.bio {
 	border-color: #ec167c;
 }
 
-.edit-button,
-.signup-button,
 .login-button {
 	position: relative;
 	width: 150px;
 	height: 43.2px;
 	margin: 0 auto;
+	margin-top: 10px;
 	background: #000000;
 	border-radius: 0px;
 	cursor: pointer;
@@ -2110,29 +2109,6 @@ textarea.bio {
 	-ms-transition: all 0.3s;
 }
 
-.signup-button {
-	margin-top: 10px;
-}
-
-.login-button {
-	margin: 15px 36px;
-	text-align: center;
-	background: #ffffff;
-}
-
-.signup-button.left,
-login-button.left {
-	margin: 0px 0 5px;
-}
-
-.signup-button.center{
-	margin: 15px auto;
-	margin-bottom: 10px;
-}
-
-
-.edit-button:hover,
-.signup-button:hover,
 .login-button:hover {
 /*	box-shadow: 0 7px 14px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22); */
 	transition: all 0.3s;
@@ -2151,8 +2127,6 @@ login-button.left {
 	/* IE6-9 */
 }
 
-.edit-button h3,
-.signup-button h3,
 .login-button h3 {
 	line-height: 1em;
 	text-align: center;
@@ -2161,22 +2135,10 @@ login-button.left {
 	font-size: 1em;
 	color: #ffffff;
 	margin: 0;
-}
-
-.edit-button h3,
-.signup-button h3 {
 	transition: all 0.3s;
 	-webkit-transition: all 0.3s;
 	-moz-transition: all 0.3s;
 	-ms-transition: all 0.3s;
-}
-
-.login-button h3 {
-	color: #000000;
-}
-
-.login-button:hover h3 {
-	color: #ffffff;
 }
 
 .solo-links {
@@ -2522,19 +2484,19 @@ login-button.left {
 	font-size: 1.5em;
 }
 
-.registration-error {
+.snackbar-error {
 	text-align: center !important;
 	background: #000000;
 }
 
-.registration-error span {
+.snackbar-error span {
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1em;
 	font-weight: 500;
 	color: rgb(236, 22, 124);
 }
 
-.registration-error > div {
+.snackbar-error > div {
 	margin: 20px !important;
 	height: auto !important;
 	line-height: 1.5em !important;
@@ -2563,11 +2525,6 @@ login-button.left {
 	font-size: 1em;
 	text-align: center;
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.registration-error.page-2 h2,
-.registration-error.page-3 h2 {
-	font-size: 0.7em;
 }
 
 .popover-title {
@@ -2873,7 +2830,7 @@ login-button.left {
 }
 
 .confirm-yes,
-.edit-artwork-yes,
+.manage-notes-yes,
 .edit-album-yes,
 .delete-account-yes {
 	width: 50%;
@@ -2898,8 +2855,12 @@ login-button.left {
     -ms-transition: all 0.3s;
 }
 
+.manage-notes-yes.unsaved {
+	background: #e73827;
+}
+
 .confirm-yes h2,
-.edit-artwork-yes h2,
+.manage-notes-yes h2,
 .edit-album-yes h2,
 .delete-account-yes h2 {
 	color: #ffffff;
@@ -2909,7 +2870,7 @@ login-button.left {
 }
 
 .confirm-no,
-.edit-artwork-no,
+.manage-notes-no,
 .edit-album-no,
 .delete-account-no {
 	width: 50%;
@@ -2935,7 +2896,7 @@ login-button.left {
 }
 
 .confirm-no h2,
-.edit-artwork-no h2,
+.manage-notes-no h2,
 .edit-album-no h2,
 .confirm-edit-profile h2,
 .delete-account-no h2 {
@@ -2947,8 +2908,8 @@ login-button.left {
 
 .confirm-no:hover,
 .confirm-yes:hover,
-.edit-artwork-yes:hover,
-.edit-artwork-no:hover,
+.manage-notes-yes:hover,
+.manage-notes-no:hover,
 .edit-album-yes:hover,
 .edit-album-no:hover,
 .upload-dialog-button:hover,
@@ -4074,7 +4035,8 @@ label.age-confirm-label {
 	width: 200px;
 }
 
-#search-title, #search-general {
+#search-title, #search-general,
+#search-artist-input {
 	border: 2px solid #dddddd;
 	border-radius: 0px;
 }

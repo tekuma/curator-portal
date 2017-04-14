@@ -151,26 +151,6 @@ export default class PrivateEdit extends React.Component {
                             </ul>
                         </div>
                         <div
-                            className={this.state.accordion.emailVerified ? "accordion-item open" : "accordion-item"}
-                            onClick={this.toggleAccordion.bind({},"emailVerified")}>
-                            <h2 className="accordion-item-heading">Email Verification</h2>
-                            <h3 className="accordion-item-preview">{(firebase.auth().currentUser.emailVerified) ? "Verified" : "Unverified"}</h3>
-                        </div>
-                        <div
-                            id="email-verified-content"
-                            className={this.state.accordion.emailVerified ? "accordion-content open" : "accordion-content"}>
-                            {firebase.auth().currentUser.emailVerified ?
-                                <h3 className="email-verified-writing">
-                                    Email Verified
-                                </h3> :
-                                <button
-                                    className="verify-button"
-                                    type="submit"
-                                    onClick={this.verifyEmail}>
-                                    <h3>Verify Email</h3>
-                                </button>}
-                        </div>
-                        <div
                             className={this.state.accordion.password ? "accordion-item open" : "accordion-item"}
                             onClick={this.toggleAccordion.bind({},"password")}
                             style={this.state.errorType.email ? errorStylePasswordAuth : null}>
@@ -407,7 +387,7 @@ export default class PrivateEdit extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.errors.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -429,7 +409,6 @@ export default class PrivateEdit extends React.Component {
     /**
      * TODO
      * @param  {[type]} item [description]
-     * @return {[type]}      [description]
      */
     toggleAccordion = (item) => {
         let accordion = this.state.accordion;
@@ -511,7 +490,7 @@ export default class PrivateEdit extends React.Component {
         // ====== Private Validations ======
 
         // Legal Name
-        if(legalName.length == 0) {
+        if( legalName.length == 0) {
             this.state.errors.push("To make use of Tekuma's services, we require your legal name.");
 
             let errorType = this.state.errorType;
@@ -661,15 +640,13 @@ export default class PrivateEdit extends React.Component {
         // Rerender the component to show errors
         this.forceUpdate();
 
-        // gather inputs that have been entered
+        // **gather inputs that have been entered**
 
         if (this.state.errors.length == 0) {
-            console.log("here");
             this.props.editPrivateUserInfo(data);
-            console.log("now here");
             this.refs.currentPassword.value = "";
-            this.refs.password.value = "";
             this.refs.confirmPassword.value = "";
+            this.refs.password.value = "";
 
             this.setState({
                 accordion: {
@@ -708,3 +685,26 @@ export default class PrivateEdit extends React.Component {
     }
 
 }
+
+/** Removed, Not relevant to curator.
+ *                         <div
+                             className={this.state.accordion.emailVerified ? "accordion-item open" : "accordion-item"}
+                             onClick={this.toggleAccordion.bind({},"emailVerified")}>
+                             <h2 className="accordion-item-heading">Email Verification</h2>
+                             <h3 className="accordion-item-preview">{(firebase.auth().currentUser.emailVerified) ? "Verified" : "Unverified"}</h3>
+                         </div>
+                         <div
+                             id="email-verified-content"
+                             className={this.state.accordion.emailVerified ? "accordion-content open" : "accordion-content"}>
+                             {firebase.auth().currentUser.emailVerified ?
+                                 <h3 className="email-verified-writing">
+                                     Email Verified
+                                 </h3> :
+                                 <button
+                                     className="verify-button"
+                                     type="submit"
+                                     onClick={this.verifyEmail}>
+                                     <h3>Verify Email</h3>
+                                 </button>}
+                         </div>
+ */

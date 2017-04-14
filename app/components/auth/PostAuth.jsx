@@ -23,19 +23,19 @@ import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog'
  */
 export default class PostAuth extends React.Component {
     state = {
-        managerIsOpen: true,
-        navIsOpen    : false,
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
-        detailBoxIsOpen: false,                     // whether artwork detail box is open or not
+        managerIsOpen  : true,
+        navIsOpen      : false,
+        detailBoxIsOpen: false, // whether artwork detail box is open or not
         user           : {},
         role           : Roles.MANAGE,
         projects       : [],
-        artworkBuffer  : [], // list of all 'selected' artworks
+        artworkBuffer  : [],   // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
         projectArtworks: [],
         projectDetails : {},
-        command        : "", // used for controlling artworks
+        command        : "",   // used for sending commands to child artworks
         currentError   : "",
         artworkInfo    : {uid: null, found: false} // Information display by more info pop-up
     };
@@ -76,7 +76,6 @@ export default class PostAuth extends React.Component {
 // =========== Flow Control =============
 
     goToSearch = () => {
-
         return(
             <div>
                 <HiddenNav
@@ -128,7 +127,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -199,7 +198,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -209,7 +208,6 @@ export default class PostAuth extends React.Component {
     }
 
     goToReview = () => {
-
         return(
             <div>
                 <HiddenNav
@@ -241,7 +239,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -279,6 +277,7 @@ export default class PostAuth extends React.Component {
                             user={this.state.user}
                             toggleProfileDialog={this.toggleProfileDialog}
                             toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
+                            sendToSnackbar={this.sendToSnackbar}
                             />
                     </div>
                     <EditProfileDialog
@@ -294,7 +293,7 @@ export default class PostAuth extends React.Component {
                 </div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <Snackbar
-                        className="registration-error"
+                        className="snackbar-error"
                         open={this.state.currentError.length > 0}
                         message={this.state.currentError}
                         autoHideDuration={4000} />
@@ -325,8 +324,12 @@ export default class PostAuth extends React.Component {
         });
     };
 
+    /**
+     * Gathers all data on currently logged in user, and stores it at
+     * this.state.user
+     */
     fetchUserData = () => {
-        const uid = firebase.auth().currentUser.uid;
+        const uid  = firebase.auth().currentUser.uid;
         const path = `users/${uid}`;
         firebase.database().ref(path).on("value", (snapshot)=>{
             this.setState({
@@ -379,6 +382,7 @@ export default class PostAuth extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
+        console.log(data);
         this.setState({artworkInfo: data});
     }
 
@@ -396,15 +400,15 @@ export default class PostAuth extends React.Component {
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects. This method has an async. for-loop
+     * state.projects.
+     * FIXME re-implement using an async-for-loop.
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {
-            let projects = [];
             const projectIDs = snapshot.val()
             let callbacks = projectIDs.length;
-            const leng = projectIDs.length;
-
+            let projects  = [];
+            const leng    = projectIDs.length;
 
             for (var i = 0; i < leng ; i++) {
                 let projID = projectIDs[i];
@@ -413,13 +417,19 @@ export default class PostAuth extends React.Component {
                 let path   = `projects/${projID}`;
                 //NOTE: Use once, not on. On is called in the parent method.
                 firebase.database().ref(path).once('value', (snapshot) => {
-                    let data = snapshot.val()
+                    let data = snapshot.val();
                     let thisProj = [data.name,data.id];
-                    projects.push(thisProj)
+                    projects.push(thisProj);
                     callbacks--;
                     if (callbacks === 0) {
                         if (!this.state.currentProject) {
                             //by default, set the first project as selected.
+                            this.setState({
+                                projects:projects,
+                                currentProject:projects[0]
+                            });
+                        // current project is not in updated project list (was deleted)
+                    } else if (projectIDs.indexOf(this.state.currentProject[1]) === -1) {
                             this.setState({
                                 projects:projects,
                                 currentProject:projects[0]
@@ -462,6 +472,7 @@ export default class PostAuth extends React.Component {
             this.changeProject(theProject);
 
             let message = "New project created";
+            console.log(message);
             this.sendToSnackbar(message);
         });
     }
@@ -472,12 +483,11 @@ export default class PostAuth extends React.Component {
      */
     changeProject = (newName) => {
         if (newName === null) {
-            console.log("Received Null");
             this.setState({
-                currentProject:"",
-                projectArtworks  :[],
-                projects: [],
-                projectDetails: {}
+                currentProject  :"",
+                projectArtworks :[],
+                projects        :[],
+                projectDetails  :{}
             });
         } else {
             let theProj = [newName.label,newName.id];
@@ -507,36 +517,58 @@ export default class PostAuth extends React.Component {
     }
 
     /**
-     * Deletes the current project from the firebaseDB, removes it from
-     * the user's projects, and updates the current project to none.
+     * - Deletes the current project from the /projects branch of firebase DB
+     * - Deletes pointer to it from the user's branch
+     * - Updates current project -> none
+     * - deletes current project from /projects for each collaborator
+     * @param  {2D Array} collaborators -> [[uid,display_name], ....]
      */
-    deleteCurrentProject = (e) => {
-        let projectID = this.state.currentProject[1];
-        let userUid   = firebase.auth().currentUser.uid;
-        let userPath  = `users/${userUid}/projects`;
-        firebase.database().ref(userPath).transaction((data)=>{
-            let index = data.indexOf(projectID);
-            data.splice(index,1);
+    deleteCurrentProject = (collaborators,owner) => {
+        const projectID = this.state.currentProject[1];
+        let projPath  = `projects/${projectID}`;
 
-            return data;
-        }, ()=>{
-            let projectRef = `projects/${projectID}`;
-            firebase.database().ref(projectRef).remove();
+        // Delete the project from projects branch
+        firebase.database().ref(projPath).transaction((data)=>{
+            return null;
+        }).then(()=>{  // delete from the owner's data
+            let ownerPath  = `users/${owner}/projects`;
+            firebase.database().ref(ownerPath).transaction((data)=>{
+                if (data){
+                    let index = data.indexOf(projectID);
+                    if (index != -1) { // is actually there
+                        data.splice(index,1);
+                    }
+                }
+                return data;
+            }).then(()=>{ // delete from each collaborators data
+                for (let user of collaborators) {
+                    let uid = user[0];
+                    let path = `users/${uid}/projects`;
+                    firebase.database().ref(path).transaction((data)=>{
+                        if (data) {
+                            let index = data.indexOf(projectID);
+                            if (index != -1) { // is actually there
+                                data.splice(index,1);
+                            }
+                        }
+                        return data;
+                    });
+                }
 
-            if(this.state.projects.length > 1) {
-                let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
-                this.changeProject(project);
-            } else {
-                this.changeProject(null);
-            }
+                // Update the current project to an existing one
+                if (this.state.projects.length > 1) {
+                    let project = {label:this.state.projects[0][0], id:this.state.projects[0][1]};
+                    this.changeProject(project);
+                } else {
+                    this.changeProject(null);
+                }
 
-            let message = "Project successfully deleted";
-            this.sendToSnackbar(message);
+                //Notify the user
+                let message = "Project successfully deleted";
+                console.log(message);
+                this.sendToSnackbar(message);
+            })
         });
-
-
-
-
     }
 
     /**
@@ -546,15 +578,16 @@ export default class PostAuth extends React.Component {
      */
     fetchProjectDetails = () => {
         if (this.state.currentProject) { // not null
-
             let projectID = this.state.currentProject[1];
             let path = `projects/${projectID}`;
             firebase.database().ref(path).on("value", (snapshot)=>{
                 let art = [];
                 let node = snapshot.val();
-                for (var key in node.artworks) { // obj -> array
-                    if (node.artworks.hasOwnProperty(key)) {
-                        art.push(node.artworks[key]);
+                if (node.artworks){
+                    for (var key in node.artworks) { // obj -> array
+                        if (node.artworks.hasOwnProperty(key)) {
+                            art.push(node.artworks[key]);
+                        }
                     }
                 }
                 this.setState({projectArtworks:art});
@@ -616,6 +649,7 @@ export default class PostAuth extends React.Component {
         });
     }
 
+
     /**
      * TODO
      * @param {[type]} artwork [description]
@@ -671,11 +705,9 @@ export default class PostAuth extends React.Component {
     }
 
     sendToSnackbar = (message) => {
-
         this.setState({
             currentError: message
         });
-
         setTimeout(() => {
             this.setState({
                 currentError: ""

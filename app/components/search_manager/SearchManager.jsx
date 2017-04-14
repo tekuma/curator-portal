@@ -1153,7 +1153,7 @@ export default class SearchManager extends React.Component {
                     <div className="search-tools">
                         <div
                             onClick={this.toggleAllAccordion}
-                            className="search-tool right-border"
+                            className="search-tool open right-border"
                             title="Open All Search Fields">
                             <img src="assets/images/icons/open-accordion.svg" />
                             <h4 className="search-tool-writing">
@@ -1162,7 +1162,7 @@ export default class SearchManager extends React.Component {
                         </div>
                         <div
                             onClick={this.clearAllSearch}
-                            className="search-tool"
+                            className="search-tool clear"
                             title="Clear All Search Fields">
                             <img src="assets/images/icons/cross-gradient.svg" />
                             <h4 className="search-tool-writing">
@@ -1291,11 +1291,9 @@ export default class SearchManager extends React.Component {
     toggleSearchCategory = (category, bool) => {
         let searchCategories = this.state.searchCategories;
         searchCategories[category] = bool;
-
         this.setState({
             searchCategories: searchCategories
         });
-
         console.log("Set it in State searchManager");;
     }
 
@@ -1305,8 +1303,6 @@ export default class SearchManager extends React.Component {
      * @param  {HTML event} e       [description]
      */
     generalChange = (general, e) => {
-        console.log(e);
-
         // Toggles Search Hint
         if (general.length) {
             this.toggleSearchCategory("general", true);
@@ -1331,25 +1327,28 @@ export default class SearchManager extends React.Component {
      * [artistChange description]
      * @param  {[type]} artist [description]
      */
-    artistChange = (artist) => {
-        console.log("Entered artistChange");
+    artistChange = (artist, e) => {
         this.setState({
             artist: artist
         });
-
+        console.log("here is artist: ", artist);
         // Toggles Search Hint
-        if (artist) {
+        if (artist.length) {
             this.toggleSearchCategory("artist", true);
         } else {
             this.toggleSearchCategory("artist", false);
         }
+
+        let message = "Performing your search. Results will arrive shortly...";
+        this.props.sendToSnackbar(message);
+        console.log("Sent to snackbar");
     }
 
     /**
      * [titleChange description] what is a title?
      * @param  {String} title [description]
      */
-    titleChange = (title) => {
+    titleChange = (title, e) => {
         this.setState({
             title: title
         });
@@ -1360,6 +1359,9 @@ export default class SearchManager extends React.Component {
         } else {
             this.toggleSearchCategory("title", false);
         }
+
+        let message = "Performing your search. Results will arrive shortly...";
+        this.props.sendToSnackbar(message);
     }
 
     timeChange = (time) => {
