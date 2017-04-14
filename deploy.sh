@@ -11,4 +11,4 @@ if [ $(git status -s -uno | wc -l) -gt 0 ]; then
     exit 1
 fi
 sed -i s/local-test-dbconf.json/remote-dbconf.json/g serv/server-config.json
-rsync -v --exclude=.git --exclude=node_modules --delete -z -a -e 'ssh -i serv/cert/trial-instance-key' . scottclivingston@curator.tekuma.io:/home/scottclivingston/curator-portal
+rsync -v --exclude=.git --exclude=node_modules --delete -z -a -e 'ssh -i serv/cert/sql-client-cert' . scottclivingston@curator.tekuma.io:/home/scottclivingston/curator-portal
