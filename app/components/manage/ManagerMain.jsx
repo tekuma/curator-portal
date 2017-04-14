@@ -261,6 +261,7 @@ export default class ManagerMain extends React.Component {
                 uid: uid
             };
 
+            console.log("about to detail",uid);
             $.ajax({
                 url: 'detail',
                 data: payload,

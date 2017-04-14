@@ -1,8 +1,5 @@
-/*
- */
-
 // Libs
-import React              from 'react';
+import React from 'react';
 import injectTapEventPlugin from "react-tap-event-plugin";
 // Files
 import PreAuthHeader from '../headers/PreAuthHeader';

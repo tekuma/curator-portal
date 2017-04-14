@@ -23,19 +23,19 @@ import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog'
  */
 export default class PostAuth extends React.Component {
     state = {
-        managerIsOpen: true,
-        navIsOpen    : false,
         editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
         verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
-        detailBoxIsOpen: false,                     // whether artwork detail box is open or not
+        managerIsOpen  : true,
+        navIsOpen      : false,
+        detailBoxIsOpen: false, // whether artwork detail box is open or not
         user           : {},
         role           : Roles.MANAGE,
         projects       : [],
-        artworkBuffer  : [], // list of all 'selected' artworks
+        artworkBuffer  : [],   // list of all 'selected' artworks
         currentProject : null, // ["Project Name", "ProjectID"]
         projectArtworks: [],
         projectDetails : {},
-        command        : "", // used for controlling artworks
+        command        : "",   // used for sending commands to child artworks
         currentError   : "",
         artworkInfo    : {uid: null, found: false} // Information display by more info pop-up
     };
@@ -208,7 +208,6 @@ export default class PostAuth extends React.Component {
     }
 
     goToReview = () => {
-
         return(
             <div>
                 <HiddenNav
@@ -383,6 +382,7 @@ export default class PostAuth extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
+        console.log(data);
         this.setState({artworkInfo: data});
     }
 
@@ -400,7 +400,8 @@ export default class PostAuth extends React.Component {
 
     /**
      * Uses data passed from fetchProjects to fetch the names of each project, then updates
-     * state.projects. This method has an async. for-loop
+     * state.projects.
+     * FIXME re-implement using an async-for-loop.
      */
     fetchProjectNames = (snapshot) => {
         if (snapshot.val()) {

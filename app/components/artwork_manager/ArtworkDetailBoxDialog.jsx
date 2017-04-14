@@ -16,7 +16,6 @@ export default class ArtworkDetailBoxDialog extends React.Component {
     }
 
     render() {
-
         if (this.props.artworkInfo.found) {
             var artwork_details = this.props.artworkInfo;
         } else {
@@ -52,14 +51,13 @@ export default class ArtworkDetailBoxDialog extends React.Component {
             colors.push({background: color_string});
         }
 
-        let image = "assets/images/artwork-substitute.png";
-
+        let imageURL = "assets/images/artwork-substitute.png";
         if (artwork_details.thumbnail512_url){
             imageURL = artwork_details.thumbnail512_url;
         }
 
         let previewImage = {
-            backgroundImage: 'url(' + image + ')'
+            backgroundImage: 'url(' + imageURL + ')'
         }
 
         const dialogHeight = {
