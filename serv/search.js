@@ -449,6 +449,11 @@ exports.insert_artists = (artists, update) => {
 }
 
 
+/**
+ * Provides details for the more info pop-up on the front end
+ * @param  {String} artwork_uid
+ * @return {Promise}   containing JSON
+ */
 exports.get_detail = (artwork_uid) => {
     if (artwork_uid) {
 
@@ -500,8 +505,9 @@ exports.get_detail = (artwork_uid) => {
                             }
                             dbq("SELECT artist FROM artists WHERE uid=?", [artist_uid]).then( (rows)=>{
                                 let item = rows[0];
-				console.log(item.artist);
-                                details.artist = item.artist;
+                                if (item) {
+                                    details.artist = item.artist;
+                                }
                                 resolve(details);
                             });
                         });
