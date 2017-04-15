@@ -42,16 +42,15 @@ for (let i = 1; i < process.argv.length; i++) {
 if (use_mockup_firebase) {
     var firebase_path = 'mock-firebase';
 } else {
-    var firebase_path = 'firebase';
+    var firebase_path = 'firebase-admin';
 }
 const firebase = require(firebase_path);
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
-    serviceAccount: require('./cert/curator-tekuma.json')
+    credential : firebase.credential.cert(require('./cert/curator-tekuma.json'))
 });
 
 const fs = require('fs');
-
 const https = require('https');
 const express = require('express');
 var app = express();
@@ -64,7 +63,7 @@ const search = require('./search.js');
 const dbconf = require(servconf.artworkdb);
 search.connectdb(dbconf);
 
-if (cmd_q_string != null) {
+
 
     search.q( cmd_q_string ).then(function(rows) {
         console.log('Found', rows.length, 'rows');

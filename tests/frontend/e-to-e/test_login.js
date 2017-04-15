@@ -40,6 +40,7 @@ module.exports = {
     'Try to log-in using the TravisCI curator-portal account': function (browser) {
         browser
 <<<<<<< HEAD
+<<<<<<< HEAD
             .url(home)
             .waitForElementVisible('input#register-email', 2000)
             .waitForElementVisible('input#register-password', 1000)
@@ -48,6 +49,11 @@ module.exports = {
             .waitForElementVisible('input#login-email', 2000)
             .waitForElementVisible('input#login-password', 1000)
 >>>>>>> a7e4378f0bd5f12bda240b55a9e480ccdd2c3e6f
+=======
+            .url('https://127.0.0.1')
+            .waitForElementVisible('input#login-email', 2000)
+            .waitForElementVisible('input#login-password', 1000)
+>>>>>>> 84beae9590a22e553515a35e46a22476db40f9d4
             .setValue('input[type=email]', 'travis-ci@tekuma.io')
             .setValue('input[type=password]', ['BczEZW{p8fgyhYs,_-2)%o5Jd/Vt6bqUm9', browser.Keys.ENTER])
             .waitForElementVisible('.header-icon.curator.search', 3000)

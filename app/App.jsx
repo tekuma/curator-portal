@@ -127,9 +127,13 @@ export default class App extends React.Component {
         })
     }
 
+    /**
+     * Log user's last login as miliseconds since 1970. A number.
+     * @param  {String} uid [description]
+     */
     logLogin = (uid)=>{
         let path = `users/${uid}/last_login`;
-        firebase.database().ref(path).set(new Date().toISOString());
+        firebase.database().ref(path).set(new Date().getTime());
     }
 
     /**
@@ -138,7 +142,7 @@ export default class App extends React.Component {
      */
     createNewUser = (user) => {
         let child = {
-            first_login : new Date().toISOString(),
+            first_login : new Date().getTime(),
             email       : user.email,
             uid         : user.uid,
             public      : {
@@ -166,7 +170,8 @@ export default class App extends React.Component {
     }
 
     /**
-     * Create a new project in the database
+     * Create a new project in the database. NOTE: .getTime() is easier to do
+     * comparisons on than .toISOString().
      * @return {String} [the project ID]
      */
     createNewProject = () => {
@@ -177,7 +182,7 @@ export default class App extends React.Component {
             id     : projectID,
             name   : "Untitled Project",
             curator: firebase.auth().currentUser.uid,
-            created: new Date().toISOString()
+            created: new Date().getTime()
         };
 
 

@@ -4,10 +4,10 @@ node_modules
 /build/app.js
 /build/vendor.js
 npm-debug.log
-<<<<<<< HEAD
 .nightwatch*
 /extern/
 /test-ui-reports/
-=======
->>>>>>> a7e4378f0bd5f12bda240b55a9e480ccdd2c3e6f
+.nightwatch*
+/extern/
+/test-ui-reports/
 selenium-debug.log
