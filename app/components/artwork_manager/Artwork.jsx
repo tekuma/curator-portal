@@ -26,6 +26,8 @@ export default class Artwork extends React.Component {
         let imageURL;
         if (this.props.result.thumbnail_url){
             imageURL = this.props.result.thumbnail_url;
+            //NOTE: RAISE IMAGE RESOLUTION HERE!
+            imageURL = imageURL.replace("thumb128","thumb512");
         } else {
             imageURL = "assets/images/artwork-substitute.png";
         }

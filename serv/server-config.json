@@ -1,4 +1,4 @@
-{
+    {
     "artworkdb": "./remote-dbconf.json",
     "httpscert": {
 	"key": "../tests/cert/selfsigned.key",
