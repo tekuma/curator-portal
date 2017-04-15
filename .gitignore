@@ -11,3 +11,5 @@ npm-debug.log
 /extern/
 /test-ui-reports/
 selenium-debug.log
+conf
+reports

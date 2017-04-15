@@ -14,8 +14,6 @@ import HamburgerIcon  from '../headers/HamburgerIcon';
 import HiddenNav      from '../nav/HiddenNav';
 import Roles          from '../../constants/Roles';
 import EditProfile    from '../edit_profile/EditProfile';
-import EditProfileDialog   from '../edit_profile/EditProfileDialog';
-import VerifyEmailDialog   from '../edit_profile/VerifyEmailDialog';
 import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog';
 
 /**
@@ -23,8 +21,6 @@ import ArtworkDetailBoxDialog   from '../artwork_manager/ArtworkDetailBoxDialog'
  */
 export default class PostAuth extends React.Component {
     state = {
-        editProfileDialogIsOpen: false,             // Used to track whether Edit Profile Dialog is open
-        verifyEmailDialogIsOpen: false,             // Used to track whether Verify Email Dialog is open
         managerIsOpen  : true,
         navIsOpen      : false,
         detailBoxIsOpen: false, // whether artwork detail box is open or not
@@ -275,17 +271,9 @@ export default class PostAuth extends React.Component {
                     <div className="edit-profile-layout">
                         <EditProfile
                             user={this.state.user}
-                            toggleProfileDialog={this.toggleProfileDialog}
-                            toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
                             sendToSnackbar={this.sendToSnackbar}
                             />
                     </div>
-                    <EditProfileDialog
-                    toggleProfileDialog={this.toggleProfileDialog}
-                    editProfileDialogIsOpen={this.state.editProfileDialogIsOpen} />
-                    <VerifyEmailDialog
-                    toggleVerifyEmailDialog={this.toggleVerifyEmailDialog}
-                    verifyEmailDialogIsOpen={this.state.verifyEmailDialogIsOpen} />
                     <div
                         onClick     ={this.toggleNav}
                         onTouchTap  ={this.toggleNav}
@@ -678,30 +666,6 @@ export default class PostAuth extends React.Component {
             this.setState({command:""});
         }, 50);
         this.setState({artworkBuffer:[]});
-    }
-
-    /**
-     * This method is used by the Edit Profile Layout page component
-     * to toggle the boolean value of this.state.editProfileDialogIsOpen
-     * to change the state of the the Edit Profile Dialog component
-     * from open to closed.
-     */
-    toggleProfileDialog = () => {
-        this.setState({
-            editProfileDialogIsOpen: !this.state.editProfileDialogIsOpen
-        });
-    }
-
-    /**
-     * This method is used by the Verify Email button the Private Edit Profile page component
-     * to toggle the boolean value of this.state.verifyEmailIsOpen
-     * to change the state of the the Verify Email Dialog component
-     * from open to closed.
-     */
-    toggleVerifyEmailDialog = () => {
-        this.setState({
-            verifyEmailDialogIsOpen: !this.state.verifyEmailDialogIsOpen
-        });
     }
 
     sendToSnackbar = (message) => {

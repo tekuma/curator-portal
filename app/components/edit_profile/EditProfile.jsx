@@ -55,7 +55,6 @@ export default class EditProfile extends React.Component {
                 user = {this.props.user}
                 editPrivateUserInfo     ={this.editPrivateUserInfo}
                 editingPublic           ={this.state.editingPublic}
-                toggleVerifyEmailDialog ={this.props.toggleVerifyEmailDialog}
                 editPublic              ={this.editPublic}
                 editPrivate             ={this.editPrivate}
                 setSaved                ={this.setSaved}
@@ -107,14 +106,18 @@ export default class EditProfile extends React.Component {
                         data.avatar = avatarURL;
                         firebase.database().ref(path).update(data)
                         .then( ()=>{
-                            this.props.toggleProfileDialog();
+                            let message = "Your profile information has been updated";
+                            this.props.sendToSnackbar(message);
+                            console.log(message);
                         });
                     });
                 });
         } else {
             firebase.database().ref(path).update(data)
             .then( ()=>{
-                this.props.toggleProfileDialog();
+                let message = "Your profile information has been updated";
+                this.props.sendToSnackbar(message);
+                console.log(message);
             });
         }
     }
@@ -133,7 +136,7 @@ export default class EditProfile extends React.Component {
             let thisCredential = firebase.auth.EmailAuthProvider.credential(thisUser.email, data.current_password);
             thisUser.reauthenticate(thisCredential).then( ()=>{
                 thisUser.updatePassword(data.password).then(() => {
-                    let message = "Your password was been updated Successfully!";
+                    let message = "Your password has been successfully updated";
                     this.props.sendToSnackbar(message);
                     console.log(message);
                 }).catch((error) => {
@@ -158,7 +161,7 @@ export default class EditProfile extends React.Component {
                 }
                 return node;
             }).then(()=>{
-                let message = "fields updated successfully!";
+                let message = "Your profile information has been updated";
                 this.props.sendToSnackbar(message);
                 console.log(message);
             });

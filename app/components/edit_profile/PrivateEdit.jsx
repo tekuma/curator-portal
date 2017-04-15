@@ -671,19 +671,6 @@ export default class PrivateEdit extends React.Component {
             }, 3000 * i);
         }
     }
-
-
-    /**
-     * [description]
-     * @return {[type]} [description]
-     */
-    verifyEmail = () => {
-        firebase.auth().currentUser.sendEmailVerification().then(()=>{
-            this.props.toggleVerifyEmailDialog();
-        });
-
-    }
-
 }
 
 /** Removed, Not relevant to curator.
