@@ -289,14 +289,11 @@ export default class ReviewManager extends React.Component {
                 newApproval = true;
             }
             aprRef.transaction((data)=>{
-                if (!data) {
-                    data = {}
-                }
-                data.memo = memo;
-                data.status = newStatus;
-                data.reviewer = this.props.user.public.display_name;
-                data.new_message = true;
-                return data; // add artwork to approved branch
+                artwork.memo = memo;
+                artwork.status = newStatus;
+                artwork.reviewer = this.props.user.public.display_name;
+                artwork.new_message = true;
+                return artwork; // add artwork to approved branch
             },(err,wasSuccessful,snapshot)=>{
                 subRef.transaction((data)=>{
                     return null; // delete artwork from submissions branch
@@ -326,13 +323,10 @@ export default class ReviewManager extends React.Component {
             }
 
             decRef.transaction((data)=>{
-                if (!data) {
-                    data={}
-                }
-                data.status = false;
-                data.memo   = memo;
-                data.reviewer = this.props.user.public.display_name;
-                return data; // add artwork to declined branch
+                artwork.status = false;
+                artwork.memo   = memo;
+                artwork.reviewer = this.props.user.public.display_name;
+                return artwork; // add artwork to declined branch
             },(err,wasSuccessful,snapshot)=>{
                 subRef.transaction((data)=>{
                     return null; // delete artwork from submissions branch
