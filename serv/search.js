@@ -499,8 +499,9 @@ exports.get_detail = (artwork_uid) => {
                                 }
                             }
                             dbq("SELECT artist FROM artists WHERE uid=?", [artist_uid]).then( (rows)=>{
-                                let item = rows[1];
-                                details.artist_name = item.artist;
+                                let item = rows[0];
+				console.log(item.artist);
+                                details.artist = item.artist;
                                 resolve(details);
                             });
                         });
