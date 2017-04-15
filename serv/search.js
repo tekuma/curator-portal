@@ -22,6 +22,13 @@ var db;
 var db_config;
 
 
+/**
+ * TODO
+ * @param  {[type]} sql_template [description]
+ * @param  {[type]} qelems       [description]
+ * @param  {[type]} resolve_rows [description]
+ * @return {[type]}              [description]
+ */
 function dbq(sql_template, qelems, resolve_rows) {
     if (resolve_rows === undefined)
         resolve_rows = true;
@@ -44,6 +51,11 @@ function dbq(sql_template, qelems, resolve_rows) {
     });
 }
 
+/**
+ * [start_transaction description]
+ * @param  {[type]} fcn [description]
+ * @return {[type]}     [description]
+ */
 function start_transaction(fcn) {
     if (db_provider === 'mysql') {
         return db.beginTransaction(fcn);
@@ -449,11 +461,12 @@ exports.get_detail = (artwork_uid) => {
         var qelems = [artwork_uid];
 
         return new Promise(function (resolve, reject) {
-            dbq(sql_template, qelems).then(function (rows) {
+            dbq(sql_template, qelems).then( (rows)=>{
                 if (rows.length === 0) {
                     resolve({uid: artwork_uid, found: false});
                 } else {
                     let row = rows[0];
+                    let artist_uid = row.artist_uid;
                     var details = {
                         found: true,
                         uid: row.uid,
@@ -462,11 +475,9 @@ exports.get_detail = (artwork_uid) => {
                         thumbnail512_url: exports.get_othersize(row.thumbnail_url, 512),
                         tags: {w3c_rgb_colors: [], labels: []}
                     };
-                    dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)',
-                        [details.uid]).then(function (rows) {
+                    dbq('SELECT label_uid FROM associations WHERE (object_table = "artworks") AND (object_uid = ?)', [details.uid]).then( (rows)=>{
                             var label_ps = rows.map(row => {
-                                return dbq('SELECT labeltype, val FROM labels WHERE (labeltype = "clarifai-text-tag" OR labeltype = "clarifai-w3c-color-density") AND (uid = ?)',
-                                           [row.label_uid]);
+                                return dbq('SELECT labeltype, val FROM labels WHERE (labeltype = "clarifai-text-tag" OR labeltype = "clarifai-w3c-color-density") AND (uid = ?)',[row.label_uid]);
                             });
                             return Promise.all(label_ps).then(function (labels_rows) {
                                 var labels = [];
@@ -487,7 +498,11 @@ exports.get_detail = (artwork_uid) => {
                                         exports.parse_color_label(labels[j][1])[0];
                                 }
                             }
-                            resolve(details);
+                            dbq("SELECT artist FROM artists WHERE uid=?", [artist_uid]).then( (rows)=>{
+                                let item = rows[1];
+                                details.artist_name = item.artist;
+                                resolve(details);
+                            });
                         });
                 }
             });

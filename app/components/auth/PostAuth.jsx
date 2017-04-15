@@ -370,7 +370,7 @@ export default class PostAuth extends React.Component {
     }
 
     updateInfoArtwork = (data) => {
-        console.log(data);
+        console.log("RETURNED FROM SERVER==>", data);
         this.setState({artworkInfo: data});
     }
 
