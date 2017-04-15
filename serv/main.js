@@ -42,12 +42,13 @@ for (let i = 1; i < process.argv.length; i++) {
 if (use_mockup_firebase) {
     var firebase_path = 'mock-firebase';
 } else {
-    var firebase_path = 'firebase';
+    var firebase_path = 'firebase-admin';
 }
 const firebase = require(firebase_path);
+const serviceKey = require('./cert/curator-tekuma.json')
 firebase.initializeApp({
     databaseURL: "https://curator-tekuma.firebaseio.com",
-    credential : firebase.credential.cert(require('./cert/curator-tekuma.json'))
+    credential : firebase.credential.cert(serviceKey)
 });
 
 const fs = require('fs');
