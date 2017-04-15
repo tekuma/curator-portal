@@ -449,6 +449,11 @@ exports.insert_artists = (artists, update) => {
 }
 
 
+/**
+ * Provides details for the more info pop-up on the front end
+ * @param  {String} artwork_uid
+ * @return {Promise}   containing JSON
+ */
 exports.get_detail = (artwork_uid) => {
     if (artwork_uid) {
 
