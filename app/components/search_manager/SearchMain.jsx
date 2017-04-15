@@ -26,10 +26,10 @@ tags: Array of Objects
 
 export default class SearchMain extends React.Component {
     state = {
-        infoArtwork    : null,  // uid of displayed artworkInfo
-        results        :[],// current list of search results
-        command        : "",  // used for controlling artworks
-        no_results: false
+        infoArtwork : null, // uid of displayed artworkInfo
+        results     : [],   // current list of search results
+        command     : "",   // used for controlling artworks
+        no_results  : false,
     }
 
     constructor(props) {
@@ -83,7 +83,14 @@ export default class SearchMain extends React.Component {
 
     // =============== Methods =====================
 
+    /**
+     * Method for forming and transmitting the query to get more info / details
+     * from an artwork. For use in the
+     * @param  {String} uid [the artwork uid of the artwork]
+     */
     detailArtwork = (uid) => {
+        console.log("here");
+        console.log("Deatiling...",uid);
         firebase.auth().currentUser.getToken(true).then( (idToken)=>{
             let payload = {
                 auth: idToken,
@@ -122,9 +129,8 @@ export default class SearchMain extends React.Component {
     }
 
     /**
-     * [doQuery description] TODO
-     * @param  {[type]} queryString [description]
-     * @return {[type]}             [description]
+     *  Handles forming and sending a search query to the server and SQL DB.
+     * @param  {String} queryString [description]
      */
     doQuery = (queryString, fields) => {
         if (queryString.length === 0 && (!fields || fields === {})) {

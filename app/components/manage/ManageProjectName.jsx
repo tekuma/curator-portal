@@ -161,7 +161,12 @@ export default class ManageProjectName extends React.Component {
         e.stopPropagation();
 
         let newName = document.getElementsByName("project-name-input")[0].value;
-        this.props.renameCurrentProject(newName);
+        if (newName != "") {
+            this.props.renameCurrentProject(newName);
+        } else {
+            let message = "Project Name cannot be blank. Please choose another name.";
+            this.props.sendToSnackbar(message);
+        }
 
         this.setState({
             editing: false

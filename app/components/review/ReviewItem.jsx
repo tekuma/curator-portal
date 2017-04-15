@@ -10,7 +10,8 @@ import confirm    from '../confirm_dialog/ConfirmFunction';
 export default class ReviewItem extends React.Component {
     state = {
         status_types: ["Pending", "Approved", "Held","Declined"],
-        status:""
+        status      :"",
+        memo        :"<enter a comment>",
     };
 
     constructor(props) {
@@ -24,6 +25,7 @@ export default class ReviewItem extends React.Component {
     render() {
         let submitted = new Date(this.props.item.submitted).toUTCString();
         let thumbnail_url = "url('assets/images/artwork-substitute.png')";
+        console.log("MEMO:", this.state.memo, this.props.item.artwork_uid);
         if (this.props.item.artist_uid && this.props.item.artwork_uid) {
             thumbnail_url = `url(https://storage.googleapis.com/art-uploads/portal/${this.props.item.artist_uid}/thumb128/${this.props.item.artwork_uid})`;
         }
@@ -63,30 +65,61 @@ export default class ReviewItem extends React.Component {
                     <h3>{submitted}</h3>
                 </td>
                 <td className="review-item-status">
-                    <select
-                        className   ="review-item-select"
-                        ref         ="review_status"
-                        value={this.state.status}
-                        onChange ={this.handleSelect}
-                        >
-                        {this.state.status_types.map(type => {
-                                return (
-                                    <option
-                                        key     ={uuid.v4()}
-                                        value   ={type}>
-                                        {type}
-                                    </option>
-                                );
-                            })}
-                    </select>
+                    {this.props.mode === "Approved" || this.props.mode === "Declined" || this.props.mode === "Held"?
+                        <select
+                            className   ="review-item-select"
+                            disabled    ={true}
+                            ref         ="review_status"
+                            value={this.state.status}
+                            onChange ={this.handleSelect}
+                            >
+                            {this.state.status_types.map(type => {
+                                    return (
+                                        <option
+                                            key     ={uuid.v4()}
+                                            value   ={type}>
+                                            {type}
+                                        </option>
+                                    );
+                                })}
+                        </select>
+                        :
+                        <select
+                            className   ="review-item-select"
+                            ref         ="review_status"
+                            value={this.state.status}
+                            onChange ={this.handleSelect}
+                            >
+                            {this.state.status_types.map(type => {
+                                    return (
+                                        <option
+                                            key     ={uuid.v4()}
+                                            value   ={type}>
+                                            {type}
+                                        </option>
+                                    );
+                                })}
+                        </select>
+                    }
                 </td>
                 <td className="review-item-note">
+                    {this.props.mode === "Approved" || this.props.mode === "Declined"?
                     <textarea
-                        ref="memo"
+                        value       ={this.state.memo}
+                        onChange    ={this.updateMemo}
+                        disabled={true}
+                        ref         ="memo"
                         placeholder ="Write a short note back to the artist explaining their artwork's status..."
-                        defaultValue ={this.props.item.memo}
-                        maxLength ="1500"
-                         />
+                        maxLength   ="1500" />
+                    :
+                    <textarea
+                        value       ={this.state.memo}
+                        onChange    ={this.updateMemo}
+                        ref         ="memo"
+                        placeholder ="Write a short note back to the artist explaining their artwork's status..."
+                        maxLength   ="1500" />
+                    }
+
                 </td>
                 <td className="review-item-review">
                     {this.props.mode === "Pending" ?
@@ -102,7 +135,7 @@ export default class ReviewItem extends React.Component {
                             Delete
                         </div>
                         </div>
-                    : this.props.mode === "Declined" ?
+                    : this.props.mode === "Declined" || this.props.mode === "Approved" ?
                         <div></div>
                         :
                         <div
@@ -118,22 +151,31 @@ export default class ReviewItem extends React.Component {
 
     componentDidMount() {
         console.log("++++++ReviewItem");
-        console.log(this.props.item.status);
         this.setState({
-            status:this.props.item.status
-        })
+            status:this.props.item.status,
+            memo  :this.props.item.memo
+        });
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.item.status) {
             this.setState({
                 status:nextProps.item.status
-            })
+            });
+        }
+        if (nextProps.item.memo) {
+            this.setState({
+                memo:nextProps.item.memo
+            });
         }
     }
 
     // =========== Methods ==============
 
+    updateMemo = (event) => {
+        console.log(event.target.value);
+        this.setState({memo:event.target.value});
+    }
 
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;

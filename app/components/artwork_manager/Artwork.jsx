@@ -89,9 +89,7 @@ export default class Artwork extends React.Component {
                             </h4>
                         </div>
                         <OverlayTrigger placement="right" overlay={infoTooltip} >
-                            <figure
-                                className="overlay-info-project-button"
-                                >
+                            <figure className="overlay-info-project-button">
                                 <p>i</p>
                             </figure>
                         </OverlayTrigger>
@@ -122,9 +120,14 @@ export default class Artwork extends React.Component {
     // ========= Methods ===========
     //
 
+    /**
+     * [handleClick description]
+     * @param  {HTML_element} e [description]
+     */
     handleClick = (e) => {
         console.log(e.target.tagName);
         if (e.target.tagName == "FIGURE" || e.target.tagName == "P") {
+            console.log("Requesting info for:",this.props.result.uid);
             this.props.detailArtwork(this.props.result.uid);
             this.props.toggleDetailBox();
         } else if (e.target.tagName == "IMG" || e.target.tagName == "ASIDE") {
