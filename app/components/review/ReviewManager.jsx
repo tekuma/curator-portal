@@ -289,6 +289,9 @@ export default class ReviewManager extends React.Component {
                 newApproval = true;
             }
             aprRef.transaction((data)=>{
+                if (!data) {
+                    data = {}
+                }
                 data.memo = memo;
                 data.status = newStatus;
                 data.reviewer = this.props.user.public.display_name;
@@ -323,6 +326,9 @@ export default class ReviewManager extends React.Component {
             }
 
             decRef.transaction((data)=>{
+                if (!data) {
+                    data={}
+                }
                 data.status = false;
                 data.memo   = memo;
                 data.reviewer = this.props.user.public.display_name;
