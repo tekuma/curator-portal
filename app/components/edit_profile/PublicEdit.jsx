@@ -332,7 +332,8 @@ export default class PublicEdit extends React.Component {
 
         let city;
         if (this.props.user.public.location) {
-            let city = this.props.user.public.location.split(", ")[0]
+            city = this.props.user.public.location.split(", ")[0];
+            console.log(city);
         }
 
         let options = this.state.countryList.map( (country)=>{
@@ -677,11 +678,17 @@ export default class PublicEdit extends React.Component {
     }
 
     componentDidMount() {
-        //pass
+        let country = this.props.user.public.location.split(", ")[1]
+        this.setState({
+            selectedCountry: country
+        });
     }
 
     componentWillReceiveProps(nextProps) {
-        //pass
+        let country = nextProps.user.public.location.split(", ")[1]
+        this.setState({
+            selectedCountry: country
+        });
     }
 
     // -------- METHODS ------------
