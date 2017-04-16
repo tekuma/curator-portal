@@ -5467,6 +5467,10 @@ animation
 	font-family: "Nexa" , "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+.no-review-items p {
+	color: rgba(0,0,0,0.6);
+}
+
 /*========================================== */
 
 /* Review Interface */
