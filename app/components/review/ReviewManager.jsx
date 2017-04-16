@@ -70,21 +70,21 @@ export default class ReviewManager extends React.Component {
     // =========== Render Control =============
 
     /**
-     * @param  {String} catagory [One of "Approved", "Held", "Pending", "Declined"]
+     * @param  {String} category [One of "Approved", "Held", "Pending", "Declined"]
      * @return {JSX}
      */
-    renderReviewItems = (catagory) => {
+    renderReviewItems = (category) => {
         let items = [];
-        if (catagory === "Pending") {
+        if (category === reviewTabs.PENDING) {
             items = this.state.reviewItems;
-        } else if (catagory === "Held") {
+        } else if (category === reviewTabs.HELD) {
             items = this.state.heldItems;
-        } else if (catagory === "Approved") {
+        } else if (category === reviewTabs.APPROVED) {
             items = this.state.approvedItems;
-        } else if (catagory === "Declined") {
+        } else if (category === reviewTabs.DECLINED) {
             items = this.state.declinedItems;
         }
-        console.log(catagory);
+        console.log(category);
 
         const reviewWrapperStyle = {
             height: window.innerHeight - 140 - 78, // 140px = Header and Review Tabs ,91 = Pagination Arrows
@@ -100,97 +100,369 @@ export default class ReviewManager extends React.Component {
 
         return (
             <div>
-                <div className="review-sections">
-                    <div
-                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
-                        <h2>Pending</h2>
+                {category == reviewTabs.PENDING && this.state.reviewItems.length == 0 ?
+                    <div>
+                        <div className="review-sections">
+                            <div
+                                className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                                <h2>Pending</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                                <h2>Approved</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                                <h2>Held</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                                <h2>Declined</h2>
+                            </div>
+                        </div>
+                        <table
+                            className="review-headings-wrapper"
+                            style={reviewWrapperStyle}>
+                            <thead className="review-headings">
+                                <tr>
+                                    <th className="review-artwork-heading">Artwork</th>
+                                    <th className="review-details-heading">Details</th>
+                                    <th className="review-tags-heading">Tags</th>
+                                    <th className="review-description-heading">Description</th>
+                                    <th className="review-submitted-heading">Submitted</th>
+                                    <th className="review-status-heading">Status</th>
+                                    <th className="review-note-heading">Review Note</th>
+                                    <th className="review-button-heading"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div className="review-wrapper no-review-items"
+                            style={reviewWrapperStyle}>
+                            <p>No Pending Review Items</p>
+                        </div>
+                        <div
+                            className="pagination-wrapper">
+                            <div
+                                className="pagination-arrow"
+                                onClick={this.changePage.bind({},false)}
+                                onTouchTap={this.changePage.bind({},false)}
+                                title="Previous">
+                                <img src="assets/images/icons/pagination-left.svg" />
+                            </div>
+                            <div
+                                className="pagination-arrow"
+                                onClick={this.changePage.bind({},true)}
+                                onTouchTap={this.changePage.bind({},true)}
+                                title="Next">
+                                <img src="assets/images/icons/pagination-right.svg" />
+                            </div>
+                        </div>
+                        <div
+                            onClick     ={this.props.toggleNav}
+                            onTouchTap  ={this.props.toggleNav}
+                            className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
                     </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
-                        <h2>Approved</h2>
+                :
+                    category == reviewTabs.HELD && this.state.heldItems.length == 0 ?
+                    <div>
+                        <div className="review-sections">
+                            <div
+                                className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                                <h2>Pending</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                                <h2>Approved</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                                <h2>Held</h2>
+                            </div>
+                            <div
+                                className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                                onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                                <h2>Declined</h2>
+                            </div>
+                        </div>
+                        <table
+                            className="review-headings-wrapper"
+                            style={reviewWrapperStyle}>
+                            <thead className="review-headings">
+                                <tr>
+                                    <th className="review-artwork-heading">Artwork</th>
+                                    <th className="review-details-heading">Details</th>
+                                    <th className="review-tags-heading">Tags</th>
+                                    <th className="review-description-heading">Description</th>
+                                    <th className="review-submitted-heading">Submitted</th>
+                                    <th className="review-status-heading">Status</th>
+                                    <th className="review-note-heading">Review Note</th>
+                                    <th className="review-button-heading"></th>
+                                </tr>
+                            </thead>
+                        </table>
+                        <div className="review-wrapper no-review-items"
+                            style={reviewWrapperStyle}>
+                            <p>No Held Review Items</p>
+                        </div>
+                        <div
+                            className="pagination-wrapper">
+                            <div
+                                className="pagination-arrow"
+                                onClick={this.changePage.bind({},false)}
+                                onTouchTap={this.changePage.bind({},false)}
+                                title="Previous">
+                                <img src="assets/images/icons/pagination-left.svg" />
+                            </div>
+                            <div
+                                className="pagination-arrow"
+                                onClick={this.changePage.bind({},true)}
+                                onTouchTap={this.changePage.bind({},true)}
+                                title="Next">
+                                <img src="assets/images/icons/pagination-right.svg" />
+                            </div>
+                        </div>
+                        <div
+                            onClick     ={this.props.toggleNav}
+                            onTouchTap  ={this.props.toggleNav}
+                            className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
                     </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
-                        <h2>Held</h2>
-                    </div>
-                    <div
-                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
-                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
-                        <h2>Declined</h2>
-                    </div>
-                </div>
-                <table
-                    className="review-headings-wrapper"
-                    style={reviewWrapperStyle}>
-                    <thead className="review-headings">
-                        <tr>
-                            <th className="review-artwork-heading">Artwork</th>
-                            <th className="review-details-heading">Details</th>
-                            <th className="review-tags-heading">Tags</th>
-                            <th className="review-description-heading">Description</th>
-                            <th className="review-submitted-heading">Submitted</th>
-                            <th className="review-status-heading">Status</th>
-                            <th className="review-note-heading">Review Note</th>
-                            <th className="review-button-heading"></th>
-                        </tr>
-                    </thead>
-                </table>
-                <div className="review-wrapper"
-                    style={reviewWrapperStyle}>
-                    <table
-                        className="review-table"
-                        style={tableWidth}>
-                        <tbody>
-                            {items.map(item => {
-                                return (
-                                    <ReviewItem
-                                        item={item}
-                                        mode={catagory}
-                                        deleteItem={this.deleteItem}
-                                        updateReviewInfo={this.updateReviewInfo}
-                                        saveReviewChanges={this.saveReviewChanges}
-                                        toggleArtworkPreview={this.toggleArtworkPreview}
-                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
-                                     />
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div
-                    className="pagination-wrapper">
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},false)}
-                        onTouchTap={this.changePage.bind({},false)}
-                        title="Previous">
-                        <img src="assets/images/icons/pagination-left.svg" />
-                    </div>
-                    <div
-                        className="pagination-arrow"
-                        onClick={this.changePage.bind({},true)}
-                        onTouchTap={this.changePage.bind({},true)}
-                        title="Next">
-                        <img src="assets/images/icons/pagination-right.svg" />
-                    </div>
-                </div>
-                <ArtworkImagePreview
-                    toggleArtworkPreview={this.toggleArtworkPreview}
-                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
-                    reviewInfo={this.state.reviewInfo}
-                 />
-                <ArtworkDescriptionPreview
-                     toggleDescriptionPreview={this.toggleDescriptionPreview}
-                     artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
-                     reviewInfo={this.state.reviewInfo}
-                  />
-                <div
-                    onClick     ={this.props.toggleNav}
-                    onTouchTap  ={this.props.toggleNav}
-                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                    :
+                        category == reviewTabs.APPROVED && this.state.approvedItems.length == 0 ?
+                        <div>
+                            <div className="review-sections">
+                                <div
+                                    className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                                    onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                                    <h2>Pending</h2>
+                                </div>
+                                <div
+                                    className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                                    onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                                    <h2>Approved</h2>
+                                </div>
+                                <div
+                                    className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                                    onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                                    <h2>Held</h2>
+                                </div>
+                                <div
+                                    className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                                    onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                                    <h2>Declined</h2>
+                                </div>
+                            </div>
+                            <table
+                                className="review-headings-wrapper"
+                                style={reviewWrapperStyle}>
+                                <thead className="review-headings">
+                                    <tr>
+                                        <th className="review-artwork-heading">Artwork</th>
+                                        <th className="review-details-heading">Details</th>
+                                        <th className="review-tags-heading">Tags</th>
+                                        <th className="review-description-heading">Description</th>
+                                        <th className="review-submitted-heading">Submitted</th>
+                                        <th className="review-status-heading">Status</th>
+                                        <th className="review-note-heading">Review Note</th>
+                                        <th className="review-button-heading"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div className="review-wrapper no-review-items"
+                                style={reviewWrapperStyle}>
+                                <p>No Approved Review Items</p>
+                            </div>
+                            <div
+                                className="pagination-wrapper">
+                                <div
+                                    className="pagination-arrow"
+                                    onClick={this.changePage.bind({},false)}
+                                    onTouchTap={this.changePage.bind({},false)}
+                                    title="Previous">
+                                    <img src="assets/images/icons/pagination-left.svg" />
+                                </div>
+                                <div
+                                    className="pagination-arrow"
+                                    onClick={this.changePage.bind({},true)}
+                                    onTouchTap={this.changePage.bind({},true)}
+                                    title="Next">
+                                    <img src="assets/images/icons/pagination-right.svg" />
+                                </div>
+                            </div>
+                            <div
+                                onClick     ={this.props.toggleNav}
+                                onTouchTap  ={this.props.toggleNav}
+                                className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                        </div>
+                        :
+                            category == reviewTabs.DECLINED && this.state.declinedItems.length == 0 ?
+                            <div>
+                                <div className="review-sections">
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                                        <h2>Pending</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                                        <h2>Approved</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                                        <h2>Held</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                                        <h2>Declined</h2>
+                                    </div>
+                                </div>
+                                <table
+                                    className="review-headings-wrapper"
+                                    style={reviewWrapperStyle}>
+                                    <thead className="review-headings">
+                                        <tr>
+                                            <th className="review-artwork-heading">Artwork</th>
+                                            <th className="review-details-heading">Details</th>
+                                            <th className="review-tags-heading">Tags</th>
+                                            <th className="review-description-heading">Description</th>
+                                            <th className="review-submitted-heading">Submitted</th>
+                                            <th className="review-status-heading">Status</th>
+                                            <th className="review-note-heading">Review Note</th>
+                                            <th className="review-button-heading"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div className="review-wrapper no-review-items"
+                                    style={reviewWrapperStyle}>
+                                    <p>No Declined Review Items</p>
+                                </div>
+                                <div
+                                    className="pagination-wrapper">
+                                    <div
+                                        className="pagination-arrow"
+                                        onClick={this.changePage.bind({},false)}
+                                        onTouchTap={this.changePage.bind({},false)}
+                                        title="Previous">
+                                        <img src="assets/images/icons/pagination-left.svg" />
+                                    </div>
+                                    <div
+                                        className="pagination-arrow"
+                                        onClick={this.changePage.bind({},true)}
+                                        onTouchTap={this.changePage.bind({},true)}
+                                        title="Next">
+                                        <img src="assets/images/icons/pagination-right.svg" />
+                                    </div>
+                                </div>
+                                <div
+                                    onClick     ={this.props.toggleNav}
+                                    onTouchTap  ={this.props.toggleNav}
+                                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                            </div>
+                            :
+                            <div>
+                                <div className="review-sections">
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.PENDING) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.PENDING)}>
+                                        <h2>Pending</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.APPROVED) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.APPROVED)}>
+                                        <h2>Approved</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.HELD) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.HELD)}>
+                                        <h2>Held</h2>
+                                    </div>
+                                    <div
+                                        className={(this.state.currentTab == reviewTabs.DECLINED) ? "review-section-pending selected" : "review-section-pending"}
+                                        onClick={this.changeReviewScreen.bind({}, reviewTabs.DECLINED)}>
+                                        <h2>Declined</h2>
+                                    </div>
+                                </div>
+                                <table
+                                    className="review-headings-wrapper"
+                                    style={reviewWrapperStyle}>
+                                    <thead className="review-headings">
+                                        <tr>
+                                            <th className="review-artwork-heading">Artwork</th>
+                                            <th className="review-details-heading">Details</th>
+                                            <th className="review-tags-heading">Tags</th>
+                                            <th className="review-description-heading">Description</th>
+                                            <th className="review-submitted-heading">Submitted</th>
+                                            <th className="review-status-heading">Status</th>
+                                            <th className="review-note-heading">Review Note</th>
+                                            <th className="review-button-heading"></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div className="review-wrapper"
+                                    style={reviewWrapperStyle}>
+                                    <table
+                                        className="review-table"
+                                        style={tableWidth}>
+                                        <tbody>
+                                            {items.map(item => {
+                                                return (
+                                                    <ReviewItem
+                                                        item={item}
+                                                        mode={category}
+                                                        deleteItem={this.deleteItem}
+                                                        updateReviewInfo={this.updateReviewInfo}
+                                                        saveReviewChanges={this.saveReviewChanges}
+                                                        toggleArtworkPreview={this.toggleArtworkPreview}
+                                                        toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                                     />
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div
+                                    className="pagination-wrapper">
+                                    <div
+                                        className="pagination-arrow"
+                                        onClick={this.changePage.bind({},false)}
+                                        onTouchTap={this.changePage.bind({},false)}
+                                        title="Previous">
+                                        <img src="assets/images/icons/pagination-left.svg" />
+                                    </div>
+                                    <div
+                                        className="pagination-arrow"
+                                        onClick={this.changePage.bind({},true)}
+                                        onTouchTap={this.changePage.bind({},true)}
+                                        title="Next">
+                                        <img src="assets/images/icons/pagination-right.svg" />
+                                    </div>
+                                </div>
+                                <ArtworkImagePreview
+                                    toggleArtworkPreview={this.toggleArtworkPreview}
+                                    artworkPreviewIsOpen={this.state.artworkPreviewIsOpen}
+                                    reviewInfo={this.state.reviewInfo}
+                                 />
+                                <ArtworkDescriptionPreview
+                                     toggleDescriptionPreview={this.toggleDescriptionPreview}
+                                     artworkDescriptionIsOpen={this.state.artworkDescriptionIsOpen}
+                                     reviewInfo={this.state.reviewInfo}
+                                  />
+                                <div
+                                    onClick     ={this.props.toggleNav}
+                                    onTouchTap  ={this.props.toggleNav}
+                                    className   ={this.props.navIsOpen ? "site-overlay open" : "site-overlay"} />
+                            </div>
+
+                }
             </div>
         );
     }

@@ -18,6 +18,11 @@ import confirm    from '../confirm_dialog/ConfirmFunction';
 export default class ProjectManager extends React.Component {
     state = {
         collabBuffer:"",
+        download_enabled: {
+            csv         : false,
+            raw_image  : false,
+            print_file : false
+        }
     }
 
     constructor(props) {
@@ -163,17 +168,17 @@ export default class ProjectManager extends React.Component {
                             <h3 className="manager-heading">
                                 Download
                             </h3>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.csv ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handleCSV}
                                  onTouchTap={this.handleCSV}>
                                 <p>CSV</p>
                             </div>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.raw_image ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handleRaw}
                                  onTouchTap={this.handleRaw}>
                                 <p>Raw Images</p>
                             </div>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.print_file ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handlePrintfile}
                                  onTouchTap={this.handlePrintfile}>
                                 <p>Print Files</p>
@@ -340,7 +345,14 @@ export default class ProjectManager extends React.Component {
      */
     handleCSV = () => {
         console.log("Requested CSV for ->", this.props.artworkBuffer);
-        let message = "CSV file is being generated. Download will begin shortly...";
+        let message;
+
+        if (this.state.download_enabled.csv) {
+            message = "CSV file is being generated. Download will begin shortly...";
+        } else {
+            message = "CSV downloads are currently unavailable.";
+        }
+
         this.props.sendToSnackbar(message);
         //do ajax call here
     }
@@ -350,7 +362,15 @@ export default class ProjectManager extends React.Component {
      */
     handleRaw = () => {
         console.log("Requested Raw Files->",this.props.artworkBuffer);
-        let message = "Zipped raw files are being generated. Download will begin shortly...";
+
+        let message;
+
+        if (this.state.download_enabled.raw_file) {
+            message = "Zipped raw files are being generated. Download will begin shortly...";
+        } else {
+            message = "Zipped raw files are currently unavailable.";
+        }
+
         this.props.sendToSnackbar(message);
 
     }
@@ -360,7 +380,15 @@ export default class ProjectManager extends React.Component {
      */
     handlePrintfile = () => {
         console.log("Requested Printfiles->",this.props.artworkBuffer);
-        let message = "Print files are being generated. Download will begin shortly...";
+
+        let message;
+
+        if (this.state.download_enabled.print_file) {
+            message = "Print files are being generated. Download will begin shortly...";
+        } else {
+            message = "Print files are currently unavailable.";
+        }
+
         this.props.sendToSnackbar(message);
     }
 
