@@ -118,8 +118,8 @@ export default class ArtworkManager extends React.Component {
                                 "See More Results"
                             </div>
                         }
-                    });
-                    : "No artworks matched your search query."}
+                    })
+                    : "No artworks matched your search query :( "}
                 </Masonry>
             </div>
 
