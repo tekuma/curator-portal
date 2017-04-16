@@ -571,6 +571,7 @@ export default class ReviewManager extends React.Component {
         }
     }
 
+
     /**
      * Fetches first page of submissions from the `submissions` branch of the curator-tekuma
      * firebase database. Then, sorts based on the field "submitted" which is the number
@@ -588,7 +589,7 @@ export default class ReviewManager extends React.Component {
                     }
                     let index = this.state.reviewItems.findIndex(isSame);
                     let updated;
-                    if (index != -1) { // already in array
+                    if (index != -1) { // already in this.state.reviewItems // How?
                         updated = this.state.reviewItems.concat([]); //dont mutate state
                         updated[index] = submit;
                     } else {

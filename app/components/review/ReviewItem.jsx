@@ -20,12 +20,18 @@ export default class ReviewItem extends React.Component {
 
     componentWillMount() {
         console.log("-----ReviewItem");
+        this.setState({
+            status:this.props.item.status,
+            memo  :this.props.item.memo
+        });
     }
 
     render() {
         let submitted = new Date(this.props.item.submitted).toUTCString();
         let thumbnail_url = "url('assets/images/artwork-substitute.png')";
+
         console.log("MEMO:", this.state.memo, this.props.item.artwork_uid);
+
         if (this.props.item.artist_uid && this.props.item.artwork_uid) {
             thumbnail_url = `url(https://storage.googleapis.com/art-uploads/portal/${this.props.item.artist_uid}/thumb128/${this.props.item.artwork_uid})`;
         }
@@ -103,11 +109,11 @@ export default class ReviewItem extends React.Component {
                     }
                 </td>
                 <td className="review-item-note">
-                    {this.props.mode === "Approved" || this.props.mode === "Declined"?
+                    {this.props.mode === "Approved" || this.props.mode === "Declined" ?
                     <textarea
                         value       ={this.state.memo}
                         onChange    ={this.updateMemo}
-                        disabled={true}
+                        disabled    ={true}
                         ref         ="memo"
                         placeholder ="Write a short note back to the artist explaining their artwork's status..."
                         maxLength   ="1500" />
@@ -151,10 +157,6 @@ export default class ReviewItem extends React.Component {
 
     componentDidMount() {
         console.log("++++++ReviewItem");
-        this.setState({
-            status:this.props.item.status,
-            memo  :this.props.item.memo
-        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -172,8 +174,9 @@ export default class ReviewItem extends React.Component {
 
     // =========== Methods ==============
 
+
     updateMemo = (event) => {
-        console.log(event.target.value);
+        console.log("====>", event.target.value);
         this.setState({memo:event.target.value});
     }
 
