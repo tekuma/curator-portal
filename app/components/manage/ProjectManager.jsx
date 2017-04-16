@@ -18,6 +18,11 @@ import confirm    from '../confirm_dialog/ConfirmFunction';
 export default class ProjectManager extends React.Component {
     state = {
         collabBuffer:"",
+        download_enabled: {
+            csv         : false,
+            raw_image  : false,
+            print_file : false
+        }
     }
 
     constructor(props) {
@@ -163,17 +168,17 @@ export default class ProjectManager extends React.Component {
                             <h3 className="manager-heading">
                                 Download
                             </h3>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.csv ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handleCSV}
                                  onTouchTap={this.handleCSV}>
                                 <p>CSV</p>
                             </div>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.raw_image ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handleRaw}
                                  onTouchTap={this.handleRaw}>
                                 <p>Raw Images</p>
                             </div>
-                            <div className="manager-function-box download center"
+                            <div className={this.state.download_enabled.print_file ? "manager-function-box download center" : "manager-function-box download disabled center"}
                                  onClick={this.handlePrintfile}
                                  onTouchTap={this.handlePrintfile}>
                                 <p>Print Files</p>
