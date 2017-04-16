@@ -12,7 +12,7 @@ import Artwork    from './Artwork';
  */
 export default class ArtworkManager extends React.Component {
     state = {
-        max_results = 40
+        max_results: 40
     };
 
     constructor(props) {
