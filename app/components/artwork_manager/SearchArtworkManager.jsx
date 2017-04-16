@@ -158,7 +158,7 @@ export default class ArtworkManager extends React.Component {
                 {this.props.noResults ?
                     <img id="empty-search-arrow-icon" className="no-results" src="assets/images/icons/sad-gradient.svg"/>
                     :
-                    <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-left-gradient.svg"/>
+                    <img id="empty-search-arrow-icon" src="assets/images/icons/arrow-right-gradient.svg"/>
                 }
                 <h3 className="empty-search-writing medium">
                     {this.props.noResults ?

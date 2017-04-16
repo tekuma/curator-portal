@@ -3213,7 +3213,8 @@ textarea.bio {
 
 /* Accordion */
 
-.edit-accordion {
+.edit-accordion,
+.search-accordion {
     width: 70vw;
 	max-width: 800px;
     list-style-type: none;
@@ -3224,13 +3225,19 @@ textarea.bio {
 	0 1px 2px rgba(0,0,0,0.24);
 }
 
-.edit-accordion .accordion-item {
+.search-accordion {
+	width: 100%;
+}
+
+.edit-accordion .accordion-item,
+.search-accordion .accordion-item {
     padding: 15px 25px;
 	margin: 0;
     position: relative;
     display: block;
     height: 50px;
 	width: 100%;
+	z-index: 8;
     cursor: pointer;
     background: #ffffff;
 	border-bottom: 1px solid rgba(0,0,0,0.12);
@@ -3292,6 +3299,18 @@ textarea.bio {
 	line-height: normal;
 }
 
+.accordion-item-heading.search {
+	width: 100%;
+	height: 20px;
+	color: rgba(0,0,0,0.87);
+	font-size: 1.1em;
+	font-weight: 400;
+	margin: 0 !important;
+	padding: 0;
+	cursor: pointer;
+	text-align: center;
+}
+
 .accordion-item-preview {
 	width: 50%;
 	font-size: 0.8em;
@@ -3329,7 +3348,8 @@ textarea.bio {
     display: none;
 }
 
-.edit-accordion .accordion-content {
+.edit-accordion .accordion-content,
+.search-accordion .accordion-content {
 	position: relative;
 	top: -30px;
 	height: 0;
@@ -3359,12 +3379,14 @@ textarea.bio {
 }
 
 .edit-accordion .accordion-content#display-name-content,
-.edit-accordion .accordion-content#legal-name-content {
+.edit-accordion .accordion-content#legal-name-content,
+.search-accordion #search-artist-content {
 	z-index: 7;
 }
 
 .edit-accordion .accordion-content#avatar-content,
-.edit-accordion .accordion-content#email-content {
+.edit-accordion .accordion-content#email-content,
+.search-accordion #search-tag-content  {
 	z-index: 6;
 }
 
@@ -3373,16 +3395,19 @@ textarea.bio {
 }
 
 .edit-accordion .accordion-content#bio-content,
-.edit-accordion .accordion-content#email-verified-content {
+.edit-accordion .accordion-content#email-verified-content,
+.search-accordion #search-title-content  {
 	z-index: 5;
 }
 
 .edit-accordion .accordion-content#location-content,
-.edit-accordion .accordion-content#password-content {
+.edit-accordion .accordion-content#password-content,
+.search-accordion #search-time-content  {
 	z-index: 4;
 }
 
-.edit-accordion .accordion-content#paypal-content {
+.edit-accordion .accordion-content#paypal-content,
+.search-accordion #search-color-content {
 	z-index: 3;
 }
 
@@ -3400,7 +3425,8 @@ textarea.bio {
 	z-index: 1;
 }
 
-.edit-accordion .accordion-content.open {
+.edit-accordion .accordion-content.open,
+.search-accordion .accordion-content.open  {
 	top: 0px;
 	opacity: 1;
 	padding: 50px;
@@ -3423,6 +3449,14 @@ textarea.bio {
     -o-transition: all 0.3s ease-in-out;
     -ms-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
+}
+
+.search-accordion #search-time-content.accordion-content.open {
+	height: 370px;
+}
+
+.search-accordion #search-color-content.accordion-content.open {
+	height: 440px;
 }
 
 .edit-accordion #email-content.accordion-content.open {
