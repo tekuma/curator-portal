@@ -8,7 +8,7 @@ import Artwork    from './Artwork';
 
 
 /**
- * TODO
+ * NEW MESSAGE
  */
 export default class ArtworkManager extends React.Component {
     state = {
