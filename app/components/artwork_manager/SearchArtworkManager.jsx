@@ -12,6 +12,7 @@ import Artwork    from './Artwork';
  */
 export default class ArtworkManager extends React.Component {
     state = {
+        max_results = 40
     };
 
     constructor(props) {
@@ -95,27 +96,39 @@ export default class ArtworkManager extends React.Component {
                >
 
                 {this.props.results.length > 0 ?
-                     this.props.results.map(result => {
-                         return (
-                             <Artwork
-                                 detailArtwork={this.props.detailArtwork}
-                                 toggleDetailBox={this.props.toggleDetailBox}
-                                 command={this.props.command}
-                                 addArtworkToBuffer={this.props.addArtworkToBuffer}
-                                 removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
-                                 result={result}
-                                 deleteArtworksFromProject={this.props.deleteArtworksFromProject}
-                                 addArtworksToProject={this.props.addArtworksToProject}
-                                 sendToSnackbar={this.props.sendToSnackbar}
-                                 role={this.props.role} />
-                         );
-                     })
-                     : "No artworks matched your search query."}
+                    this.props.results.map((result,i) => {
+                        if (i < this.state.max_results) {
+                            return (
+                                <Artwork
+                                    detailArtwork={this.props.detailArtwork}
+                                    toggleDetailBox={this.props.toggleDetailBox}
+                                    command={this.props.command}
+                                    addArtworkToBuffer={this.props.addArtworkToBuffer}
+                                    removeArtworkFromBuffer={this.props.removeArtworkFromBuffer}
+                                    result={result}
+                                    deleteArtworksFromProject={this.props.deleteArtworksFromProject}
+                                    addArtworksToProject={this.props.addArtworksToProject}
+                                    sendToSnackbar={this.props.sendToSnackbar}
+                                    role={this.props.role} />
+                            );
+                        }  else {
+                            <div
+                                className="review-item-review-button"
+                                onClick={this.increaseSearchResults}>
+                                Update
+                            </div>
+                        }
+                    });
+                    : "No artworks matched your search query."}
                 </Masonry>
             </div>
 
         );
     };
+
+    increaseSearchResults = () =>{
+        this.setState({max_results:this.state.max_results + 20});
+    }
 
     renderEmptySearch = () => {
         let styleManagerClosed = {
