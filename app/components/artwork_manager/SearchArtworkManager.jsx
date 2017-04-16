@@ -115,7 +115,7 @@ export default class ArtworkManager extends React.Component {
                             <div
                                 className="review-item-review-button"
                                 onClick={this.increaseSearchResults}>
-                                Update
+                                "See More Results"
                             </div>
                         }
                     });
