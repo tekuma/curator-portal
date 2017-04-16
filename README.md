@@ -164,19 +164,15 @@ for ESLint <http://eslint.org/> that you can run using
     npm run lint
 
 
-## Deployment
-
-`master` branch is supposed to match the site as it is deployed. As such, before
+## ----- Deployment -----
+1. `master` branch is supposed to match the site as it is deployed. As such, before
 following the instructions below, increment the version number in package.json,
-and merge all changes into `master` branch.  Change server-config.json to have
-`"artworkdb": "./remote-dbconf.json"`, and then, build the client-side bundle,
-and rsync relevant data to the GCE instance:
-
-    npm run build
-    ./deploy.sh
-
-From the instance, stop nginx if it is running, `sudo nginx -s stop`, then
-
-    cd ~/curator-portal
-    sudo nginx -c `pwd`/conf/nginx.conf
-    screen -d -m ./auto-restart.sh
+and merge all changes into `master` branch.
+2. Change server-config.json to have `"artworkdb": "./remote-dbconf.json"
+3. SSH into the server (curator-tekuma-1) at [https://console.cloud.google.com/compute/instancesDetail/zones/us-east1-c/instances/curator-tekuma-1?project=curator-tekuma&graph=GCE_CPU&duration=PT1H](https://console.cloud.google.com/compute/instancesDetail/zones/us-east1-c/instances/curator-tekuma-1?project=curator-tekuma&graph=GCE_CPU&duration=PT1H) with username 'tekuma'
+4. type `tmux attach`
+5. Kill the active server with cltr-c
+6. Stop static serving with `sudo nginx -s stop`
+7. restart static serving with `sudo nginx -c `pwd`/conf/nginx.conf`
+8. restart active server with `./autorestart`
+9. cltr-b d  to exit tmux screen.
