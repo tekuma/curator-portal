@@ -474,16 +474,14 @@ export default class ReviewManager extends React.Component {
      * @param  {String} id     [the artwork_uid]
      * @param  {String} branch [one of submissions, declined, approved ]
      */
-    deleteItem = (id,branch) =>{
-        if (branch == "held") {
-            branch = "submissions"; // held items are still in submissions branch
-        }
-        if (branch == "submissions" || branch == "declined" || branch == "approved") {
-            let ref = firebase.database().ref(`${branch}/${id}`);
+    deleteItem = (artwork_uid,branch) =>{
+        if (branch == "submissions" || branch == "declined" || branch == "approved" || branch == "held") {
+            let ref = firebase.database().ref(`${branch}/${artwork_uid}`);
             ref.transaction((data)=>{
                 return null;
             },(err,wasSuccessful,snapshot)=>{
-                console.log(id," was deleted from ", branch);
+                this.removeFromReviewItems(artwork_uid);
+                console.log(artwork_uid," was deleted from ", branch);
             });
         } else {
             console.log(">> NOT A VALID BRANCH");
