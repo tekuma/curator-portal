@@ -112,7 +112,7 @@ export default class ArtworkManager extends React.Component {
                                     sendToSnackbar={this.props.sendToSnackbar}
                                     role={this.props.role} />
                             );
-                        }  else {
+                        }  else if (i == this.state.max_results) {
                             return(
                             <div
                                 className ="review-item-review-button"
