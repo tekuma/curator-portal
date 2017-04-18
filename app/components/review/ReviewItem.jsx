@@ -1,6 +1,6 @@
 // Libs
 import React      from 'react';
-import Firebase   from 'firebase';
+import firebase   from 'firebase';
 import {WithContext as ReactTags} from 'react-tag-input';
 import uuid       from 'node-uuid';
 
@@ -29,8 +29,6 @@ export default class ReviewItem extends React.Component {
     render() {
         let submitted = new Date(this.props.item.submitted).toUTCString();
         let thumbnail_url = "url('assets/images/artwork-substitute.png')";
-
-        console.log("MEMO:", this.state.memo, this.props.item.artwork_uid);
 
         if (this.props.item.artist_uid && this.props.item.artwork_uid) {
             thumbnail_url = `url(https://storage.googleapis.com/art-uploads/portal/${this.props.item.artist_uid}/thumb128/${this.props.item.artwork_uid})`;
@@ -142,12 +140,23 @@ export default class ReviewItem extends React.Component {
                         </div>
                         </div>
                     : this.props.mode === "Declined" || this.props.mode === "Approved" ?
-                        <div></div>
+                        <div
+                            className="review-item-review-button pending bottom"
+                            onClick={this.handleDelete}>
+                            Delete
+                        </div>
                         :
+                        <div>
                         <div
                             className="review-item-review-button"
                             onClick={this.handleReviewButton}>
                             Update
+                        </div>
+                        <div
+                            className="review-item-review-button pending bottom"
+                            onClick={this.handleDelete}>
+                            Delete
+                        </div>
                         </div>
                 }
                 </td>
@@ -160,12 +169,12 @@ export default class ReviewItem extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.item.status) {
+        if (nextProps.item.status != undefined) {
             this.setState({
                 status:nextProps.item.status
             });
         }
-        if (nextProps.item.memo) {
+        if (nextProps.item.memo != undefined) {
             this.setState({
                 memo:nextProps.item.memo
             });
@@ -175,11 +184,19 @@ export default class ReviewItem extends React.Component {
     // =========== Methods ==============
 
 
+    /**
+     *
+     * @param  {[type]} event [description]
+     */
     updateMemo = (event) => {
         console.log("====>", event.target.value);
         this.setState({memo:event.target.value});
     }
 
+    /**
+     * Handles deleting the item.
+     * @param  {HTML_Event} e [description]
+     */
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;
         let branch;

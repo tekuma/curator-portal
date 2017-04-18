@@ -18,7 +18,7 @@ export default class ReviewManager extends React.Component {
         artworkPreviewIsOpen    : false,
         approvedItems           : [], // current page of approved items
         declinedItems           : [], // current page of decliend items
-        reviewItems             : [], // current page of pending items
+        pendingItems            : [], // current page of pending items
         heldItems               : [], // current page of held items
         reviewInfo              : {}  // details for pop-ups like description
     };
@@ -33,13 +33,13 @@ export default class ReviewManager extends React.Component {
 
     render() {
         if (this.state.currentTab == reviewTabs.PENDING) {
-            return this.renderReviewItems("Pending");
+            return this.renderPendingItems("Pending");
         } else if (this.state.currentTab == reviewTabs.APPROVED) {
-            return this.renderReviewItems("Approved");
+            return this.renderPendingItems("Approved");
         } else if (this.state.currentTab == reviewTabs.HELD) {
-            return this.renderReviewItems("Held");
+            return this.renderPendingItems("Held");
         } else {
-            return this.renderReviewItems("Declined");
+            return this.renderPendingItems("Declined");
         }
     }
 
@@ -73,10 +73,10 @@ export default class ReviewManager extends React.Component {
      * @param  {String} category [One of "Approved", "Held", "Pending", "Declined"]
      * @return {JSX}
      */
-    renderReviewItems = (category) => {
+    renderPendingItems = (category) => {
         let items = [];
         if (category === reviewTabs.PENDING) {
-            items = this.state.reviewItems;
+            items = this.state.pendingItems;
         } else if (category === reviewTabs.HELD) {
             items = this.state.heldItems;
         } else if (category === reviewTabs.APPROVED) {
@@ -100,7 +100,7 @@ export default class ReviewManager extends React.Component {
 
         return (
             <div>
-                {category == reviewTabs.PENDING && this.state.reviewItems.length == 0 ?
+                {category == reviewTabs.PENDING && this.state.pendingItems.length == 0 ?
                     <div>
                         <div className="review-sections">
                             <div
@@ -480,7 +480,7 @@ export default class ReviewManager extends React.Component {
             ref.transaction((data)=>{
                 return null;
             },(err,wasSuccessful,snapshot)=>{
-                this.removeFromReviewItems(artwork_uid);
+                this.removeFromItems(artwork_uid,branch);
                 console.log(artwork_uid," was deleted from ", branch);
             });
         } else {
@@ -504,21 +504,34 @@ export default class ReviewManager extends React.Component {
     }
 
     /**
-     * Removes an artwork from the list of artworks in the reviewItems array in
+     * Removes an artwork from the list of artworks in the pendingItems array in
      * state. This method uses concat([]) as a way to copy the state, as not to
      * directly mutate the state.
      * @param  {String} artwork_uid [uid of the artwork]
      */
-    removeFromReviewItems = (artwork_uid) => {
-        for (var i = 0; i < this.state.reviewItems.length; i++) {
-            let item = this.state.reviewItems[i];
-            if (item.artwork_uid == artwork_uid) {
-                let updates = this.state.reviewItems.concat([]); //deepcopy
-                updates.splice(i,1);
-                this.setState({reviewItems:updates});
+    removeFromItems = (artwork_uid, branch) => {
+        let items;
+        if (branch === "pending") {
+            items = this.state.pendingItems.concat([]); //deepcopy
+        } else if (branch === "held") {
+            items = this.state.heldItems.concat([]); //deepcopy
+        } else if (branch === "declined") {
+            items = this.state.declinedItems.concat([]); //deepcopy
+        }
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].artwork_uid == artwork_uid) {
+                items.splice(i,1);
                 break;
             }
         }
+        if (branch === "pending") {
+            this.setState({pendingItems:items});
+        } else if (branch === "held") {
+            this.setState({heldItems:items});
+        } else if (branch === "declined") {
+            this.setState({declinedItems:items});
+        }
+        return;
     }
 
     /**
@@ -576,7 +589,7 @@ export default class ReviewManager extends React.Component {
             });
 
             //Remove this artwork from the pending screen
-            this.removeFromReviewItems(artwork.artwork_uid);
+            this.removeFromItems(artwork.artwork_uid, "pending");
 
             let message = "";
             if (newApproval) {
@@ -609,7 +622,7 @@ export default class ReviewManager extends React.Component {
             });
 
             //Remove this artwork from the pending screen
-            this.removeFromReviewItems(artwork.artwork_uid);
+            this.removeFromItems(artwork.artwork_uid, "pending");
 
             let message = "";
             newDecline ? message = "Artwork has been declined and the artist has been notified." : message = "Artwork status has been updated." ;
@@ -642,7 +655,7 @@ export default class ReviewManager extends React.Component {
                 });
 
                 //splice out this artwork from the pending screen
-                this.removeFromReviewItems(artwork.artwork_uid);
+                this.removeFromItems(artwork.artwork_uid, "pending");
 
                 message = "This artwork has been held. The corresponding artwork in the artist portal has been unlocked, so the artist can make changes";
             }
@@ -679,12 +692,12 @@ export default class ReviewManager extends React.Component {
         let list,first,last,db_ref,query;
         if (forward) { // -->
             if (currentTab == reviewTabs.PENDING) {
-                list = this.state.reviewItems.concat([]);//copy
+                list = this.state.pendingItems.concat([]);//copy
                 last = list[list.length -1].submitted;
                 db_ref = firebase.database().ref(`submissions`);
                 db_ref.off();
                 query = db_ref.orderByChild("submitted").startAt(last).limitToFirst(pg_size);
-                this.setState({reviewItems:[]});
+                this.setState({pendingItems:[]});
                 query.on("value", (snapshot)=>{
                     snapshot.forEach( (childSnap)=>{
                         if (childSnap.key != 0) { //ignore the placeholder in DB
@@ -692,16 +705,16 @@ export default class ReviewManager extends React.Component {
                             function isSame(elm) {
                                 return elm.artwork_uid == data.artwork_uid
                             }
-                            let index = this.state.reviewItems.findIndex(isSame);
+                            let index = this.state.pendingItems.findIndex(isSame);
                             let list;
                             if (index != -1) { // already in array
-                                list  = this.state.reviewItems.concat([]);//copy
+                                list  = this.state.pendingItems.concat([]);//copy
                                 list[index] = data;
                             } else {
-                                list  = this.state.reviewItems.concat([data]);//copy
+                                list  = this.state.pendingItems.concat([data]);//copy
                             }
                             console.log(list);
-                            this.setState({reviewItems:list});
+                            this.setState({pendingItems:list});
                         }
                     });
                 });
@@ -760,12 +773,12 @@ export default class ReviewManager extends React.Component {
             }
         } else { // <--
             if (currentTab == reviewTabs.PENDING) {
-                list   = this.state.reviewItems.concat([]);//copy
+                list   = this.state.pendingItems.concat([]);//copy
                 first  = list[0].submitted;
                 db_ref = firebase.database().ref(`submissions`);
                 db_ref.off(); // turn off listener to last page
                 query = db_ref.orderByChild("submitted").endAt(first).limitToLast(pg_size);
-                this.setState({reviewItems:[]});
+                this.setState({pendingItems:[]});
                 query.on("value", (snapshot)=>{
                     snapshot.forEach( (childSnap)=>{
                         if (childSnap.key != 0) { //ignore the placeholder in DB
@@ -773,15 +786,15 @@ export default class ReviewManager extends React.Component {
                             function isSame(elm) {
                                 return elm.artwork_uid == data.artwork_uid
                             }
-                            let index = this.state.reviewItems.findIndex(isSame);
+                            let index = this.state.pendingItems.findIndex(isSame);
                             let list;
                             if (index != -1) { // already in array
-                                list  = this.state.reviewItems.concat([]);//copy
+                                list  = this.state.pendingItems.concat([]);//copy
                                 list[index] = data;
                             } else {
-                                list  = this.state.reviewItems.concat([data]);//copy
+                                list  = this.state.pendingItems.concat([data]);//copy
                             }
-                            this.setState({reviewItems:list});
+                            this.setState({pendingItems:list});
                         }
                     });
                 });
@@ -857,15 +870,15 @@ export default class ReviewManager extends React.Component {
                     function isSame(elm) {
                         return elm.artwork_uid == submit.artwork_uid
                     }
-                    let index = this.state.reviewItems.findIndex(isSame);
+                    let index = this.state.pendingItems.findIndex(isSame);
                     let updated;
-                    if (index != -1) { // already in this.state.reviewItems // How?
-                        updated = this.state.reviewItems.concat([]); //dont mutate state
+                    if (index != -1) { // already in this.state.pendingItems // How?
+                        updated = this.state.pendingItems.concat([]); //dont mutate state
                         updated[index] = submit;
                     } else {
-                        updated = this.state.reviewItems.concat([submit]);
+                        updated = this.state.pendingItems.concat([submit]);
                     }
-                    this.setState({reviewItems:updated});
+                    this.setState({pendingItems:updated});
                 }
             });
         });
