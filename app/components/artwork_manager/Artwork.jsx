@@ -83,10 +83,10 @@ export default class Artwork extends React.Component {
                                     }
                                 </h3>
                             <h4 className="artwork-overlay-artist">
-                                {!this.props.result.artist || this.props.result.artist == "" ?
-                                    "Untitled Artist"
+                                {!this.props.result.description || this.props.result.description == "" ?
+                                    "No description."
                                     :
-                                    this.props.result.artist
+                                    this.props.result.description.substring(0,27) + "..."
                                 }
                             </h4>
                         </div>
