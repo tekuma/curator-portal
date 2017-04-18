@@ -27,7 +27,7 @@ tags: Array of Objects
 export default class SearchMain extends React.Component {
     state = {
         infoArtwork : null, // uid of displayed artworkInfo
-        results     : [],   // current list of search results
+        results     : [{id:"x"}],   // current list of search results
         command     : "",   // used for controlling artworks
         no_results  : false,
     }

@@ -12,7 +12,7 @@ import Artwork    from './Artwork';
  */
 export default class ArtworkManager extends React.Component {
     state = {
-        max_results: 40
+        max_results: 20
     };
 
     constructor(props) {
@@ -43,6 +43,7 @@ export default class ArtworkManager extends React.Component {
 
     renderArtworks = () => {
 
+        console.log(this.state.max_results);
         let styleManagerClosed = {
             width: window.innerWidth - 40,
             height: window.innerHeight - 60
@@ -112,23 +113,26 @@ export default class ArtworkManager extends React.Component {
                                     role={this.props.role} />
                             );
                         }  else {
+                            return(
                             <div
-                                className="review-item-review-button"
+                                className ="review-item-review-button"
                                 onClick={this.increaseSearchResults}>
-                                ---------------- \n
-                                See More Results
+                                <h4>More..</h4>
                             </div>
+                        );
                         }
                     })
                     : "No artworks matched your search query :( "}
                 </Masonry>
+
             </div>
 
         );
     };
 
     increaseSearchResults = () =>{
-        this.setState({max_results:this.state.max_results + 20});
+        let old_max = this.state.max_results + 20;
+        this.setState({max_results:old_max});
     }
 
     renderEmptySearch = () => {
