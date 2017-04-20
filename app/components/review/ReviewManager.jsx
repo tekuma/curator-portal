@@ -558,7 +558,7 @@ export default class ReviewManager extends React.Component {
         console.log("new",newStatus,"old",oldStatus,memo, artwork);
         if (!memo) {
             let message;
-            if (!memo && newStatus == "Pending") {
+            if (!memo && newStatus == reviewTabs.PENDING) {
                 message = "Review failed. Write a review note to the artist explaining the artwork's review status and edit its review status.";
             } else {
                 message = "Review failed. Write a review note to the artist explaining the artwork's review status.";
@@ -598,7 +598,7 @@ export default class ReviewManager extends React.Component {
                 message = "Artwork status has been updated.";
             }
             this.props.sendToSnackbar(message);
-        } else if (newStatus == "Declined") {
+        } else if (newStatus == reviewTabs.DECLINED) {
             let newDecline = false;
             if (!artwork.declined) {
                 artwork.declined = new Date().getTime();
@@ -606,9 +606,10 @@ export default class ReviewManager extends React.Component {
             }
 
             decRef.transaction((data)=>{
-                artwork.status = false;
                 artwork.memo   = memo;
+                artwork.status = newStatus;
                 artwork.reviewer = this.props.user.public.display_name;
+                artwork.new_message = true;
                 return artwork; // add artwork to declined branch
             },(err,wasSuccessful,snapshot)=>{
                 subRef.transaction((data)=>{
@@ -628,9 +629,9 @@ export default class ReviewManager extends React.Component {
             newDecline ? message = "Artwork has been declined and the artist has been notified." : message = "Artwork status has been updated." ;
             this.props.sendToSnackbar(message);
 
-        } else if (newStatus == "Held") {
+        } else if (newStatus == reviewTabs.HELD) {
             let message;
-            if (oldStatus == "Held" && memo != null) { // an update
+            if (oldStatus == reviewTabs.HELD && memo != null) { // an update
                 // only thing that can be updated in Held is the memo.
                 artwork.memo = memo;
                 heldRef.transaction((data)=>{
@@ -643,8 +644,11 @@ export default class ReviewManager extends React.Component {
                     artwork.held = new Date().getTime();
                 }
 
-                artwork.status   = newStatus;
                 heldRef.transaction((data)=>{
+                    artwork.memo   = memo;
+                    artwork.status = newStatus;
+                    artwork.reviewer = this.props.user.public.display_name;
+                    artwork.new_message = true;
                     return artwork; // add artwork to declined branch
                 },(err,wasSuccessful,snapshot)=>{
                     subRef.transaction((data)=>{
@@ -660,13 +664,13 @@ export default class ReviewManager extends React.Component {
                 message = "This artwork has been held. The corresponding artwork in the artist portal has been unlocked, so the artist can make changes";
             }
             this.props.sendToSnackbar(message);
-        } else if (newStatus == "Pending" && oldStatus == "Pending"){ // update info
-            if (artwork.status != status || artwork.memo != memo) {
+        } else if (newStatus == reviewTabs.PENDING && oldStatus == reviewTabs.PENDING){ // update info
+            if (artwork.memo != memo) {
                 console.log("updating db...",artwork.artwork_uid);
                 let subRef = firebase.database().ref(`submissions/${artwork.artwork_uid}`);
                 subRef.transaction((data)=>{
                     data.new_message = true;
-                    data.status = status;
+                    data.status = newStatus;
                     data.memo = memo;
                     console.log("artwork updated.");
                     return data;

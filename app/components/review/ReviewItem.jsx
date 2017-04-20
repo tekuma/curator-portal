@@ -3,13 +3,14 @@ import React      from 'react';
 import firebase   from 'firebase';
 import {WithContext as ReactTags} from 'react-tag-input';
 import uuid       from 'node-uuid';
+import reviewTabs from '../../constants/reviewTabs';
 
 // Files
 import confirm    from '../confirm_dialog/ConfirmFunction';
 
 export default class ReviewItem extends React.Component {
     state = {
-        status_types: ["Pending", "Approved", "Held","Declined"],
+        status_types: [reviewTabs.PENDING, reviewTabs.APPROVED, reviewTabs.HELD,reviewTabs.DECLINED],
         status      :"",
         memo        :"<enter a comment>",
     };
@@ -27,7 +28,7 @@ export default class ReviewItem extends React.Component {
     }
 
     render() {
-        let submitted = new Date(this.props.item.submitted).toUTCString();
+        let submit_date = new Date(this.props.item.submitted).toUTCString();
         let thumbnail_url = "url('assets/images/artwork-substitute.png')";
 
         if (this.props.item.artist_uid && this.props.item.artwork_uid) {
@@ -66,7 +67,7 @@ export default class ReviewItem extends React.Component {
                     </div>
                 </td>
                 <td className="review-item-submitted">
-                    <h3>{submitted}</h3>
+                    <h3>{submit_date}</h3>
                 </td>
                 <td className="review-item-status">
                     {this.props.mode === "Approved" || this.props.mode === "Declined" || this.props.mode === "Held"?
@@ -126,7 +127,7 @@ export default class ReviewItem extends React.Component {
 
                 </td>
                 <td className="review-item-review">
-                    {this.props.mode === "Pending" ?
+                    {this.props.mode === reviewTabs.PENDING ?
                         <div>
                         <div
                             className="review-item-review-button pending top"
@@ -139,7 +140,7 @@ export default class ReviewItem extends React.Component {
                             Delete
                         </div>
                         </div>
-                    : this.props.mode === "Declined" || this.props.mode === "Approved" ?
+                    : this.props.mode === reviewTabs.DECLINED || this.props.mode === reviewTabs.APPROVED ?
                         <div
                             className="review-item-review-button pending bottom"
                             onClick={this.handleDelete}>
@@ -169,12 +170,12 @@ export default class ReviewItem extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.item.status != undefined) {
+        if (nextProps.item.status) {
             this.setState({
                 status:nextProps.item.status
             });
         }
-        if (nextProps.item.memo != undefined) {
+        if (nextProps.item.memo) {
             this.setState({
                 memo:nextProps.item.memo
             });
@@ -200,13 +201,13 @@ export default class ReviewItem extends React.Component {
     handleDelete = (e) =>{
         let id = this.props.item.artwork_uid;
         let branch;
-        if (this.props.mode == "Approved") {
+        if (this.props.mode == reviewTabs.APPROVED) {
             branch = 'approved';
-        } else if (this.props.mode == "Declined") {
+        } else if (this.props.mode == reviewTabs.DECLINED) {
             branch = 'declined';
-        } else if (this.props.mode == "Held") {
+        } else if (this.props.mode == reviewTabs.HELD) {
             branch = 'held';
-        } else if (this.props.mode == "Pending"){
+        } else if (this.props.mode == reviewTabs.PENDING){
             branch = 'submissions';
         }
         confirm("Are you sure you want to delete this review item?").then(
